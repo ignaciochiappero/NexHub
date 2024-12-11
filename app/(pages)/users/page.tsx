@@ -26,7 +26,7 @@ export default function UsersListPage() {
     {
       id: 2,
       name: "María Rodríguez",
-      avatar: "/perfil-m-d.png",
+      avatar: "/perfil.png",
       role: "UX/UI Designer",
       projects: 25,
       status: 'offline'
@@ -34,7 +34,7 @@ export default function UsersListPage() {
     {
       id: 3,
       name: "Carlos Gómez",
-      avatar: "/perfil-c-d.png",
+      avatar: "/perfil.png",
       role: "Backend Engineer",
       projects: 33,
       status: 'online'

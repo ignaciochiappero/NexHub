@@ -6,7 +6,7 @@ import SigninForm from "@/components/authComponents/SigninForm";
 function LoginPage() {
     return (
 
-        <div className="h-screen p-2 flex justify-center font-[family-name:var(--blender-medium)] text-2xl">
+        <div className="bg-[#1A1A1A] min-h-screen p-6 pt-40s flex justify-center font-[family-name:var(--blender-medium)] text-2xl">
             
 
             

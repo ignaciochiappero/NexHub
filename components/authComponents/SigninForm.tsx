@@ -2,6 +2,8 @@
 "use client"
 
 import { useForm, Controller } from "react-hook-form";
+import Image from "next/image";
+import { Lock, Mail } from 'lucide-react';
 
 function SigninForm() {
 
@@ -19,17 +21,26 @@ function SigninForm() {
   return (
     <form onSubmit={onSubmit}>
 
-        <div className="mt-32 border h-96 w-96 rounded-3xl flex flex-col items-center p-5 text-black">
+        <div className="bg-[#353535] rounded-2xl p-8 w-full max-w-md shadow-lg mt-48">
+
+        <div className="text-center mb-8">
+          <Image 
+            src="/perfil-n-d.png" 
+            alt="Profile" 
+            width={100} 
+            height={100} 
+            className="mx-auto rounded-full mb-4"
+          />
+          <h1 className="text-3xl font-bold text-white">
+           Iniciar Sesión
+          </h1>
+        </div>
 
         {/* contenedor email */}
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
 
-            <label 
-            htmlFor="email"
-            className="text-white"
-            >
-                Email
-            </label>
+            
+
             
             <Controller 
                 name="email"
@@ -42,12 +53,20 @@ function SigninForm() {
                 }}
                 render = {({field}) => {
                     return (
+
+                        <div className="relative">
+
+                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                         
-                        <input 
-                        type="email" placeholder="email@domain.com" autoFocus 
-                        className="rounded-lg p-2 w-80"
-                        {...field}
-                        />
+                            <input 
+                            type="email" placeholder="email@domain.com" autoFocus 
+                            className="pl-10 text-lg rounded-lg p-2 w-80 bg-[#454545] text-white "
+                            {...field}
+                            />
+                        
+                        </div>
+
+                        
                     );
                 }}
             
@@ -65,12 +84,7 @@ function SigninForm() {
         {/* contenedor password */}
         <div className="mt-5 flex flex-col">
 
-            <label 
-            htmlFor="password"
-            className="text-white"
-            >
-                Password
-            </label>
+
             
             <Controller 
                 name="password"
@@ -87,12 +101,17 @@ function SigninForm() {
                 }}
                 render = {({field}) => {
                     return (
-                        
-                        <input 
-                        type="password" placeholder="************" autoFocus 
-                        className="rounded-lg p-2 w-80"
-                        {...field}
-                        />
+                        <div className="relative">
+
+                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+
+                            <input 
+                            type="password" placeholder="Contraseña" autoFocus 
+                            className="rounded-lg pl-10 items-center flex justify-center text-lg p-2 w-80 bg-[#454545] text-white "
+                            {...field}
+                            />
+
+                        </div>
                     );
                 }}
             
@@ -107,10 +126,11 @@ function SigninForm() {
         </div>
 
         <button 
-        type="submit"
-        className="mt-10 bg-slate-400 p-2 rounded-2xl w-64">
-            Ingresar
-        </button>
+            type="submit"
+            className="w-full bg-pink-600 text-white py-2 rounded-full hover:bg-pink-700 transition text-lg mt-3"
+          >
+            Entrar
+          </button>
 
 
 

@@ -3,6 +3,8 @@
 "use client"
 
 import { useForm, Controller } from "react-hook-form";
+import { Lock, User, Mail } from 'lucide-react';
+
 
 function SignupForm() {
 
@@ -22,16 +24,11 @@ function SignupForm() {
   return (
     <form onSubmit={onSubmit}>
         
-        <div className="mt-32 border h-auto w-96 rounded-3xl flex flex-col items-center p-5 text-black">
+        <div className="bg-[#353535] rounded-2xl p-8 w-full max-w-md shadow-lg mt-48">
             {/* contenedor email */}
             <div className="flex flex-col">
 
-                <label 
-                htmlFor="text"
-                className="text-white"
-                >
-                    User Name
-                </label>
+
                 
                 <Controller 
                     name="name"
@@ -45,11 +42,17 @@ function SignupForm() {
                     render = {({field}) => {
                         return (
                             
+                            <div className="relative">
+
+                            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        
                             <input 
-                            type="name" placeholder="Nombre_Usuario" autoFocus 
-                            className="rounded-lg p-2 w-80"
+                            type="name" placeholder="Nombre Usuario" autoFocus 
+                            className="pl-10 text-lg rounded-lg p-2 w-80 bg-[#454545] text-white "
                             {...field}
                             />
+                        
+                        </div>      
                         );
                     }}
                 
@@ -66,12 +69,7 @@ function SignupForm() {
             {/* contenedor email */}
             <div className="flex mt-5 flex-col" >
 
-                <label 
-                htmlFor="email"
-                className="text-white"
-                >
-                    Email
-                </label>
+
                 
                 <Controller 
                     name="email"
@@ -85,12 +83,17 @@ function SignupForm() {
                     render = {({field}) => {
                         return (
                             
+                            <div className="relative">
+
+                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        
                             <input 
                             type="email" placeholder="email@domain.com" autoFocus 
-                            className="rounded-lg p-2 w-80"
+                            className="pl-10 text-lg rounded-lg p-2 w-80 bg-[#454545] text-white "
                             {...field}
                             />
-                        );
+                        
+                        </div>                        );
                     }}
                 
                 />
@@ -107,12 +110,7 @@ function SignupForm() {
             {/* contenedor password */}
             <div className="flex mt-5 flex-col">
 
-                <label 
-                htmlFor="password"
-                className="text-white"
-                >
-                    Password
-                </label>
+
                 
                 <Controller 
                     name="password"
@@ -130,11 +128,17 @@ function SignupForm() {
                     render = {({field}) => {
                         return (
                             
+                            <div className="relative">
+
+                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+
                             <input 
-                            type="password" placeholder="************" autoFocus 
-                            className="rounded-lg p-2 w-80"
+                            type="password" placeholder="Contraseña" autoFocus 
+                            className="rounded-lg pl-10 items-center flex justify-center text-lg p-2 w-80 bg-[#454545] text-white "
                             {...field}
                             />
+
+                        </div>
                         );
                     }}
                 
@@ -150,10 +154,10 @@ function SignupForm() {
 
             <button 
             type="submit"
-            className="mt-10 bg-slate-400 p-2 rounded-2xl w-64">
-                Registrar nuevo usuario
+            className="w-full bg-pink-600 text-white py-2 rounded-full hover:bg-pink-700 transition text-lg mt-3"
+            >
+            Registrar usuario
             </button>
-
 
 
 

@@ -46,7 +46,7 @@ export default function AdminDashboardPage() {
       id: 2,
       name: "María Rodríguez",
       email: "maria@example.com",
-      avatar: "/perfil-m-d.png",
+      avatar: "/perfil.png",
       role: "UX/UI Designer",
       skills: ["Figma", "Adobe XD", "User Research"]
     }
