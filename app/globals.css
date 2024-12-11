@@ -9,7 +9,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #1d1d1d;
     --foreground: #ededed;
   }
 }
@@ -19,3 +19,60 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+
+
+/*NAVBAR*/
+
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-style: none;
+  background: white;
+  color: black;
+  cursor: pointer;
+  z-index: 1;
+  
+}
+
+/* .navbar {
+  width: 250px;
+  height: 700px;
+  margin: none;
+  border-radius: 16px;
+  /*background-color: turquoise;*/
+  /* background: linear-gradient(to top, #8e2de2, #4a00e0); 
+}  */
+
+.navList {
+  padding: 100px 70px 200px 70px;
+}
+
+.nav-item {
+  font-size: 20px;
+  list-style:circle;
+  color: white;
+  /* cursor: pointer; */
+ 
+}
+
+h4 {
+  margin-block-start: 1px;
+  margin-block-end: 1px;
+}
+
+ .navbar-item-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #000428, #004e92);
+}
+
+.navbar-item-rect {
+  width: 30px;
+  height: 30px;
+} 
