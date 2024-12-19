@@ -24,6 +24,8 @@ function SigninForm() {
         <div className="bg-[#353535] rounded-2xl p-8 w-full max-w-md shadow-lg mt-48">
 
         <div className="text-center mb-8">
+
+          
           <Image 
             src="/perfil-n-d.png" 
             alt="Profile" 
