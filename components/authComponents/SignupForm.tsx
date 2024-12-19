@@ -4,6 +4,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { Lock, User, Mail } from 'lucide-react';
+import axios from "axios";
 
 
 function SignupForm() {
@@ -16,8 +17,11 @@ function SignupForm() {
         }
     });
     
-    const onSubmit = handleSubmit(data => {
-        console.log(data);
+    const onSubmit = handleSubmit(async (data) => {
+
+        const response = await axios.post('/api/auth/register', data);
+
+        console.log(response);
     })
 
 
