@@ -4,6 +4,9 @@ import NextAuth from "next-auth";
 import CreadentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
 
+import bcrypt from "bcrypt";
+
+
 const handler = NextAuth({
     providers: [
         
@@ -30,13 +33,21 @@ const handler = NextAuth({
                 //Si no encuentra al usuario
                 if (!userFound) throw new Error("Usuario Inválido!");
 
-                //Si la contraseña es válida
-                const validPassword = await userFound.password === password
+
+                // //Si la contraseña es válida
+                // const validPassword = await userFound.password === password
+
+                //esto reemplaza lo de arriba porque se desencripta la contraseña
+                const validPassword = await bcrypt.compare(
+                    password,
+                    userFound.password
+                );
 
                 //Si la contraseña es inválida
                 if (!validPassword) throw new Error("Contraseña Inválida");
 
-                
+
+                //si todo sale bien devuelve esto
                 return {
                     id: userFound.id + '',
                     name: userFound.name,
