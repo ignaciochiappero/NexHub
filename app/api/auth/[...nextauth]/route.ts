@@ -2,6 +2,7 @@
 
 import NextAuth from "next-auth";
 import CreadentialsProvider from "next-auth/providers/credentials";
+import prisma from "@/libs/prisma";
 
 const handler = NextAuth({
     providers: [
@@ -17,8 +18,30 @@ const handler = NextAuth({
                 password: { label: "Password", type: "password" }
             },
             
-            async authorize() {
-                return null
+            async authorize(credentials: any, req) {
+
+                const {email, password} = credentials;
+
+                const userFound = await prisma.user.findUnique({where: {
+                    email
+                  },
+                });
+
+                //Si no encuentra al usuario
+                if (!userFound) throw new Error("Usuario Inválido!");
+
+                //Si la contraseña es válida
+                const validPassword = await userFound.password === password
+
+                //Si la contraseña es inválida
+                if (!validPassword) throw new Error("Contraseña Inválida");
+
+                
+                return {
+                    id: userFound.id + '',
+                    name: userFound.name,
+                    email: userFound.email,
+                };
             } 
 
         })

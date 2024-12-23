@@ -4,6 +4,10 @@
 import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import { Lock, Mail } from 'lucide-react';
+import { signIn } from "next-auth/react";
+
+import { useRouter } from "next/navigation";
+
 
 function SigninForm() {
 
@@ -14,8 +18,25 @@ function SigninForm() {
         }
     });
     
-    const onSubmit = handleSubmit(data => {
+    const router = useRouter();
+
+    const onSubmit = handleSubmit(async (data) => {
         console.log(data);
+        const res = await signIn('credentials', {
+            redirect: false,
+            email: data.email,
+            password: data.password
+        });
+        
+
+        //Si la respuesta es negativa
+        if( !res?.ok) {
+            console.log(res);
+        }
+
+        //Si la respuesta es exitosa
+        router.push('/dashboard');
+        
     })
 
   return (

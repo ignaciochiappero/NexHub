@@ -5,6 +5,9 @@ import Navbar from "@/components/navbar/Navbar";
 
 
 
+
+
+
 //FUENTES
 
 const geistSans = localFont({
@@ -63,7 +66,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
+      
+
+
+
       <body
         className={`${blenderMayus.variable} ${blenderMedium.variable} ${blenderNormal.variable} ${blenderThin.variable} ${blenderBold.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
