@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+//prisma\schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -11,12 +10,31 @@ datasource db {
 }
 
 model User {
-  
-  id Int @id @default(autoincrement())
-  name String
-  email String  @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
+
+	//Tenemos que crear como la colección donde se van a 
+	//almacenar los proyectos de cada usuario, esta es la 
+	//relación
+  projects Project[]
+}
+
+model Project {
+	//Campos de contenido
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+
+  //FK -> Esta va a ser la relación
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+	//Otros campos de contenido
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
