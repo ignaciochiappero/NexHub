@@ -6,6 +6,9 @@ import { useForm, Controller } from "react-hook-form";
 import { Lock, User, Mail } from 'lucide-react';
 import axios from "axios";
 
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 function SignupForm() {
 
@@ -16,12 +19,38 @@ function SignupForm() {
             name: "",
         }
     });
+
+
+    const router = useRouter();
     
     const onSubmit = handleSubmit(async (data) => {
 
         const response = await axios.post('/api/auth/register', data);
 
-        console.log(response);
+        if (response.status === 201) {
+            
+            const result = await signIn('credentials', {
+                email: response.data.email,
+                password: data.password,
+                redirect: false
+            })
+
+            if (!result.ok) {
+                console.log(result.error);
+                return;
+            }
+
+
+            /* TODO: Esto quizá después se
+               saca ya que el administrador
+               es el encargado de crear los
+               nuevos usuarios, no necesita
+               que se lo redireccione al 
+               dashboard del user creado */
+            router.push('/dashboard');
+
+
+        }
     })
 
 

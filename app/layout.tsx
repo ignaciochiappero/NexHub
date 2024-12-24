@@ -1,9 +1,12 @@
+//app\layout.tsx
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
+import NavbarCustom from "@/components/navbarCustom/NavbarCustom";
 
-
+import ContextProvider from "@/context/GlobalContext";
 
 
 
@@ -76,10 +79,14 @@ export default function RootLayout({
         className={`${blenderMayus.variable} ${blenderMedium.variable} ${blenderNormal.variable} ${blenderThin.variable} ${blenderBold.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         
-        <div className=" mt-10 flex justify-center -mb-10">
+        <ContextProvider>
+          <div className=" mt-10 flex justify-center -mb-10">
 
-          <Navbar/>
-        </div>
+          <NavbarCustom/>
+          {/* <Navbar/> */}
+
+          </div>
+        </ContextProvider>
 
 
 
