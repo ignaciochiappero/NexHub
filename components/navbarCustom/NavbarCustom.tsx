@@ -26,8 +26,8 @@ function NavbarCustom() {
             </li>
 
             <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
-                <Link href="/auth/register">
-                    Register
+                <Link href="/admin/users">
+                    Administration
                 </Link>
             </li>
 

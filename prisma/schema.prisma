@@ -21,7 +21,7 @@ model User {
 	//Tenemos que crear como la colección donde se van a 
 	//almacenar los proyectos de cada usuario, esta es la 
 	//relación
-  projects Project[]
+  projects Project[] 
 }
 
 model Project {
@@ -32,7 +32,7 @@ model Project {
 
   //FK -> Esta va a ser la relación
   userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 	//Otros campos de contenido
   createdAt DateTime @default(now())

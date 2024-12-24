@@ -41,13 +41,8 @@ function SignupForm() {
             }
 
 
-            /* TODO: Esto quizá después se
-               saca ya que el administrador
-               es el encargado de crear los
-               nuevos usuarios, no necesita
-               que se lo redireccione al 
-               dashboard del user creado */
-            router.push('/dashboard');
+            /* Esto redirecciona al panel de registro */
+            router.push('/admin/users');
 
 
         }
