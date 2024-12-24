@@ -1,13 +1,14 @@
 //app\api\auth\[...nextauth]\route.ts
 
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CreadentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
 
 import bcrypt from "bcrypt";
 
-
-const handler = NextAuth({
+//Creamos una constante donde guardar todo para 
+//exportarla a otros lados de la app
+export const authOptions: AuthOptions = {
     providers: [
         
         CreadentialsProvider({
@@ -21,6 +22,7 @@ const handler = NextAuth({
                 password: { label: "Password", type: "password" }
             },
             
+
             async authorize(credentials: any, req) {
 
                 const {email, password} = credentials;
@@ -59,6 +61,39 @@ const handler = NextAuth({
     ],
 
 
+    /* Con esto sacamos los datos que 
+       vienen en el token */
+    callbacks: {
+        async jwt ({token, user}) {
+            
+
+            /* Creamos una nueva propiedad
+               en el token que sea id, y 
+               guarda el valor de user.id */
+            if (user) {
+                token.id = user.id;
+            }
+
+            return token;
+        },
+
+
+        //creamos el id de la session y lo guardamos como propiedad
+        //para luego extraerla
+        async session ({session, token}) {
+            
+            if (token) {
+                session.user.id = token.sub as string;
+            }
+
+            console.log({session})
+            console.log({token})
+            
+            return session;
+        }
+    },
+
+
 
     /*Acá abajo vamos a indicar qué formulario 
     queremos que use Next Auth para iniciar sesión
@@ -67,7 +102,9 @@ const handler = NextAuth({
         signIn: "/auth/login",
 
     },
-});
+}
+
+const handler = NextAuth(authOptions);
 
 
 export {handler as GET, handler as POST};
