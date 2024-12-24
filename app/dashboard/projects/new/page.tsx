@@ -1,10 +1,12 @@
 
-//app\dashboard\tasks\new\page.tsx
+//app\dashboard\projects\new\page.tsx
 
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+
+import { useRouter } from "next/navigation";
 
 function TaskNewPage() {
 
@@ -15,11 +17,17 @@ function TaskNewPage() {
         }
     });
 
+    const router = useRouter();
+
 
     const onSubmit = handleSubmit(async(data) => {
-        console.log(data);
         const res = await axios.post("/api/projects", data);
-        console.log(res);
+
+        //si la tarea fue creada con éxito entonces redireccionar
+        if (res.status === 201) {
+            router.push("/dashboard");
+            router.refresh();
+        }
     })
 
 
