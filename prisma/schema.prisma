@@ -17,15 +17,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-
-	//Tenemos que crear como la colección donde se van a 
-	//almacenar los proyectos de cada usuario, esta es la 
-	//relación
-  projects Project[] 
+  //Tenemos que crear como la colección donde se van a 
+  //almacenar los proyectos de cada usuario, esta es la 
+  //relación
+  projects Project[]
+  posts    Post[]
 }
 
 model Project {
-	//Campos de contenido
+  //Campos de contenido
   id          Int    @id @default(autoincrement())
   title       String
   description String
@@ -34,7 +34,18 @@ model Project {
   userId Int
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-	//Otros campos de contenido
+  //Otros campos de contenido
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Post {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }

@@ -27,25 +27,27 @@ function SignupForm() {
 
         const response = await axios.post('/api/auth/register', data);
 
-        if (response.status === 201) {
+        router.push('/admin/users');
+
+        // if (response.status === 201) {
             
-            const result = await signIn('credentials', {
-                email: response.data.email,
-                password: data.password,
-                redirect: false
-            })
+        //     const result = await signIn('credentials', {
+        //         email: response.data.email,
+        //         password: data.password,
+        //         redirect: false
+        //     })
 
-            if (!result.ok) {
-                console.log(result.error);
-                return;
-            }
-
-
-            /* Esto redirecciona al panel de registro */
-            router.push('/admin/users');
+        //     if (!result.ok) {
+        //         console.log(result.error);
+        //         return;
+        //     }
 
 
-        }
+        //     /* Esto redirecciona al panel de registro */
+        //     router.push('/admin/users');
+
+
+        // }
     })
 
 

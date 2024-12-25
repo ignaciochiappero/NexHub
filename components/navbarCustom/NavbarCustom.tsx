@@ -26,6 +26,12 @@ function NavbarCustom() {
             </li>
 
             <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
+                <Link href="/blog">
+                    Blog
+                </Link>
+            </li>
+
+            <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
                 <Link href="/admin/users">
                     Administration
                 </Link>
@@ -55,9 +61,9 @@ function NavbarCustom() {
                 {
                     session && (
                         
-                        <p>
+                        <Link href="/dashboard/profile">
                             {session?.user?.name}
-                        </p>
+                        </Link>
     
                         
                     )

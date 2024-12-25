@@ -120,10 +120,14 @@ export default function ProfilePage() {
   };
 
   return (
+
     <div className="mt-40 p-4 font-[family-name:var(--blender-medium)] flex justify-center">
-      <div className="w-full max-w-6xl bg-[#212121] rounded-3xl p-6 grid md:grid-cols-3 gap-6">
+
+      <div className="w-full max-w-6xl bg-[#212121] rounded-3xl p-6 grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6">
+
         {/* Profile Image and Basic Info */}
         <div className="col-span-1 flex flex-col items-center">
+
           <div className="relative group mb-6">
             <Image
               src={currentFrame}

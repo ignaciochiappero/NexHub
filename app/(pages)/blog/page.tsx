@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
 
+
 // Types for posts
 type Post = {
   id: number;
