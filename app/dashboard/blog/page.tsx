@@ -4,23 +4,59 @@ import Image from "next/image";
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Heart, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 import PostSection from "./components/PostSection";
+import LikeButton from "./components/LikeButton";
 
+//CARGAR TODOS LOS POST
+async function loadData() {
+  const session = await getServerSession(authOptions);
+  if(!session) throw new Error("No estas logueado");
+  
+  const user = await prisma.user.findUnique({
+    where: { email: session.user?.email }
+  });
 
-async function loadData() { 
-    const session = await getServerSession(authOptions);
+  if (!user) throw new Error("Usuario no encontrado");
 
-    if(!session) throw new Error("No estas logueado");
+  const posts = await prisma.post.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: true,
+      likes: true,
+    },
+  });
 
-    return await prisma.post.findMany({
-        orderBy: {
-            createdAt: "desc", // Orden descendente
-        },
-    });
+  return posts.map(post => ({
+    ...post,
+    isLiked: post.likes.some(like => like.userId === user.id),
+    likesCount: post.likes.length
+  }));
 }
 
+
+//Función para formato de fecha
+function formatTimeAgo(date: Date): string {
+  const now = new Date();
+  const diff = Math.abs(now.getTime() - date.getTime());
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  //const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  if(minutes < 1) {
+    return `hace un momento`;
+  }
+  else if (minutes < 60) {
+      return `hace ${minutes} ${minutes === 1 ? "minuto" : "minutos"}`;
+  } else if (hours < 24) {
+      return `hace ${hours} ${hours === 1 ? "hora" : "horas"}`;
+  } else {
+      return date.toLocaleDateString(); // Devuelve la fecha en formato local
+  }
+}
 
 
 
@@ -63,13 +99,12 @@ async function BlogPage() {
               <div>
 
                 <h3 className="font-bold">
-                    Autor: {post.userId}
+                    {post.user.name}
                     {/* {post.author} */}
                 </h3>
                 <p className="text-sm text-gray-400">
                     
-                    Publicado el: 
-                    {/* {post.timestamp} */}
+                {formatTimeAgo(new Date(post.createdAt))}
                 </p>
               </div>
             </div>
@@ -90,11 +125,10 @@ async function BlogPage() {
 
             {/* Post Interactions */}
             <div className="flex justify-start text-gray-300 gap-4">
-              <button className="flex items-center hover:text-pink-500">
-                <Heart className="mr-2" /> 
-                12
-                {/* {post.likes} */}
-              </button>
+              
+              <LikeButton 
+              postId={post.id}   initialLikes={post.likesCount}  
+              initialIsLiked={post.isLiked} />
 
               <button className="flex items-center hover:text-blue-500 ">
                 <MessageCircle className="mr-2" /> 

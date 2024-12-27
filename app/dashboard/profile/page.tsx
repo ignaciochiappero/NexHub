@@ -26,7 +26,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 async function ProfilePage() {
 
     const datos = await loadData();
-    console.log(datos)
+    
 
     const user = datos[0];
 

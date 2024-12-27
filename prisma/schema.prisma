@@ -22,6 +22,7 @@ model User {
   //relación
   projects Project[]
   posts    Post[]
+  likes    Like[]
 }
 
 model Project {
@@ -40,12 +41,22 @@ model Project {
 }
 
 model Post {
-  id      Int    @id @default(autoincrement())
-  content String
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Like[] // Cambiamos el campo likes por una relación
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
 }
