@@ -19,38 +19,53 @@ function NavbarCustom() {
     <div className="flex font-[family-name:var(--blender-bold)] text-lg">
 
         <ul className="flex gap-2 text-black">
-            <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
-                <Link href="/">
+            <li >
+                <Link 
+                href="/"
+                className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all"
+                >
                     Home
                 </Link>
             </li>
 
-            <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
-                <Link href="/blog">
+            <li>
+                <Link 
+                href="/dashboard/blog"
+                className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all"
+                >
                     Blog
                 </Link>
             </li>
 
-            <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
-                <Link href="/admin/users">
+            <li>
+                <Link 
+                href="/admin"
+                className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all"
+                >
                     Administration
                 </Link>
             </li>
 
-            <li className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all">
-                <Link href="/dashboard">
+            <li >
+                <Link 
+                href="/dashboard"
+                className="bg-white rounded-xl p-2 hover:bg-stone-200 transition-all"
+                >
                     Dashboard
                 </Link>
             </li>
 
             {/* Componente personalizado */}
-            <li className="bg-yellow-400 rounded-xl p-2 transition-all">
+            <li >
                 
                 
                 {/* Si no hay sesión, mostrar el componente Login */}
                 {
                     !session && (
-                        <Link href="/auth/login">
+                        <Link 
+                        href="/auth/login"
+                        className="bg-yellow-400 rounded-xl p-2 transition-all"
+                        >
                             Login
                         </Link>
                     ) 
@@ -61,7 +76,10 @@ function NavbarCustom() {
                 {
                     session && (
                         
-                        <Link href="/dashboard/profile">
+                        <Link 
+                        href="/dashboard/profile"
+                        className="bg-yellow-400 rounded-xl p-2 transition-all"
+                        >
                             {session?.user?.name}
                         </Link>
     
@@ -73,11 +91,20 @@ function NavbarCustom() {
 
 
             {/* Componente LogOut */}
-            <li className="bg-red-400 hover:bg-red-500 rounded-xl p-2 transition-all">
+            <li >
                 
-                <button onClick={() => signOut()}>
-                    Log Out
-                </button>
+                <Link
+                href="#"
+                className="bg-red-400 hover:bg-red-500 rounded-xl p-2 transition-all h-9"
+                >
+                
+                    <button 
+                    onClick={() => signOut()}
+                    >
+                        Log Out
+                    </button>
+                
+                </Link>
 
             </li>
             
