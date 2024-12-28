@@ -4,9 +4,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
-import NavbarCustom from "@/components/navbarCustom/NavbarCustom";
+import NavbarCustom from "@/components/UserDropdown/UserDropdown";
 
 import ContextProvider from "@/context/GlobalContext";
+import WheelNavbar from "@/components/newNavbar/WheelNavbar";
+import UserDropdown from "@/components/UserDropdown/UserDropdown";
 
 
 
@@ -80,10 +82,13 @@ export default function RootLayout({
       >
         
         <ContextProvider>
-          <div className=" mt-10 flex justify-center -mb-10">
+          <div className=" flex justify-center -mb-10">
 
-          <NavbarCustom/>
           {/* <Navbar/> */}
+
+          <UserDropdown/>
+
+          <WheelNavbar/>
 
           </div>
         </ContextProvider>

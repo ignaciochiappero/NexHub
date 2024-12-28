@@ -35,7 +35,7 @@ function SigninForm() {
         }
 
         //Si la respuesta es exitosa
-        router.push('/dashboard');
+        router.push('/dashboard/profile');
         
     })
 

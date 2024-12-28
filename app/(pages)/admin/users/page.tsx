@@ -47,7 +47,7 @@ export default function AdminUserPage() {
 
             <div className="flex w-screen justify-between px-10 bg-stone-900 p-2">
 
-                <p className="text-3xl">Administrar Usuarios</p>
+                <p className="text-3xl pl-20">Administrar Usuarios</p>
                 
                 
                 <Link href="/auth/register">
