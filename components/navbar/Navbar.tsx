@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import NavbarItems from "./NavbarItems";
 import { motion, AnimatePresence } from "framer-motion";
-import HamburgerIcon from "./hambIcon/HamburguerIcon";
+import HamburgerIcon from "../newNavbar/hambIcon/HamburguerIcon";
 
 const Navbar = () => {
   const [isToggled, setToggle] = useState(false);

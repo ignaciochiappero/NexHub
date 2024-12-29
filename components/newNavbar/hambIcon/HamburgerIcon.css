@@ -1,3 +1,6 @@
+
+/*components\newNavbar\hambIcon\HamburgerIcon.css*/
+
 #nav-icon3 { 
   width: 20px; /* Contenedor más pequeño */
   height: 15px; /* Contenedor más pequeño */
@@ -51,3 +54,19 @@
   width: 0%;
   left: 50%;
 }
+
+#hamburger-container {
+  width: 50px; /* Tamaño total del fondo circular */
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #353535; /* Color de fondo del círculo */
+  border-radius: 50%;
+  transition: background-color 0.3s ease; /* Efecto al hover */
+}
+
+#hamburger-container:hover {
+  background-color: #454545; /* Color más oscuro al hover */
+}
+
