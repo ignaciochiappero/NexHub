@@ -67,7 +67,7 @@ model Logro {
   title       String
   description String
 
-  premios     Premio[]
+  //premios     Premio[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
@@ -76,9 +76,9 @@ model Logro {
 model Premio {
   id          Int    @id @default(autoincrement())
   
-  titulo      String
+  titulo      String 
   descripcion String
   
-  logroId     Int
-  logro       Logro  @relation(fields: [logroId], references: [id], onDelete: Cascade)
+  //logroId     Int 
+  //logro       Logro  @relation(fields: [logroId], references: [id], onDelete: Cascade)
 }

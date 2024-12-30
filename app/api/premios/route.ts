@@ -16,17 +16,20 @@ export async function GET() {
 
   export async function POST(req: NextRequest) {
     
-    const { titulo, descripcion, logroId } = await req.json();
+    //TODO: Luego agregar la relacion con el logro
+    //    const { titulo, descripcion, logroId } = await req.json();
+
+    const { titulo, descripcion } = await req.json();
     const premioCreated = await prisma.premio.create({
       data: {
         
         titulo,
         descripcion,
-        logroId: parseInt(logroId)
+        //logroId: parseInt(logroId)
       },
-      include: {
-        logro: true,
-      }
+      // include: {
+      //   logro: true,
+      // }
     })
     return new NextResponse(JSON.stringify(premioCreated), { status: 200 });
   }

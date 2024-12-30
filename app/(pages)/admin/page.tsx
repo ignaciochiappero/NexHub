@@ -37,7 +37,7 @@ const AdminPanel = () => {
 
           {/* BOTON 2 */}
           <Link
-            href="/admin/logros" 
+            href="/admin/logros/panelPremios" 
             className="font-[family-name:var(--blender-medium)] group relative h-[500px] bg-[#353535] rounded-2xl overflow-hidden transition-all duration-700 ease-out hover:bg-[#454545] hover:scale-105 hover:-rotate-1 hover:shadow-[0_0_40px_rgba(234,179,8,0.3)] active:scale-95 active:rotate-0"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

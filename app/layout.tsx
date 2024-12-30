@@ -3,8 +3,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/navbar/Navbar";
-import NavbarCustom from "@/components/UserDropdown/UserDropdown";
 
 import ContextProvider from "@/context/GlobalContext";
 import WheelNavbar from "@/components/newNavbar/WheelNavbar";

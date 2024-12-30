@@ -1,4 +1,3 @@
-// Esta es la dinámica de category xd
 // app\api\logros\[logroId]\route.ts
 
 import prisma from "@/libs/prisma";
@@ -48,11 +47,15 @@ export async function PUT(
   const parametroId = params.premioId; // ID dinámico desde la URL
 
   try {
-    // Obtener los datos enviados en el cuerpo de la solicitud
-    const { titulo, descripcion, logroId } = await req.json();
+
+    //TODO: Luego agregar la relacion con el logro
+    //const { titulo, descripcion, logroId } = await req.json();
+
+
+    const { titulo, descripcion } = await req.json();
 
     // Validar que el nuevo nombre no esté vacío
-    if (!titulo || !descripcion || !logroId) {
+    if (!titulo || !descripcion) {
       return new NextResponse(
         JSON.stringify({ error: "Faltan completar campos" }),
         { status: 400 }
@@ -69,7 +72,7 @@ export async function PUT(
       data: { 
         titulo, 
         descripcion, 
-        logroId: parseInt(logroId) 
+        //logroId: parseInt(logroId) 
     },
       }
     );
