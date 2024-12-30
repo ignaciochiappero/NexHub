@@ -61,4 +61,24 @@ model Like {
   @@unique([postId, userId])
 }
 
+model Logro {
+  id          Int @id @default(autoincrement())
 
+  title       String
+  description String
+
+  premios     Premio[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Premio {
+  id          Int    @id @default(autoincrement())
+  
+  titulo      String
+  descripcion String
+  
+  logroId     Int
+  logro       Logro  @relation(fields: [logroId], references: [id], onDelete: Cascade)
+}
