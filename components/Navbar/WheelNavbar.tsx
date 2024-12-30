@@ -1,38 +1,52 @@
 
-//components\newNavbar\WheelNavbar.tsx
+//components\Navbar\WheelNavbar.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { Home, Shield, Settings, Users, Trophy } from 'lucide-react';
-import HamburgerIcon from './hambIcon/HamburguerIcon';
-import Link from 'next/link';
+import React, { useState, useRef, useEffect } from "react";
+import { Home, Shield, Settings, Users, Trophy } from "lucide-react";
+import HamburgerIcon from "./hambIcon/HamburguerIcon";
+import Link from "next/link";
 
 const RadialNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navbarRef = useRef<HTMLDivElement>(null); // Ref para el Navbar
 
   const menuItems = [
-    { id: 1, icon: Home, angle: 0, label: 'Inicio', site: '/' },
-    { id: 2, icon: Users, angle: 22.5, label: 'Blog', site: '/dashboard/blog' },
-    { id: 3, icon: Shield, angle: 45, label: 'Administración', site: '/admin' },
-    { id: 4, icon: Trophy, angle: 67.5, label: 'Logros', site: '/logros' },
-    { id: 5, icon: Settings, angle: 90, label: 'Configuración', site: '/dashboard/profile' },
+    { id: 1, icon: Home, angle: 0, label: "Inicio", site: "/" },
+    { id: 2, icon: Users, angle: 22.5, label: "Blog", site: "/dashboard/blog" },
+    { id: 3, icon: Shield, angle: 45, label: "Administración", site: "/admin" },
+    { id: 4, icon: Trophy, angle: 67.5, label: "Logros", site: "/logros" },
+    { id: 5, icon: Settings, angle: 90, label: "Configuración", site: "/dashboard/profile" },
   ];
 
   const radius = 210;
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
+      setIsOpen(false); // Cierra el menú si el clic fue fuera del Navbar
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   const handleLinkClick = () => {
-    setIsOpen(false); // Cierra el menú y restablece el ícono al estado inicial
+    setIsOpen(false); // Cierra el menú al hacer clic en un enlace
   };
 
   const getTooltipPosition = (angle: number) => {
     if (angle === 0) {
-      return 'top-full mt-2 left-1/2 -translate-x-1/2 -translate-y-3 group-hover:translate-y-0';
+      return "top-full mt-2 left-1/2 -translate-x-1/2 -translate-y-3 group-hover:translate-y-0";
     }
-    return 'left-full ml-2 top-1/2 -translate-y-1/2 -translate-x-3 group-hover:translate-x-0';
+    return "left-full ml-2 top-1/2 -translate-y-1/2 -translate-x-3 group-hover:translate-x-0";
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-50 font-[family-name:var(--blender-medium)]">
+    <div ref={navbarRef} className="fixed top-0 left-0 z-50 font-[family-name:var(--blender-medium)]">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative z-50 group bg-[#353535] rounded-full hover:bg-[#454545] transition-colors duration-300 m-6"
@@ -46,10 +60,10 @@ const RadialNavbar = () => {
         className={`absolute top-0 left-0 w-80 h-80 
         bg-[#353535]/20 backdrop-blur-md
         transition-all duration-500 origin-top-left
-        ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
+        ${isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
         style={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          borderBottomRightRadius: '100%',
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+          borderBottomRightRadius: "100%",
         }}
       />
 
@@ -63,17 +77,17 @@ const RadialNavbar = () => {
           return (
             <div key={id} className="group">
               <Link
-                href={site || '/'}
+                href={site || "/"}
                 onClick={handleLinkClick} // Cierra el menú al hacer clic en un enlace
                 className={`absolute p-3 bg-white rounded-full 
               hover:bg-gray-100 hover:scale-110 transition-all duration-500 
               transform group shadow-lg
-              ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
+              ${isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}
                 style={{
                   transform: `translate(${isOpen ? x : 0}px, ${isOpen ? y : 0}px) scale(${isOpen ? 1 : 0})`,
                   transitionDelay: `${isOpen ? delay : 0}ms`,
-                  left: '24px',
-                  top: '24px',
+                  left: "24px",
+                  top: "24px",
                 }}
                 aria-label={label}
               >
@@ -91,7 +105,7 @@ const RadialNavbar = () => {
           );
         })}
       </div>
-    </nav>
+    </div>
   );
 };
 

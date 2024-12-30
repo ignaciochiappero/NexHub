@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import ContextProvider from "@/context/GlobalContext";
-import WheelNavbar from "@/components/newNavbar/WheelNavbar";
+import WheelNavbar from "@/components/Navbar/WheelNavbar";
 import UserDropdown from "@/components/UserDropdown/UserDropdown";
 
 
