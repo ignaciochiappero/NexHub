@@ -34,7 +34,7 @@ async function ProfilePage() {
   
 
     return (
-        <div className="mt-40 p-4 font-[family-name:var(--blender-medium)] flex flex-col justify-center">
+        <div className="mt-40 p-4 font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center ">
             
             <p className='text-3xl text-center'>
             
@@ -43,7 +43,7 @@ async function ProfilePage() {
             </p>
 
 
-            <div className="w-full max-w-6xl bg-[#212121] rounded-3xl p-6 grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="w-full max-w-6xl bg-[#212121] rounded-3xl p-6 flex gap-6">
 
 
                 {/* INFO PERFIL */}
@@ -51,7 +51,7 @@ async function ProfilePage() {
                 
                 <span className="text-2xl">{user.name} </span>
 
-                <span>Cargo: </span>
+                <span> {user.role} </span>
 
                 <span className="mt-2 text-stone-500">{user.email}</span>   
 

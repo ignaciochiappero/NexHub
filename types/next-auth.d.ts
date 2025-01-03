@@ -8,7 +8,8 @@ declare module "next-auth" {
         user: {
             email: any;
             name: ReactNode;
-            id: string
+            id: string;
+            role: "ADMIN" | "USER";
         };
     }
 }

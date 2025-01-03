@@ -1,6 +1,13 @@
+
+
 import Link from 'next/link';
 
 const AdminPanel = () => {
+
+
+
+
+
   return (
     <div className="min-h-screen bg-[#1A1A1A] p-6 pt-20 font-[family-name:var(--blender-bold)]">
 

@@ -1,29 +1,36 @@
-
-//components\Navbar\WheelNavbar.tsx
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Home, Shield, Settings, Users, Trophy } from "lucide-react";
+import { Home, Shield, Settings, Users, Trophy } from 'lucide-react';
 import HamburgerIcon from "./hambIcon/HamburguerIcon";
 import Link from "next/link";
 
-const RadialNavbar = () => {
+type UserData = {
+  id: number;
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'USER';
+} | null;
+
+const RadialNavbar = ({ userData }: { userData: UserData }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const navbarRef = useRef<HTMLDivElement>(null); // Ref para el Navbar
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
     { id: 1, icon: Home, angle: 0, label: "Inicio", site: "/" },
     { id: 2, icon: Users, angle: 22.5, label: "Blog", site: "/dashboard/blog" },
-    { id: 3, icon: Shield, angle: 45, label: "Administración", site: "/admin" },
+    { id: 3, icon: Shield, angle: 45, label: "Administración", site: "/admin", adminOnly: true },
     { id: 4, icon: Trophy, angle: 67.5, label: "Logros", site: "/logros" },
     { id: 5, icon: Settings, angle: 90, label: "Configuración", site: "/dashboard/profile" },
   ];
+
+  const filteredMenuItems = menuItems.filter(item => !item.adminOnly || userData?.role === 'ADMIN');
 
   const radius = 210;
 
   const handleClickOutside = (event: MouseEvent) => {
     if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
-      setIsOpen(false); // Cierra el menú si el clic fue fuera del Navbar
+      setIsOpen(false);
     }
   };
 
@@ -35,7 +42,7 @@ const RadialNavbar = () => {
   }, []);
 
   const handleLinkClick = () => {
-    setIsOpen(false); // Cierra el menú al hacer clic en un enlace
+    setIsOpen(false);
   };
 
   const getTooltipPosition = (angle: number) => {
@@ -43,6 +50,14 @@ const RadialNavbar = () => {
       return "top-full mt-2 left-1/2 -translate-x-1/2 -translate-y-3 group-hover:translate-y-0";
     }
     return "left-full ml-2 top-1/2 -translate-y-1/2 -translate-x-3 group-hover:translate-x-0";
+  };
+
+  const calculatePosition = (index: number, totalItems: number) => {
+    const angle = (index / (totalItems - 1)) * 90;
+    const angleInRadians = (90 - angle) * (Math.PI / 180);
+    const x = radius * Math.cos(angleInRadians);
+    const y = radius * Math.sin(angleInRadians);
+    return { x, y, angle };
   };
 
   return (
@@ -68,17 +83,15 @@ const RadialNavbar = () => {
       />
 
       <div className="absolute top-0 left-0">
-        {menuItems.map(({ id, icon: Icon, angle, label, site }, index) => {
+        {filteredMenuItems.map(({ id, icon: Icon, label, site }, index) => {
+          const { x, y, angle } = calculatePosition(index, filteredMenuItems.length);
           const delay = index * 100;
-          const angleInRadians = (90 - angle) * (Math.PI / 180);
-          const x = radius * Math.cos(angleInRadians);
-          const y = radius * Math.sin(angleInRadians);
 
           return (
             <div key={id} className="group">
               <Link
                 href={site || "/"}
-                onClick={handleLinkClick} // Cierra el menú al hacer clic en un enlace
+                onClick={handleLinkClick}
                 className={`absolute p-3 bg-white rounded-full 
               hover:bg-gray-100 hover:scale-110 transition-all duration-500 
               transform group shadow-lg
@@ -91,7 +104,7 @@ const RadialNavbar = () => {
                 }}
                 aria-label={label}
               >
-                <Icon className="w-5 h-5 text-gray-800 group-hover:scale-125  transition-all duration-500" />
+                <Icon className="w-5 h-5 text-gray-800 group-hover:scale-125 transition-all duration-500" />
                 <div
                   className={`absolute whitespace-nowrap px-2 py-1 text-base
                 bg-white text-gray-900 rounded-md opacity-0
@@ -110,3 +123,4 @@ const RadialNavbar = () => {
 };
 
 export default RadialNavbar;
+

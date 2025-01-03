@@ -28,10 +28,16 @@ async function loadProjects() {
 }
 
 
+
+
 async function DashboardPage() {
 
   const projects = await loadProjects();
+  
+  
   console.log(projects)
+  
+  
 
 
 
