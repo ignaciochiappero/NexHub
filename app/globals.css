@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1d1d1d;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+
+/*NAVBAR*/
+
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-style: none;
+  background: white;
+  color: black;
+  cursor: pointer;
+  z-index: 1;
+  
+}
+
+/* .navbar {
+  width: 250px;
+  height: 700px;
+  margin: none;
+  border-radius: 16px;
+  /*background-color: turquoise;*/
+  /* background: linear-gradient(to top, #8e2de2, #4a00e0); 
+}  */
+
+.navList {
+  padding: 100px 70px 200px 70px;
+}
+
+.nav-item {
+  font-size: 20px;
+  list-style:circle;
+  color: white;
+  /* cursor: pointer; */
+ 
+}
+
+h4 {
+  margin-block-start: 1px;
+  margin-block-end: 1px;
+}
+
+ .navbar-item-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #000428, #004e92);
+}
+
+.navbar-item-rect {
+  width: 30px;
+  height: 30px;
+} 
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+
+/*SCROLL BAR FACHA*/
+
+/* Estilo para navegadores webkit (Chrome, Safari, Edge moderno) */
+::-webkit-scrollbar {
+  width: 12px;  /* Ancho de la barra de scroll */
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;  /* Color del fondo */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;  /* Color de la barra */
+  border-radius: 8px;
+  border: 2px solid #1a1a1a;  /* Borde con el color del fondo */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;  /* Color al pasar el mouse */
+}
+
+/* Estilo para Firefox */
+* {
+  scrollbar-width: thin;  /* "auto" o "thin" */
+  scrollbar-color: #333 #1a1a1a;  /* Color de la barra y el fondo */
+}
+
+
+/*/////////////////*/
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+

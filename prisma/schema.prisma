@@ -1,0 +1,183 @@
+//prisma\schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  image       String?   
+  birthday    DateTime  
+  location    String?   
+  company     String?   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  role        Role      @default(USER)
+
+  projects Project[]
+  // posts    Post[]
+  // likes    Like[]
+
+  posts         Post[]
+  comments      Comment[]
+  postLikes     PostLike[]
+  commentLikes  CommentLike[]
+
+  ConversationParticipant ConversationParticipant[]
+  Message                 Message[]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Project {
+  //Campos de contenido
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+
+  //FK -> Esta va a ser la relación
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //Otros campos de contenido
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   content   String
+//   userId    Int
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   likes     Like[] // Cambiamos el campo likes por una relación
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+// }
+
+// model Like {
+//   id        Int      @id @default(autoincrement())
+//   postId    Int
+//   userId    Int
+//   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   createdAt DateTime @default(now())
+
+//   @@unique([postId, userId])
+// }
+
+model Logro {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String
+  icon           String   @default("Trophy")
+  stepsProgress  Int      @default(0)
+  stepsFinal     Int      @default(1)
+  progress       Float    @default(0)
+  completed      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+}
+
+model Premio {
+  id Int @id @default(autoincrement())
+
+  titulo      String
+  descripcion String
+
+  //logroId     Int 
+  //logro       Logro  @relation(fields: [logroId], references: [id], onDelete: Cascade)
+}
+
+//PARA EL CHAT INTERNO ///////////////////
+model Conversation {
+  id           Int                       @id @default(autoincrement())
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  
+  //CHAT INTERNO
+  messages     Message[]
+  participants ConversationParticipant[]
+}
+
+model ConversationParticipant {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime     @default(now())
+  lastRead       DateTime     @default(now())
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String       @db.Text
+  conversationId Int
+  senderId       Int
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  isRead         Boolean      @default(false)
+}
+
+////////////////FIN CHAT INTERNO //////////
+
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     PostLike[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  postId    Int
+  userId    Int
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     CommentLike[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model PostLike {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model CommentLike {
+  id        Int      @id @default(autoincrement())
+  commentId Int
+  userId    Int
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, userId])
+}
