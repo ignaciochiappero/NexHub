@@ -49,7 +49,7 @@ export default async function BlogPage() {
   const { currentUser, posts } = await getBlogData();
 
   return (
-    <div className="min-h-screen bg-[#1A1A1A] p-6 pt-40 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen bg-[#1A1A1A] p-6 pt-28 font-[family-name:var(--blender-medium)]">
       <div className="max-w-2xl mx-auto">
         <h1 className="font-blender-mayus text-3xl text-white mb-6">Feed</h1>
         <BlogFeed initialPosts={posts} currentUser={currentUser} />
