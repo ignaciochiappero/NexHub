@@ -9,15 +9,15 @@ const AdminPanel = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#1A1A1A] p-6 pt-20 font-[family-name:var(--blender-bold)]">
+    <div className="min-h-screen bg-[#1A1A1A] p-6 pt-20 font-[family-name:var(--blender-bold)] flex items-center justify-center ">
 
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto ">
 
         <h1 className="text-4xl text-white mb-16 text-center font-bold tracking-wider">
           Panel de Administración
         </h1>
         
-        <div className="flex justify-center gap-8 px-4">
+        <div className="flex justify-center gap-8 px-4 ">
           
           
           {/* BOTON 1 */}
