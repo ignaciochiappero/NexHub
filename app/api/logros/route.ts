@@ -17,10 +17,7 @@ export async function GET() {
         title: true,
         description: true,
         icon: true,
-        stepsProgress: true,
         stepsFinal: true,
-        progress: true,
-        completed: true,
         createdAt: true,
       },
       orderBy: {
@@ -61,7 +58,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title, description, icon, stepsFinal, stepsProgress, progress, completed } = body;
+    const { title, description, icon, stepsFinal } = body;
 
     // Validar campos requeridos
     if (!title || !description || !icon || stepsFinal === undefined) {
@@ -81,9 +78,6 @@ export async function POST(req: NextRequest) {
         description,
         icon,
         stepsFinal: Number(stepsFinal),
-        stepsProgress: Number(stepsProgress || 0),
-        progress: Number(progress || 0),
-        completed: Boolean(completed || false),
       },
     });
 

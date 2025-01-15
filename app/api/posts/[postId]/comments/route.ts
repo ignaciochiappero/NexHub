@@ -1,3 +1,5 @@
+//app\api\posts\[postId]\comments\route.ts
+
 import { NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";

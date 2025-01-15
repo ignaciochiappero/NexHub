@@ -10,29 +10,30 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  name        String
-  email       String    @unique
-  password    String
-  image       String?   
-  birthday    DateTime  
-  location    String?   
-  company     String?   
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  role        Role      @default(USER)
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  image     String?
+  birthday  DateTime
+  location  String?
+  company   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  role      Role     @default(USER)
 
   projects Project[]
-  // posts    Post[]
-  // likes    Like[]
 
-  posts         Post[]
-  comments      Comment[]
-  postLikes     PostLike[]
-  commentLikes  CommentLike[]
+  posts        Post[]
+  comments     Comment[]
+  postLikes    PostLike[]
+  commentLikes CommentLike[]
 
   ConversationParticipant ConversationParticipant[]
   Message                 Message[]
+
+  achievements       UserAchievement[]
+  AchievementRequest AchievementRequest[]
 }
 
 enum Role {
@@ -55,38 +56,46 @@ model Project {
   updatedAt DateTime @default(now())
 }
 
-// model Post {
-//   id        Int      @id @default(autoincrement())
-//   content   String
-//   userId    Int
-//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   likes     Like[] // Cambiamos el campo likes por una relación
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @default(now())
-// }
-
-// model Like {
-//   id        Int      @id @default(autoincrement())
-//   postId    Int
-//   userId    Int
-//   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   createdAt DateTime @default(now())
-
-//   @@unique([postId, userId])
-// }
-
 model Logro {
-  id             Int      @id @default(autoincrement())
-  title          String
-  description    String
-  icon           String   @default("Trophy")
-  stepsProgress  Int      @default(0)
-  stepsFinal     Int      @default(1)
-  progress       Float    @default(0)
-  completed      Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String   @default("Trophy")
+  stepsFinal  Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  achievements       UserAchievement[]
+  AchievementRequest AchievementRequest[]
+}
+
+model UserAchievement {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  logroId       Int
+  stepsProgress Int      @default(0)
+  progress      Float    @default(0)
+  completed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logro Logro @relation(fields: [logroId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, logroId])
+}
+
+model AchievementRequest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  logroId   Int
+  step      Int
+  status    String   @default("pending") // "pending", "approved", "rejected"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logro Logro @relation(fields: [logroId], references: [id], onDelete: Cascade)
 }
 
 model Premio {
@@ -101,10 +110,10 @@ model Premio {
 
 //PARA EL CHAT INTERNO ///////////////////
 model Conversation {
-  id           Int                       @id @default(autoincrement())
-  createdAt    DateTime                  @default(now())
-  updatedAt    DateTime                  @updatedAt
-  
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   //CHAT INTERNO
   messages     Message[]
   participants ConversationParticipant[]
@@ -136,28 +145,27 @@ model Message {
 
 ////////////////FIN CHAT INTERNO //////////
 
-
 model Post {
-  id        Int       @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   content   String
   userId    Int
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes     PostLike[]
   comments  Comment[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Comment {
-  id        Int       @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   content   String
   postId    Int
   userId    Int
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes     CommentLike[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model PostLike {
