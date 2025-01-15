@@ -25,7 +25,7 @@ const RadialNavbar = ({ userData }: { userData: UserData }) => {
   const authenticatedMenuItems = [
     { id: 1, icon: Home, angle: 0, label: "Inicio", site: "/" },
     { id: 2, icon: Users, angle: 30, label: "Blog", site: "/dashboard/blog" },
-    { id: 3, icon: Trophy, angle: 60, label: "Logros", site: "/logros" },
+    { id: 3, icon: Trophy, angle: 60, label: "Logros", site: "/dashboard/logros" },
     { id: 4, icon: MessageCircle, angle: 90, label: "Mensajes", site: "/dashboard/messages" },
     { id: 5, icon: Shield, angle: 120, label: "Administración", site: "/admin", adminOnly: true },
   ];
