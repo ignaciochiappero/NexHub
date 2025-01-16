@@ -9,8 +9,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { conversationId: string } }
 ) {
-  // Espera los params antes de acceder a sus propiedades
-  const { conversationId } = await params;  // <<<< CORRECCIÓN AQUÍ
+  const { conversationId } = params;
   
   const session = await getServerSession(authOptions);
   
@@ -20,7 +19,7 @@ export async function GET(
 
   const messages = await prisma.message.findMany({
     where: {
-      conversationId: parseInt(conversationId),  // Ahora se usa `conversationId` directamente
+      conversationId: parseInt(conversationId),
       conversation: {
         participants: {
           some: {
@@ -51,8 +50,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { conversationId: string } }
 ) {
-  // Espera los params antes de acceder a sus propiedades
-  const { conversationId } = await params;  // <<<< CORRECCIÓN AQUÍ
+  const { conversationId } = params;
   
   const session = await getServerSession(authOptions);
   
@@ -65,7 +63,7 @@ export async function POST(
   const message = await prisma.message.create({
     data: {
       content,
-      conversationId: parseInt(conversationId),  // Ahora se usa `conversationId` directamente
+      conversationId: parseInt(conversationId),
       senderId: parseInt(session.user.id)
     },
     include: {
@@ -81,3 +79,4 @@ export async function POST(
 
   return new NextResponse(JSON.stringify(message), { status: 201 });
 }
+

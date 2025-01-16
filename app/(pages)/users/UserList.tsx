@@ -98,24 +98,38 @@ export default function UserList() {
     }
   };
   
-  //redireccion para mensajes
   const handleSendMessage = async (userId: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/conversations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ participantIds: [userId] }),
-      });
+      // First, check if a conversation already exists
+      const checkResponse = await fetch(`/api/conversations/check/${userId}`);
+      const existingConversation = await checkResponse.json();
 
-      if (!response.ok) {
-        throw new Error('Failed to create conversation');
+      let conversationId;
+
+      if (existingConversation) {
+        // If a conversation exists, use its ID
+        conversationId = existingConversation.id;
+      } else {
+        // If no conversation exists, create a new one
+        const createResponse = await fetch('/api/conversations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ participantIds: [userId] }),
+        });
+
+        if (!createResponse.ok) {
+          throw new Error('Failed to create conversation');
+        }
+
+        const newConversation = await createResponse.json();
+        conversationId = newConversation.id;
       }
 
-      const conversation = await response.json();
-      router.push(`/dashboard/messages?conversationId=${conversation.id}`);
+      // Navigate to the messages page with the conversation ID
+      router.push(`/dashboard/messages?conversationId=${conversationId}`);
     } catch (error) {
-      console.error('Error starting conversation:', error);
+      console.error('Error handling conversation:', error);
       // You might want to show an error message to the user here
     } finally {
       setIsLoading(false);

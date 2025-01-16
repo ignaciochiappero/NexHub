@@ -9,6 +9,7 @@ import { ConversationList } from './components/ConversationList';
 import { UserList } from './components/UserList';
 import { ChatMessages } from './components/ChatMessages';
 import { Conversation, User, Message } from '@/types/chat';
+import { useSearchParams } from 'next/navigation';
 
 interface MessagesClientProps {
   session: any;
@@ -24,6 +25,17 @@ export default function MessagesClient({ session, initialConversations, initialU
   const [newMessage, setNewMessage] = useState('');
   const [showUserList, setShowUserList] = useState(false);
   const conversationListRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const conversationId = searchParams.get('conversationId');
+    if (conversationId) {
+      const conversation = conversations.find(c => c.id === parseInt(conversationId));
+      if (conversation) {
+        handleSelectConversation(conversation.id);
+      }
+    }
+  }, [searchParams, conversations]);
 
   const fetchMessages = async (conversationId: number) => {
     const res = await fetch(`/api/conversations/${conversationId}`);

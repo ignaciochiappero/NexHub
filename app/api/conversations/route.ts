@@ -1,5 +1,4 @@
 //app\api\conversations\route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
@@ -77,3 +76,4 @@ export async function POST(req: NextRequest) {
 
   return new NextResponse(JSON.stringify(conversation), { status: 201 });
 }
+
