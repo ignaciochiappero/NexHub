@@ -34,6 +34,8 @@ model User {
 
   achievements       UserAchievement[]
   AchievementRequest AchievementRequest[]
+
+  lastActive DateTime @default(now())
 }
 
 enum Role {

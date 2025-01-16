@@ -6,6 +6,8 @@ import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
+const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1
+
 // GET: Obtener todos los usuarios
 export async function GET() {
   try {
@@ -20,10 +22,23 @@ export async function GET() {
         company: true,
         role: true,
         createdAt: true,
+        lastActive: true,
+        achievements: {
+          select: {
+            id: true,
+            completed: true,
+          },
+        },
       },
     });
 
-    return NextResponse.json(users);
+    const usersWithOnlineStatus = users.map(user => ({
+      ...user,
+      isOnline: new Date().getTime() - new Date(user.lastActive).getTime() < ONLINE_THRESHOLD,
+      projectCount: user.achievements.length,
+    }));
+
+    return NextResponse.json(usersWithOnlineStatus);
   } catch (error) {
     console.error("[USERS_GET_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
