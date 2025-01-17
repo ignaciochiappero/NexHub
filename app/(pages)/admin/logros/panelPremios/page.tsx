@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Plus, Gift } from 'lucide-react'
+import { Search, Plus, Gift, ChevronLeft } from 'lucide-react'
 import PremioForm from '@/components/premiosForm/PremiosForm'
 import PremioList from '@/components/premiosForm/PremiosList'
+import Link from 'next/link'
 
 export default function AdminPremiosPage() {
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -27,10 +28,25 @@ export default function AdminPremiosPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#242424] p-8 pt-40 font-[family-name:var(--blender-medium)]">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#242424] p-5 pt-28 font-[family-name:var(--blender-medium)]">
+      
+      <Link href="/admin/logros">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              
+              className=" text-white py-3 rounded-full transition-all flex items-center text-lg"
+            >
+              <ChevronLeft className="mr-2" size={24} />
+            Volver
+            </motion.button>
+      </Link>
+
+
+      
+      <div className="max-w-6xl mx-auto mt-10">
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="flex justify-between items-center mb-12"
@@ -40,7 +56,7 @@ export default function AdminPremiosPage() {
             Administrar Premios
           </h1>
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsFormOpen(true)}
             className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-pink-500/25 transition-all flex items-center text-lg"

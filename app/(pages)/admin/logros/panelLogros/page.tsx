@@ -27,9 +27,12 @@ import {
   Flame,  Award,  Sparkles,
   Gem, Sword, Book, Compass, Map,
   Mountain, Sun, Moon,  Lightbulb,
-  Flag, Crosshair, Eye, Gift
+  Flag, Crosshair, Eye, Gift,
+  ChevronDown,
+  ChevronLeft
 } from 'lucide-react';
 import LogrosForm from "@/components/logrosForm/LogrosForm";
+import Link from "next/link";
 
 // Mapeo de strings a componentes de íconos
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,9 +134,28 @@ export default function AdminUserPage() {
       logros.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  
+
   return (
-    <div className="min-h-screen bg-[#242424] p-8 pt-40 font-[family-name:var(--blender-medium)]">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#242424] p-8 pt-28 font-[family-name:var(--blender-medium)]">
+      
+          <Link href="/admin/logros">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              
+              className=" text-whitepy-3 rounded-full transition-all flex items-center text-lg"
+            >
+              <ChevronLeft className="mr-2" size={24} />
+            Volver
+            </motion.button>
+          </Link>
+
+
+
+
+
+      <div className="max-w-6xl mx-auto mt-10">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

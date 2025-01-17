@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Trash2, Edit2 } from 'lucide-react'
 
@@ -36,16 +36,14 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted }: Pre
   }
 
   return (
-    <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <AnimatePresence>
-        {filteredPremios.map((premio, index) => (
+    <motion.div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+        {filteredPremios.map((premio) => (
           <motion.div
-            key={premio.id}
-            layout
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
+            key={premio.id}            
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            whileHover={{ scale: 1.03 }}
             className="bg-[#353535] hover:bg-[#454545] p-6 rounded-xl transition-all duration-300"
           >
             <div className="mb-4">
@@ -81,7 +79,7 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted }: Pre
             </div>
           </motion.div>
         ))}
-      </AnimatePresence>
+      
     </motion.div>
   )
 }

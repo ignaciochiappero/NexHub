@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -46,31 +48,30 @@ export default function AdminLogrosPage() {
 
         <div className="mt-20 flex flex-col items-center font-[family-name:var(--blender-bold)]">
 
-            <div className="flex w-screen justify-between px-10 bg-stone-900 p-2 mt-10">
 
-                <p className="text-3xl">Administrar Logros</p>
-                
-                
-                <Link href="/admin/logros/panelLogros">
-                
-                    <button
-                        className="bg-blue-600 hover:bg-blue-500 transition-all p-2 rounded-lg">
-                            Agregar Logro
-                    </button>
-                </Link>
-            </div>
+        <Link href="/admin">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            
+            className=" text-white px-6 py-3 rounded-full transition-all flex items-center text-lg border"
+          >
+            <ChevronLeft className="mr-2" size={24} />
+          Volver
+          </motion.button>
+        </Link>
 
         
         
         
         {/* BOTONES PANELES */}
-        <div className="flex justify-center gap-8 px-4 mt-20">
+        <div className="flex justify-center gap-8 px-4 mt-10">
           
           
           {/* BOTON 1 */}
           <Link
             href="/admin/logros/panelLogros" 
-            className="font-[family-name:var(--blender-medium)] group relative h-64 bg-[#353535] rounded-2xl overflow-hidden transition-all duration-700 ease-out hover:bg-[#454545] hover:scale-105 hover:rotate-1 hover:shadow-[0_0_40px_rgba(236,72,153,0.3)] active:scale-95 active:rotate-0"
+            className="font-[family-name:var(--blender-medium)] group relative h-[500px] bg-[#353535] rounded-2xl overflow-hidden transition-all duration-700 ease-out hover:bg-[#454545] hover:scale-105 hover:rotate-1 hover:shadow-[0_0_40px_rgba(236,72,153,0.3)] active:scale-95 active:rotate-0"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-pink-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             
@@ -91,8 +92,8 @@ export default function AdminLogrosPage() {
 
           {/* BOTON 2 */}
           <Link
-            href="/admin/logros" 
-            className="font-[family-name:var(--blender-medium)] group relative h-64 bg-[#353535] rounded-2xl overflow-hidden transition-all duration-700 ease-out hover:bg-[#454545] hover:scale-105 hover:-rotate-1 hover:shadow-[0_0_40px_rgba(234,179,8,0.3)] active:scale-95 active:rotate-0"
+            href="/admin/logros/panelPremios" 
+            className="font-[family-name:var(--blender-medium)] group relative h-[500px] bg-[#353535] rounded-2xl overflow-hidden transition-all duration-700 ease-out hover:bg-[#454545] hover:scale-105 hover:-rotate-1 hover:shadow-[0_0_40px_rgba(234,179,8,0.3)] active:scale-95 active:rotate-0"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-all duration-700 group-hover:scale-105 group-hover:-rotate-2" />
@@ -109,7 +110,7 @@ export default function AdminLogrosPage() {
 
 
             {/* LISTA DE LOGROS */}
-            <div className="mt-10 flex flex-col min-w-[700px] gap-4 px-10">
+            {/* <div className="mt-10 flex flex-col min-w-[700px] gap-4 px-10">
                 {logros.map((logro) => (
                     <div
                         key={logro.id}
@@ -127,12 +128,11 @@ export default function AdminLogrosPage() {
                             Eliminar
                         </button>
 
-                        {/* TODO: CREAR BOTON PARA EDITAR USUARIO */}
 
 
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 }
