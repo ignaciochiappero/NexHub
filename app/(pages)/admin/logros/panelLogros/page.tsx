@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image';
+
 import { 
   Search, 
   Trash2, 
@@ -28,7 +30,6 @@ import {
   Gem, Sword, Book, Compass, Map,
   Mountain, Sun, Moon,  Lightbulb,
   Flag, Crosshair, Eye, Gift,
-  ChevronDown,
   ChevronLeft
 } from 'lucide-react';
 import LogrosForm from "@/components/logrosForm/LogrosForm";
@@ -84,14 +85,28 @@ interface Logro {
   progress: number;
   completed: boolean;
   createdAt: string;
+
+  premios: Premio[];
+}
+
+interface Premio {
+  id: number;
+  titulo: string;
+  subtitulo: string;
+  imagen: string;
 }
 
 export default function AdminUserPage() {
   const [logro, setLogro] = useState<Logro[]>([]);
+
+  const [premio, setPremio] = useState<Premio[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLogroId, setDeleteLogroId] = useState<number | null>(null);
   const [isLogrosFormOpen, setIsLogrosFormOpen] = useState(false);
+
+
 
   const fetchLogros = async () => {
     setLoading(true);
@@ -106,10 +121,34 @@ export default function AdminUserPage() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchLogros();
   }, []);
+
+
+
+
+  const fetchPremios = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/premios");
+      if (!response.ok) throw new Error("Error al obtener premios");
+      const data = await response.json();
+      setPremio(data);
+    } catch (error) {
+      console.error("Error al cargar premios:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchPremios();
+  }, []);
+
+
+
 
   const handleDelete = async (id: number) => {
     try {
@@ -123,6 +162,8 @@ export default function AdminUserPage() {
     }
   };
 
+
+
   const getIconComponent = (iconName: string) => {
     const IconComponent = iconMapping[iconName];
     return IconComponent ? <IconComponent size={48} /> : <Trophy size={48} />;
@@ -133,6 +174,8 @@ export default function AdminUserPage() {
       logros.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       logros.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
 
   
 
@@ -211,10 +254,10 @@ export default function AdminUserPage() {
         ) : (
           <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
+              
               {filteredLogros.map((logros, index) => (
                 <motion.div
                   key={logros.id}
-                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -257,23 +300,45 @@ export default function AdminUserPage() {
                   </div>
 
                   <div className="flex justify-between text-sm text-gray-400">
-                    <span>Progreso</span>
+                    <span>Pasos para completar</span>
                     <span>
                       {logros.stepsProgress}/{logros.stepsFinal}
                     </span>
                   </div>
 
-                  {logros.completed ? (
-                    <div className="flex items-center text-green-500 mt-4">
-                      <CheckCircle className="mr-2" /> 
-                      Completado
+                  <div>
+                    <hr className="mt-3 mb-3"/>
+                    
+                    <span className="text-sm text-gray-400">Premios</span>
+
+                  {/* Contenedor para los premios */}
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                      {logros.premios.map((premio) => (
+                        <div 
+                          key={premio.id} 
+                          className="flex items-center gap-2 p-2 bg-gray-700 rounded-lg"
+                        >
+                          {/* Imagen del premio */}
+                          <Image 
+                            src={premio.imagen} 
+                            alt={premio.titulo} 
+                            width={40} 
+                            height={40} 
+                            className="object-cover rounded-full" 
+                          />
+                          
+                          {/* Información del premio */}
+                          <div>
+                            <h4 className="text-sm text-white font-semibold">{premio.titulo}</h4>
+                            <p className="text-xs text-gray-400">{premio.subtitulo}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ) : (
-                    <div className="flex items-center text-yellow-500 mt-4">
-                      <Target className="mr-2" /> 
-                      En curso
-                    </div>
-                  )}
+
+                  </div>
+
+                      
 
                   <div className="flex justify-between mt-6">
                     <motion.button

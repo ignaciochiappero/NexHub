@@ -108,7 +108,7 @@ export default function LogrosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] p-8 pt-40 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen p-8 pt-40 font-[family-name:var(--blender-medium)]">
       <div className="max-w-6xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
