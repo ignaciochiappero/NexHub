@@ -69,8 +69,31 @@ model Logro {
 
   achievements       UserAchievement[]
   AchievementRequest AchievementRequest[]
+
+  premios            LogroPremio[]
 }
 
+model Premio {
+  id           Int      @id @default(autoincrement())
+  titulo       String
+  subtitulo    String
+  descripcion  String
+  imagen       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  logros       LogroPremio[]
+}
+
+model LogroPremio {
+  id        Int      @id @default(autoincrement())
+  logroId   Int
+  premioId  Int
+  logro     Logro    @relation(fields: [logroId], references: [id])
+  premio    Premio   @relation(fields: [premioId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([logroId, premioId])
+}
 model UserAchievement {
   id            Int      @id @default(autoincrement())
   userId        Int
@@ -100,15 +123,7 @@ model AchievementRequest {
   logro Logro @relation(fields: [logroId], references: [id], onDelete: Cascade)
 }
 
-model Premio {
-  id Int @id @default(autoincrement())
 
-  titulo      String
-  descripcion String
-
-  //logroId     Int 
-  //logro       Logro  @relation(fields: [logroId], references: [id], onDelete: Cascade)
-}
 
 //PARA EL CHAT INTERNO ///////////////////
 model Conversation {
@@ -132,6 +147,7 @@ model ConversationParticipant {
 
   @@unique([userId, conversationId])
 }
+
 
 model Message {
   id             Int          @id @default(autoincrement())

@@ -47,6 +47,7 @@ export async function PUT(
     }
 
     const { logroId } = await params; // Esperar params de manera asincrónica
+    
     if (parseInt(session.user.id) !== parseInt(logroId)) {
       return new NextResponse("No autorizado", { status: 401 });
     }

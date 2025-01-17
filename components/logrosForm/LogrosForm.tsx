@@ -1,8 +1,7 @@
-//components\logrosForm\LogrosForm.tsx
-'use client'
+//components\logrosForm\LogrosForm.tsx'use client'
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Pen, Book, X, Target } from 'lucide-react';
+import { Pen, Book, X, Target, Gift } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import IconSelector from './IconSelector';
@@ -13,6 +12,13 @@ interface LogrosFormProps {
   onLogroAdded: () => void;
 }
 
+interface Premio {
+  id: number;
+  titulo: string;
+  subtitulo: string;
+  imagen: string;
+}
+
 function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -20,51 +26,71 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
       description: '',
       icon: 'Trophy',
       stepsFinal: 1,
+      premioIds: [] as number[],
     }
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [premios, setPremios] = useState<Premio[]>([]);
+  const [selectedPremios, setSelectedPremios] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchPremios = async () => {
+      try {
+        const response = await axios.get('/api/premios');
+        setPremios(response.data);
+      } catch (error) {
+        console.error('Error fetching premios:', error);
+      }
+    };
+
+    if (isOpen) {
+      fetchPremios();
+    }
+  }, [isOpen]);
 
   const onSubmit = handleSubmit(async (formData) => {
     setIsLoading(true);
     setError(null);
     
-    // Crear el objeto de datos con todos los campos necesarios
     const data = {
       title: formData.title,
       description: formData.description,
       icon: formData.icon,
       stepsFinal: Number(formData.stepsFinal),
-      stepsProgress: 0,
-      progress: 0,
-      completed: false
+      completed: false,
+      premioIds: selectedPremios,
     };
 
     try {
-      console.log('Sending data:', data); // Debug log
-      
       const response = await axios.post('/api/logros', data, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
-      
-      console.log('Response:', response); // Debug log
 
       if (response.status === 201) {
         onLogroAdded();
         reset();
+        setSelectedPremios([]);
         onClose();
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: Error | any) { 
+    } catch (error: any) {
       console.error('Add logro error:', error);
-      setError(error.response?.data || 'Error al crear el logro');
+      setError(error.response?.data?.error || 'Error al crear el logro');
     } finally {
       setIsLoading(false);
     }
   });
+
+  const togglePremio = (premioId: number) => {
+    setSelectedPremios(prev => 
+      prev.includes(premioId)
+        ? prev.filter(id => id !== premioId)
+        : [...prev, premioId]
+    );
+  };
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -217,12 +243,50 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                   )}
                 />
 
+                <div className="space-y-2">
+                  <label className="text-white flex items-center gap-2 mb-2">
+                    <Gift size={20} />
+                    Premios asociados
+                  </label>
+                  <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+                    {premios.map((premio) => (
+                      <motion.div
+                        key={premio.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`
+                          p-3 rounded-lg cursor-pointer transition-all
+                          ${selectedPremios.includes(premio.id)
+                            ? 'bg-pink-600/20 border-2 border-pink-500'
+                            : 'bg-[#353535] hover:bg-[#404040] border-2 border-transparent'
+                          }
+                        `}
+                        onClick={() => togglePremio(premio.id)}
+                      >
+                        <div className="flex items-center gap-3">
+                          {premio.imagen && (
+                            <img
+                              src={premio.imagen}
+                              alt={premio.titulo}
+                              className="w-10 h-10 rounded-md object-cover"
+                            />
+                          )}
+                          <div>
+                            <h3 className="text-white font-medium">{premio.titulo}</h3>
+                            <p className="text-gray-400 text-sm">{premio.subtitulo}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white p-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all font-geist-sans"
+                  className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white p-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all font-geist-sans disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Agregando...' : 'Agregar logro'}
                 </motion.button>

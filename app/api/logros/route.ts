@@ -2,11 +2,8 @@
 //app\api\logros\route.ts
 
 
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
-
-
 
 // GET: Obtener todos los logros
 export async function GET() {
@@ -19,31 +16,39 @@ export async function GET() {
         icon: true,
         stepsFinal: true,
         createdAt: true,
+        premios: {
+          select: {
+            premio: {
+              select: {
+                id: true,
+                titulo: true,
+                subtitulo: true,
+                descripcion: true,
+                imagen: true
+              }
+            }
+          }
+        }
       },
       orderBy: {
-        createdAt: 'desc' // Opcional: ordena los logros del más reciente al más antiguo
+        createdAt: 'desc'
       }
     });
 
-    return NextResponse.json(logros);
+    // Transformar la respuesta para que sea más fácil de usar en el cliente
+    const formattedLogros = logros.map(logro => ({
+      ...logro,
+      premios: logro.premios.map(p => p.premio)
+    }));
+
+    return NextResponse.json(formattedLogros);
   } catch (error) {
     console.error("[LOGROS_GET_ERROR]", error);
-    return new NextResponse(
-      JSON.stringify({ 
-        error: "Error al obtener los logros",
-        details: error.message 
-      }), 
-      { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    return new NextResponse("Error interno", { status: 500 });
   }
 }
 
-//Crear un logro
+// Crear un logro
 export async function POST(req: NextRequest) {
   try {
     // Asegurarse de que el cuerpo de la solicitud no sea nulo
@@ -58,7 +63,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title, description, icon, stepsFinal } = body;
+    const { title, description, icon, stepsFinal, premioIds = [] } = body;
 
     // Validar campos requeridos
     if (!title || !description || !icon || stepsFinal === undefined) {
@@ -71,25 +76,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Crear el logro
+    // Crear el logro con sus relaciones de premios
     const logro = await prisma.logro.create({
       data: {
         title,
         description,
         icon,
         stepsFinal: Number(stepsFinal),
+        // Crear las relaciones con los premios si se proporcionaron
+        premios: premioIds.length > 0 ? {
+          create: premioIds.map((premioId: number) => ({
+            premio: {
+              connect: { id: premioId }
+            }
+          }))
+        } : undefined
       },
+      include: {
+        premios: {
+          include: {
+            premio: true
+          }
+        }
+      }
     });
 
     return NextResponse.json(logro, { status: 201 });
   } catch (error) {
     console.error("[LOGRO_POST_ERROR]", error);
-    
     return new NextResponse(
-      JSON.stringify({ 
-        error: "Error interno del servidor",
-        details: error.message 
-      }), 
+      JSON.stringify({ error: "Error interno del servidor" }), 
       { status: 500 }
     );
   }

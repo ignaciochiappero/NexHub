@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+
 //app\(pages)\profile\ProfileForm.tsx
 
 'use client';
@@ -23,6 +24,7 @@ interface ProfileFormProps {
     company: string | null;
     createdAt: Date;
     updatedAt: Date;
+    lastActive: Date; 
   };
 }
 
@@ -35,6 +37,11 @@ export default function ProfileForm({ initialUser }: ProfileFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+
+
+
+  //////////////FUNCIONES PARA EL RECORTE DE IMÁGENES Y SU SUBIDA //////////
   
   // Estados para el recortador de imágenes
   const [showCropper, setShowCropper] = useState(false);
@@ -158,6 +165,9 @@ export default function ProfileForm({ initialUser }: ProfileFormProps) {
       setIsUploading(false);
     }
   };
+
+
+  /////////////////////////////////////////////////////////////////////
 
   const formatDate = (dateString: string) => {
     try {

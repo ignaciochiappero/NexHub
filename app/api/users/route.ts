@@ -6,7 +6,7 @@ import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1
+const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1 minuto
 
 // GET: Obtener todos los usuarios
 export async function GET() {
