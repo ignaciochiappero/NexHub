@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //app\dashboard\blog\components\CreatePostForm.tsx
 "use client"
 
@@ -10,7 +11,7 @@ interface CreatePostFormProps {
   onPostCreated: (newPost: any) => void
 }
 
-export default function CreatePostForm({ currentUser, onPostCreated }: CreatePostFormProps) {
+export default function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const [content, setContent] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [image, setImage] = useState<File | null>(null)

@@ -99,6 +99,7 @@ interface Premio {
 export default function AdminUserPage() {
   const [logro, setLogro] = useState<Logro[]>([]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [premio, setPremio] = useState<Premio[]>([]);
 
   const [loading, setLoading] = useState(true);

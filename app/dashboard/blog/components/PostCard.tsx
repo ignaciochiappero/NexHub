@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //app\dashboard\blog\components\PostCard.tsx
 "use client"
 
 import { useState } from "react"
 import Image from "next/image"
-import { Heart, MessageCircle, Edit, Trash, ImageIcon } from "lucide-react"
+import { Heart, MessageCircle, Edit, Trash } from "lucide-react"
 import CommentSection from "./CommentSection"
 
 const formatRelativeTime = (date: Date) => {

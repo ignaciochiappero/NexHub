@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //app\dashboard\blog\components\BlogFeed.tsx
 "use client";
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, CheckCircle, Target, AlertCircle, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { Trophy, CheckCircle, Target, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
 interface Achievement {
@@ -102,6 +102,7 @@ export default function LogrosPage() {
     setExpandedAchievement(prevId => prevId === achievementId ? null : achievementId);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const DynamicIcon = ({ name, ...props }: { name: string; [key: string]: any }) => {
     const IconComponent = LucideIcons[name as keyof typeof LucideIcons];
     return IconComponent ? <IconComponent {...props} /> : null;

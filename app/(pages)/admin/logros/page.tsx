@@ -110,7 +110,7 @@ export default function AdminLogrosPage() {
 
 
             {/* LISTA DE LOGROS */}
-            {/* <div className="mt-10 flex flex-col min-w-[700px] gap-4 px-10">
+             <div className="mt-10 flex flex-col min-w-[700px] gap-4 px-10">
                 {logros.map((logro) => (
                     <div
                         key={logro.id}
@@ -132,7 +132,7 @@ export default function AdminLogrosPage() {
 
                     </div>
                 ))}
-            </div> */}
+            </div> 
         </div>
     );
 }

@@ -23,7 +23,8 @@ export const authOptions: AuthOptions = {
             },
             
 
-            async authorize(credentials: any, req) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            async authorize(credentials: any) {
 
                 const {email, password} = credentials;
 

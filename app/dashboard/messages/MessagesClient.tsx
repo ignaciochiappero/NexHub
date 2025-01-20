@@ -12,6 +12,7 @@ import { Conversation, User, Message } from '@/types/chat';
 import { useSearchParams } from 'next/navigation';
 
 interface MessagesClientProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   session: any;
   initialConversations: Conversation[];
   initialUsers: User[];
@@ -19,6 +20,7 @@ interface MessagesClientProps {
 
 export default function MessagesClient({ session, initialConversations, initialUsers }: MessagesClientProps) {
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);

@@ -5,6 +5,7 @@ import { Pen, Book, X, Target, Gift } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import IconSelector from './IconSelector';
+import Image from 'next/image';
 
 interface LogrosFormProps {
   isOpen: boolean;
@@ -76,6 +77,7 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
         setSelectedPremios([]);
         onClose();
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Add logro error:', error);
       setError(error.response?.data?.error || 'Error al crear el logro');
@@ -265,11 +267,13 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                       >
                         <div className="flex items-center gap-3">
                           {premio.imagen && (
-                            <img
-                              src={premio.imagen}
-                              alt={premio.titulo}
-                              className="w-10 h-10 rounded-md object-cover"
-                            />
+                            <Image
+                            src={premio.imagen}
+                            alt={premio.titulo}
+                            width={40}
+                            height={40}
+                            className="rounded-md object-cover"
+                          />
                           )}
                           <div>
                             <h3 className="text-white font-medium">{premio.titulo}</h3>

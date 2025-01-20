@@ -45,6 +45,7 @@ export async function POST(request: Request) {
         uploadStream.end(buffer)
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       imageUrl = (result as any).secure_url
     }
 

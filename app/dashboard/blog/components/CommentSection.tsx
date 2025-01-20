@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // app\dashboard\blog\components\CommentSection.tsx
 "use client";
 
@@ -21,6 +22,7 @@ export default function CommentSection({
   initialComments, 
   currentUser, 
   isExpanded,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onToggle 
 }: CommentSectionProps) {
   const [comments, setComments] = useState(initialComments);
@@ -96,6 +98,7 @@ export default function CommentSection({
       });
 
       if (response.ok) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const updatedComment = await response.json();
         setComments(
           comments.map((comment) =>

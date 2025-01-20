@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { Lock, User, Mail, Calendar, X } from 'lucide-react'
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface SignupModalProps {
@@ -25,7 +24,7 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
     }
   })
 
-  const router = useRouter()
+  
   const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = handleSubmit(async (data) => {

@@ -1,36 +1,52 @@
+
+//app\api\admin\requests\[requestId]\route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function PUT(req: NextRequest, { params }: { params: { requestId: string } }) {
-  const session = await getServerSession(authOptions);
-  if (!session ) {
-    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
-  }
-
-  const requestId = parseInt(params.requestId);
-  const { action } = await req.json();
-
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { requestId: string } }
+) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { 
+        status: 401 
+      });
+    }
+
+    // Esperar la resolución de params de manera asíncrona
+    const { requestId } = await params;
+    if (!requestId) {
+      return new NextResponse(JSON.stringify({ error: "Request ID is required" }), { 
+        status: 400 
+      });
+    }
+
+    const id = parseInt(requestId);
+    const { action } = await req.json();
+
     const request = await prisma.achievementRequest.findUnique({
-      where: { id: requestId },
+      where: { id },
       include: { logro: true },
     });
 
     if (!request) {
-      return new NextResponse(JSON.stringify({ error: "Request not found" }), { status: 404 });
+      return new NextResponse(JSON.stringify({ error: "Request not found" }), { 
+        status: 404 
+      });
     }
 
     if (action === 'approve') {
       await prisma.$transaction(async (prisma) => {
-        // Update the request status
         await prisma.achievementRequest.update({
-          where: { id: requestId },
+          where: { id },
           data: { status: 'approved' },
         });
 
-        // Update or create the user's achievement
         const userAchievement = await prisma.userAchievement.upsert({
           where: {
             userId_logroId: {
@@ -56,7 +72,7 @@ export async function PUT(req: NextRequest, { params }: { params: { requestId: s
       });
     } else if (action === 'reject') {
       await prisma.achievementRequest.update({
-        where: { id: requestId },
+        where: { id },
         data: { status: 'rejected' },
       });
     }
@@ -64,7 +80,8 @@ export async function PUT(req: NextRequest, { params }: { params: { requestId: s
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[ACHIEVEMENT_REQUEST_UPDATE_ERROR]", error);
-    return new NextResponse(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+    return new NextResponse(JSON.stringify({ error: "Internal Server Error" }), { 
+      status: 500 
+    });
   }
 }
-
