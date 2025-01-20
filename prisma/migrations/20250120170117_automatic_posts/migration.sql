@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `Post` ADD COLUMN `author` VARCHAR(191) NULL,
+    ADD COLUMN `systemPost` BOOLEAN NOT NULL DEFAULT false,
+    MODIFY `userId` INTEGER NULL;

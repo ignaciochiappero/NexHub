@@ -1,58 +1,55 @@
-import { NextResponse } from "next/server";
-import prisma from "@/libs/prisma";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
 
-export async function GET(request: Request, { params }: { params: { postId: string } }) {
-  const postId = parseInt(params.postId);
-  const post = await prisma.post.findUnique({
-    where: { id: postId },
-    include: {
-      user: true,
-      likes: true,
-      comments: {
-        include: {
-          user: true,
-          likes: true,
-        },
-      },
-    },
-  });
-
-  if (!post) {
-    return NextResponse.json({ error: "Post no encontrado" }, { status: 404 });
-  }
-
-  return NextResponse.json(post);
-}
+//app\api\posts\[postId]\route.ts
+import { NextResponse } from "next/server"
+import prisma from "@/libs/prisma"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../../auth/[...nextauth]/route"
+import cloudinary from "@/libs/cloudinary"
 
 export async function PUT(request: Request, { params }: { params: { postId: string } }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
   if (!session) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
-  const postId = parseInt(params.postId);
-  const data = await request.json();
+  const postId = Number.parseInt(params.postId)
+  const formData = await request.formData()
+  const content = formData.get("content") as string
+  const deleteImage = formData.get("deleteImage") as string
+
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
-  });
+  })
 
   if (!user) {
-    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
+    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 })
   }
 
   const post = await prisma.post.findUnique({
     where: { id: postId },
-  });
+  })
 
   if (!post || post.userId !== user.id) {
-    return NextResponse.json({ error: "No autorizado para editar este post" }, { status: 403 });
+    return NextResponse.json({ error: "No autorizado para editar este post" }, { status: 403 })
+  }
+
+  let updatedImageUrl = post.image
+
+  if (deleteImage === "true" && post.image) {
+    // Eliminar la imagen de Cloudinary
+    const publicId = post.image.split("/").pop()?.split(".")[0]
+    if (publicId) {
+      await cloudinary.uploader.destroy(publicId)
+    }
+    updatedImageUrl = null
   }
 
   const updatedPost = await prisma.post.update({
     where: { id: postId },
-    data: { content: data.content },
+    data: {
+      content: content,
+      image: updatedImageUrl,
+    },
     include: {
       user: true,
       likes: true,
@@ -63,38 +60,46 @@ export async function PUT(request: Request, { params }: { params: { postId: stri
         },
       },
     },
-  });
+  })
 
-  return NextResponse.json(updatedPost);
+  return NextResponse.json(updatedPost)
 }
 
 export async function DELETE(request: Request, { params }: { params: { postId: string } }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions)
   if (!session) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
-  const postId = parseInt(params.postId);
+  const postId = Number.parseInt(params.postId)
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
-  });
+  })
 
   if (!user) {
-    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
+    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 })
   }
 
   const post = await prisma.post.findUnique({
     where: { id: postId },
-  });
+  })
 
   if (!post || post.userId !== user.id) {
-    return NextResponse.json({ error: "No autorizado para eliminar este post" }, { status: 403 });
+    return NextResponse.json({ error: "No autorizado para eliminar este post" }, { status: 403 })
+  }
+
+  if (post.image) {
+    // Eliminar la imagen de Cloudinary
+    const publicId = post.image.split("/").pop()?.split(".")[0]
+    if (publicId) {
+      await cloudinary.uploader.destroy(publicId)
+    }
   }
 
   await prisma.post.delete({
     where: { id: postId },
-  });
+  })
 
-  return NextResponse.json({ message: "Post eliminado exitosamente" });
+  return NextResponse.json({ message: "Post eliminado exitosamente" })
 }
 

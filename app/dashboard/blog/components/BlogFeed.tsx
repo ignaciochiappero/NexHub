@@ -27,7 +27,7 @@ export default function BlogFeed({ initialPosts, currentUser }: BlogFeedProps) {
 
   return (
     <>
-      <CreatePostForm currentUser={currentUser} onPostCreated={handlePostCreated} />
+      {!currentUser.isAdmin && <CreatePostForm currentUser={currentUser} onPostCreated={handlePostCreated} />}
       <div className="space-y-6 mt-8">
         {posts.map((post) => (
           <PostCard

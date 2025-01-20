@@ -163,11 +163,19 @@ model Message {
 
 ////////////////FIN CHAT INTERNO //////////
 
+
+
+//////////////////// PARA EL BLOG /////////////////////
 model Post {
   id        Int        @id @default(autoincrement())
   content   String
-  userId    Int
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image     String?
+  userId    Int?
+  user      User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  systemPost Boolean @default(false)
+  author    String?  // Para posts del sistema
+  
   likes     PostLike[]
   comments  Comment[]
   createdAt DateTime   @default(now())
@@ -207,3 +215,5 @@ model CommentLike {
 
   @@unique([commentId, userId])
 }
+
+//////////////////// FIN BLOG /////////////////////
