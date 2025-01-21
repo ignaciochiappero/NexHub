@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Home, Shield, MessageCircle, Users, Trophy, Info, LogIn } from 'lucide-react';
+import { Home, Shield, TextSelect , Users, Trophy, Info, LogIn } from 'lucide-react';
 import HamburgerIcon from "./hambIcon/HamburguerIcon";
 import Link from "next/link";
 
@@ -24,9 +24,9 @@ const RadialNavbar = ({ userData }: { userData: UserData }) => {
 
   const authenticatedMenuItems = [
     { id: 1, icon: Home, angle: 0, label: "Inicio", site: "/" },
-    { id: 2, icon: Users, angle: 30, label: "Blog", site: "/dashboard/blog" },
+    { id: 2, icon: TextSelect, angle: 30, label: "Blog", site: "/dashboard/blog" },
     { id: 3, icon: Trophy, angle: 60, label: "Logros", site: "/dashboard/logros" },
-    { id: 4, icon: MessageCircle, angle: 90, label: "Mensajes", site: "/dashboard/messages" },
+    { id: 4, icon: Users, angle: 90, label: "Usuarios", site: "/dashboard/users" },
     { id: 5, icon: Shield, angle: 120, label: "Administración", site: "/admin", adminOnly: true },
   ];
 
