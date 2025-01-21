@@ -4,7 +4,6 @@ import { useForm, Controller } from "react-hook-form";
 import Image from "next/image";
 import { Lock, Mail, AlertCircle } from 'lucide-react';
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
@@ -14,25 +13,30 @@ function SigninForm() {
   });
   const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) => {
     setAuthError('');
     setIsLoading(true);
     
-    const res = await signIn('credentials', {
-      redirect: false,
-      email: data.email,
-      password: data.password
-    });
-    
-    if (!res?.ok) {
-      setAuthError('Usuario o contraseña incorrectos');
+    try {
+      const res = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password
+      });
+      
+      if (!res?.ok) {
+        setAuthError('Usuario o contraseña incorrectos');
+        setIsLoading(false);
+      } else {
+        // Esperar un poco menos y verificar la sesión antes de redirigir
+        await new Promise(resolve => setTimeout(resolve, 500));
+        window.location.href = '/dashboard/profile';  // Usar redirección del navegador en lugar de router.push
+      }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setAuthError('Ocurrió un error al iniciar sesión');
       setIsLoading(false);
-    } else {
-      const loadingDuration = 1000;
-      await new Promise(resolve => setTimeout(resolve, loadingDuration));
-      router.push('/dashboard/profile');
     }
   });
 
