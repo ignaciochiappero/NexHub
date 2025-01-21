@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, Star, Users, Shield, Code } from "lucide-react";
+import Link from "next/link";
 
-export default function AboutUs() {
+export default function SobreNosotros() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const fadeInUp = {
@@ -15,18 +16,18 @@ export default function AboutUs() {
 
   const features = [
     {
-      title: "Community Driven",
-      description: "Join our growing community of passionate developers",
+      title: "Unidos por una Visión",
+      description: "Forma parte de una comunidad donde cada logro colectivo nos acerca al éxito.",
       icon: Users,
     },
     {
-      title: "Secure Platform",
-      description: "Your data is protected with enterprise-grade security",
+      title: "Confianza y Seguridad",
+      description: "Tu información y la de tu equipo están protegidas con tecnología de última generación.",
       icon: Shield,
     },
     {
-      title: "Modern Stack",
-      description: "Built with the latest technologies and best practices",
+      title: "Herramientas Innovadoras",
+      description: "Avanza con las mejores prácticas y tecnologías modernas para alcanzar tus metas.",
       icon: Code,
     }
   ];
@@ -46,7 +47,7 @@ export default function AboutUs() {
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            Welcome to Our Platform
+            ¡Bienvenido a Nuestra Plataforma!
           </motion.h1>
         </motion.div>
 
@@ -115,15 +116,19 @@ export default function AboutUs() {
               transition={{ delay: 1 }}
             >
               <div className="flex-1">
-                <h2 className="text-4xl font-blender-mayus mb-4">Ready to Get Started?</h2>
-                <p className="text-gray-400 mb-6">Join our community and start building amazing things today.</p>
-                <motion.button
-                  className="flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 px-6 py-3 rounded-xl font-medium"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Get Started <ArrowRight className="w-5 h-5" />
-                </motion.button>
+                <h2 className="text-4xl font-blender-mayus mb-4">¿Listo para Empezar?</h2>
+                <p className="text-gray-400 mb-6">Únete a nuestra comunidad y empieza a construir logros compartidos.</p>
+
+                <Link href={"/auth/login"}>
+                  <motion.button
+                    className="flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 px-6 py-3 rounded-xl font-medium"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    ¡Comienza Ahora! <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                </Link>
+                
               </div>
               
               <motion.div
