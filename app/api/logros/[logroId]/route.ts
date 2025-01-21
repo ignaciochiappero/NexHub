@@ -3,16 +3,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
+
+
+type RouteContext = {
+  params: Promise<{ logroId: string }>;
+};
+
+
 
 // GET: Obtener un logro específico
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { logroId: string } }
+    req: NextRequest,
+    context: RouteContext
 ) {
   try {
     // Espera la resolución de params
-    const { logroId } = await params; // Usar await aquí si params es asincrónico
+    const { logroId } = await context.params; // Usar await aquí si params es asincrónico
 
     const logro = await prisma.logro.findUnique({
       where: { id: parseInt(logroId) },
@@ -38,7 +45,7 @@ export async function GET(
 // PUT: Actualizar un Logro
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { logroId: string } }
+  context: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -46,7 +53,7 @@ export async function PUT(
       return new NextResponse("No autorizado", { status: 401 });
     }
 
-    const { logroId } = await params; // Esperar params de manera asincrónica
+    const { logroId } = await context.params; // Esperar params de manera asincrónica
     
     if (parseInt(session.user.id) !== parseInt(logroId)) {
       return new NextResponse("No autorizado", { status: 401 });
@@ -72,10 +79,10 @@ export async function PUT(
 // DELETE: Eliminar un Logro
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { logroId: string } }
+  context: RouteContext
 ) {
   try {
-    const { logroId } = await params; // Usar await para params
+    const { logroId } = await context.params;  // Usar await para params
 
     const logroDeleted = await prisma.logro.delete({
       where: { id: parseInt(logroId) }

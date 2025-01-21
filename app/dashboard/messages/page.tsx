@@ -1,7 +1,7 @@
 //app\dashboard\messages\page.tsx
 
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma";
 import MessagesClient from "./MessagesClient";
 

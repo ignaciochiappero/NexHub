@@ -1,17 +1,26 @@
 //app\api\posts\[postId]\like\route.ts
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
-export async function POST(request: Request, { params }: { params: { postId: string } }) {
+
+type RouteContext = {
+  params: Promise<{ postId: string }>;
+};
+
+
+export async function POST(  req: NextRequest,
+  { params }: RouteContext) {
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const postId = parseInt(params.postId);
+  const { postId } = await params;
+
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
   });
@@ -23,7 +32,7 @@ export async function POST(request: Request, { params }: { params: { postId: str
   const existingLike = await prisma.postLike.findUnique({
     where: {
       postId_userId: {
-        postId: postId,
+        postId: Number(postId),
         userId: user.id,
       },
     },
@@ -36,14 +45,14 @@ export async function POST(request: Request, { params }: { params: { postId: str
   } else {
     await prisma.postLike.create({
       data: {
-        postId: postId,
+        postId: Number(postId),
         userId: user.id,
       },
     });
   }
 
   const updatedPost = await prisma.post.findUnique({
-    where: { id: postId },
+    where: { id: Number(postId) },
     include: {
       likes: true,
     },

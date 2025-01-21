@@ -88,8 +88,8 @@ model LogroPremio {
   id        Int      @id @default(autoincrement())
   logroId   Int
   premioId  Int
-  logro     Logro    @relation(fields: [logroId], references: [id])
-  premio    Premio   @relation(fields: [premioId], references: [id])
+  logro     Logro    @relation(fields: [logroId], references: [id], onDelete: Cascade)
+  premio    Premio   @relation(fields: [premioId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([logroId, premioId])

@@ -7,7 +7,7 @@ import prisma from "@/libs/prisma";
 
 //para traer el valor del id de la sesion
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
 
 

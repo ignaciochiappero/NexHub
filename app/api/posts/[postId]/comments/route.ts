@@ -1,14 +1,23 @@
 //app\api\posts\[postId]\comments\route.ts
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
-export async function GET(request: Request, { params }: { params: { postId: string } }) {
-  const postId = parseInt(params.postId);
+type RouteContext = {
+  params: Promise<{ postId: string }>;
+};
+
+
+export async function GET( req: NextRequest,
+  { params }: RouteContext) {
+
+
+  const { postId } = await params;
+
   const comments = await prisma.comment.findMany({
-    where: { postId: postId },
+    where: { postId: Number(postId) },
     include: {
       user: true,
       likes: true,
@@ -21,13 +30,17 @@ export async function GET(request: Request, { params }: { params: { postId: stri
   return NextResponse.json(comments);
 }
 
-export async function POST(request: Request, { params }: { params: { postId: string } }) {
+export async function POST(request: NextRequest,
+  { params }: RouteContext) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const postId = parseInt(params.postId);
+
+
+  const { postId } = await params;
+
   const data = await request.json();
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
@@ -40,7 +53,7 @@ export async function POST(request: Request, { params }: { params: { postId: str
   const newComment = await prisma.comment.create({
     data: {
       content: data.content,
-      postId: postId,
+      postId: Number(postId),
       userId: user.id,
     },
     include: {

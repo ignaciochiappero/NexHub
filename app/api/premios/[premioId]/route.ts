@@ -2,12 +2,18 @@
 import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+
+type RouteContext = {
+  params: Promise<{ premioId: string }>;
+};
+
+
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { premioId: string } }
+    req: NextRequest,
+    context: RouteContext
 ) {
   try {
-    const { premioId } = params;
+    const { premioId } = await context.params;
 
     const premio = await prisma.premio.findUnique({
       where: { id: parseInt(premioId) },
@@ -43,10 +49,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { premioId: string } }
+  context: RouteContext
 ) {
   try {
-    const { premioId } = params;
+    const { premioId } = await context.params;
 
     const { titulo, subtitulo, descripcion, imagen } = await req.json();
 
@@ -74,10 +80,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { premioId: string } }
+  context: RouteContext
 ) {
   try {
-    const { premioId } = params;
+    const { premioId } = await context.params;
 
     const premioDeleted = await prisma.premio.delete({
       where: { id: parseInt(premioId) },

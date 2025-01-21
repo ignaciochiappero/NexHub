@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 
+type RouteContext = {
+  params: Promise<{ logroId: string }>;
+};
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { logroId: string } }
+  context: RouteContext
 ) {
   try {
-    const { logroId } = params;
+    const { logroId } = await context.params;
 
     const logro = await prisma.logro.findUnique({
       where: { id: parseInt(logroId) },
@@ -32,10 +36,10 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { logroId: string } }
+  context: RouteContext
 ) {
   try {
-    const { logroId } = params;
+    const { logroId } = await context.params;
     const { premioId } = await req.json();
 
     const logroPremio = await prisma.logroPremio.create({
@@ -54,10 +58,10 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { logroId: string } }
+  context: RouteContext
 ) {
   try {
-    const { logroId } = params;
+    const { logroId } = await context.params;
     const { premioId } = await req.json();
 
     const deletedLogroPremio = await prisma.logroPremio.delete({
@@ -75,4 +79,3 @@ export async function DELETE(
     return new NextResponse("Error interno", { status: 500 });
   }
 }
-

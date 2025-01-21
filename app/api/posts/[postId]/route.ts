@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { config as authOptions } from "@/auth.config";
 import cloudinary from "@/libs/cloudinary"
 
 export async function PUT(request: Request, { params }: { params: { postId: string } }) {

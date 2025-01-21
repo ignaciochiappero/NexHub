@@ -1,15 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
-export async function POST(request: Request, { params }: { params: { commentId: string } }) {
+type RouteContext = {
+  params: Promise<{ commentId: string }>;
+};
+
+export async function POST(req: NextRequest,
+  { params }: RouteContext) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const commentId = parseInt(params.commentId);
+  const { commentId } = await params;
+
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
   });
@@ -21,7 +27,7 @@ export async function POST(request: Request, { params }: { params: { commentId: 
   const existingLike = await prisma.commentLike.findUnique({
     where: {
       commentId_userId: {
-        commentId: commentId,
+        commentId: Number(commentId),
         userId: user.id,
       },
     },
@@ -34,14 +40,14 @@ export async function POST(request: Request, { params }: { params: { commentId: 
   } else {
     await prisma.commentLike.create({
       data: {
-        commentId: commentId,
+        commentId: Number(commentId),
         userId: user.id,
       },
     });
   }
 
   const updatedComment = await prisma.comment.findUnique({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
     include: {
       likes: true,
     },

@@ -1,11 +1,17 @@
-import { NextResponse } from 'next/server';
+//app\api\conversations\check\[userId]\route.ts
+
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import prisma from '@/libs/prisma';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { config as authOptions } from "@/auth.config";
+
+type RouteContext = {
+  params: Promise<{ userId: string }>;
+};
 
 export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,8 +19,9 @@ export async function GET(
       return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
     }
 
+    const { userId } = await context.params;
     const currentUserId = parseInt(session.user.id);
-    const targetUserId = parseInt(params.userId);
+    const targetUserId = parseInt(userId);
 
     const existingConversation = await prisma.conversation.findFirst({
       where: {
@@ -38,4 +45,3 @@ export async function GET(
     return new NextResponse(JSON.stringify({ error: "Error interno" }), { status: 500 });
   }
 }
-

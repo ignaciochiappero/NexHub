@@ -1,15 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
-export async function PUT(request: Request, { params }: { params: { commentId: string } }) {
+type RouteContext = {
+  params: Promise<{ commentId: string }>;
+};
+
+export async function PUT(request: NextRequest,
+  { params }: RouteContext) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const commentId = parseInt(params.commentId);
+  const { commentId } = await params;
+
   const data = await request.json();
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
@@ -20,7 +26,7 @@ export async function PUT(request: Request, { params }: { params: { commentId: s
   }
 
   const comment = await prisma.comment.findUnique({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
   });
 
   if (!comment || comment.userId !== user.id) {
@@ -28,7 +34,7 @@ export async function PUT(request: Request, { params }: { params: { commentId: s
   }
 
   const updatedComment = await prisma.comment.update({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
     data: { content: data.content },
     include: {
       user: true,
@@ -39,13 +45,15 @@ export async function PUT(request: Request, { params }: { params: { commentId: s
   return NextResponse.json(updatedComment);
 }
 
-export async function DELETE(request: Request, { params }: { params: { commentId: string } }) {
+export async function DELETE(request: NextRequest,
+  { params }: RouteContext)  {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const commentId = parseInt(params.commentId);
+  const { commentId } = await params;
+
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
   });
@@ -55,7 +63,7 @@ export async function DELETE(request: Request, { params }: { params: { commentId
   }
 
   const comment = await prisma.comment.findUnique({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
   });
 
   if (!comment || comment.userId !== user.id) {
@@ -63,7 +71,7 @@ export async function DELETE(request: Request, { params }: { params: { commentId
   }
 
   await prisma.comment.delete({
-    where: { id: commentId },
+    where: { id: Number(commentId) },
   });
 
   return NextResponse.json({ message: "Comentario eliminado exitosamente" });

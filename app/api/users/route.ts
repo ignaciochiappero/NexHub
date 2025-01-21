@@ -4,7 +4,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
 const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1 minuto
 

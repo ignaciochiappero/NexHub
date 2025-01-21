@@ -5,7 +5,7 @@ import prisma from "@/libs/prisma";
 
 //Función de next-auth para obtener el id de la sesión de usuario
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
 
 export async function POST(request: Request) {
 

@@ -1,14 +1,17 @@
 
 //app\api\admin\requests\[requestId]\route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { config as authOptions } from "@/auth.config";
+
+type RouteContext = {
+  params: Promise<{ requestId: string }>;
+};
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { requestId: string } }
+  { params }: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -18,7 +21,6 @@ export async function PUT(
       });
     }
 
-    // Esperar la resolución de params de manera asíncrona
     const { requestId } = await params;
     if (!requestId) {
       return new NextResponse(JSON.stringify({ error: "Request ID is required" }), { 
