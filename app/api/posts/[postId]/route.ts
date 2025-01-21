@@ -1,18 +1,26 @@
 
 //app\api\posts\[postId]\route.ts
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config";
 import cloudinary from "@/libs/cloudinary"
 
-export async function PUT(request: Request, { params }: { params: { postId: string } }) {
+
+type RouteContext = {
+  params: Promise<{ postId: string }>;
+};
+
+export async function PUT(    
+  request: NextRequest,
+    context: RouteContext) {
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
-  const postId = Number.parseInt(params.postId)
+  const { postId } = await context.params;
+
   const formData = await request.formData()
   const content = formData.get("content") as string
   const deleteImage = formData.get("deleteImage") as string
@@ -26,7 +34,7 @@ export async function PUT(request: Request, { params }: { params: { postId: stri
   }
 
   const post = await prisma.post.findUnique({
-    where: { id: postId },
+    where: { id: Number(postId) },
   })
 
   if (!post || post.userId !== user.id) {
@@ -45,7 +53,7 @@ export async function PUT(request: Request, { params }: { params: { postId: stri
   }
 
   const updatedPost = await prisma.post.update({
-    where: { id: postId },
+    where: { id: Number(postId) },
     data: {
       content: content,
       image: updatedImageUrl,
@@ -64,14 +72,17 @@ export async function PUT(request: Request, { params }: { params: { postId: stri
 
   return NextResponse.json(updatedPost)
 }
-
-export async function DELETE(request: Request, { params }: { params: { postId: string } }) {
+ 
+export async function DELETE(    
+  request: NextRequest,
+    context: RouteContext) {
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
-  const postId = Number.parseInt(params.postId)
+  const { postId } = await context.params;
+
   const user = await prisma.user.findUnique({
     where: { email: session.user?.email },
   })
@@ -81,7 +92,7 @@ export async function DELETE(request: Request, { params }: { params: { postId: s
   }
 
   const post = await prisma.post.findUnique({
-    where: { id: postId },
+    where: { id: Number(postId) },
   })
 
   if (!post || post.userId !== user.id) {
@@ -97,7 +108,7 @@ export async function DELETE(request: Request, { params }: { params: { postId: s
   }
 
   await prisma.post.delete({
-    where: { id: postId },
+    where: { id: Number(postId) },
   })
 
   return NextResponse.json({ message: "Post eliminado exitosamente" })

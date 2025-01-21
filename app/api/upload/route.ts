@@ -1,8 +1,9 @@
 // app/api/upload/route.ts
-import { NextResponse } from "next/server";
+// app/api/upload/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/libs/cloudinary";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
@@ -19,7 +20,8 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(bytes);
 
     // Subir imagen a Cloudinary
-    return new Promise((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return new Promise<NextResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: "premios",
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
         (error, result) => {
           if (error) {
             console.error("Error en Cloudinary:", error);
-            reject(
+            resolve(
               NextResponse.json(
                 { error: "Error al subir la imagen" },
                 { status: 500 }

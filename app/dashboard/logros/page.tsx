@@ -1,70 +1,80 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+"use client"
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, CheckCircle, Target, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Trophy, CheckCircle, Target, AlertCircle, ChevronDown, ChevronUp } from "lucide-react"
+import * as LucideIcons from "lucide-react"
 
 interface Achievement {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  stepsFinal: number;
-  achievements: UserAchievement[];
+  id: number
+  title: string
+  description: string
+  icon: string
+  stepsFinal: number
+  achievements: UserAchievement[]
 }
 
 interface UserAchievement {
-  stepsProgress: number;
-  progress: number;
-  completed: boolean;
-  pendingSteps?: number[];
+  stepsProgress: number
+  progress: number
+  completed: boolean
+  pendingSteps?: number[]
 }
 
 export default function LogrosPage() {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [confirmationModal, setConfirmationModal] = useState<{ show: boolean; achievementId: number; step: number } | null>(null);
-  const [expandedAchievement, setExpandedAchievement] = useState<number | null>(null);
-  const achievementsRef = useRef<HTMLDivElement>(null);
+  const [achievements, setAchievements] = useState<Achievement[]>([])
+  const [loading, setLoading] = useState(true)
+  const [confirmationModal, setConfirmationModal] = useState<{
+    show: boolean
+    achievementId: number
+    step: number
+  } | null>(null)
+  const [expandedAchievement, setExpandedAchievement] = useState<number | null>(null)
+  const achievementsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetchAchievements();
-  }, []);
+    fetchAchievements()
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (expandedAchievement !== null && achievementsRef.current && !achievementsRef.current.contains(event.target as Node)) {
-        setExpandedAchievement(null);
+      if (
+        expandedAchievement !== null &&
+        achievementsRef.current &&
+        !achievementsRef.current.contains(event.target as Node)
+      ) {
+        setExpandedAchievement(null)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [expandedAchievement]);
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [expandedAchievement])
 
   const fetchAchievements = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch("/api/achievements");
-      if (!response.ok) throw new Error("Error al obtener logros");
-      const data = await response.json();
-      setAchievements(data);
+      const response = await fetch("/api/achievements")
+      if (!response.ok) throw new Error("Error al obtener logros")
+      const data = await response.json()
+      setAchievements(data)
     } catch (error) {
-      console.error("Error al cargar logros:", error);
+      console.error("Error al cargar logros:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleStepCompletion = async (achievementId: number, step: number) => {
-    setConfirmationModal({ show: true, achievementId, step });
-  };
+    setConfirmationModal({ show: true, achievementId, step })
+  }
 
   const confirmStepCompletion = async () => {
-    if (!confirmationModal) return;
+    if (!confirmationModal) return
 
     try {
       const response = await fetch("/api/achievements", {
@@ -74,44 +84,45 @@ export default function LogrosPage() {
           logroId: confirmationModal.achievementId,
           step: confirmationModal.step,
         }),
-      });
+      })
 
-      if (!response.ok) throw new Error("Error al enviar la solicitud");
+      if (!response.ok) throw new Error("Error al enviar la solicitud")
 
-      setAchievements(prevAchievements => 
-        prevAchievements.map(achievement => 
+      setAchievements((prevAchievements) =>
+        prevAchievements.map((achievement) =>
           achievement.id === confirmationModal.achievementId
             ? {
                 ...achievement,
-                achievements: [{
-                  ...achievement.achievements[0],
-                  pendingSteps: [...(achievement.achievements[0]?.pendingSteps || []), confirmationModal.step]
-                }]
+                achievements: [
+                  {
+                    ...achievement.achievements[0],
+                    pendingSteps: [...(achievement.achievements[0]?.pendingSteps || []), confirmationModal.step],
+                  },
+                ],
               }
-            : achievement
-        )
-      );
+            : achievement,
+        ),
+      )
     } catch (error) {
-      console.error("Error al enviar la solicitud:", error);
+      console.error("Error al enviar la solicitud:", error)
     } finally {
-      setConfirmationModal(null);
+      setConfirmationModal(null)
     }
-  };
+  }
 
   const toggleAchievementExpansion = (achievementId: number) => {
-    setExpandedAchievement(prevId => prevId === achievementId ? null : achievementId);
-  };
+    setExpandedAchievement((prevId) => (prevId === achievementId ? null : achievementId))
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const DynamicIcon = ({ name, ...props }: { name: string; [key: string]: any }) => {
-    const IconComponent = LucideIcons[name as keyof typeof LucideIcons];
-    return IconComponent ? <IconComponent {...props} /> : null;
-  };
+    const IconComponent = LucideIcons[name as keyof typeof LucideIcons] as React.ComponentType<any>
+    return IconComponent ? <IconComponent {...props} /> : null
+  }
 
   return (
     <div className="min-h-screen p-8 pt-40 font-[family-name:var(--blender-medium)]">
       <div className="max-w-6xl mx-auto">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -121,7 +132,6 @@ export default function LogrosPage() {
             <Trophy className="mr-4 text-yellow-500" size={48} />
             Mis Logros
           </h1>
-
         </motion.div>
 
         {loading ? (
@@ -143,8 +153,13 @@ export default function LogrosPage() {
           <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative" ref={achievementsRef}>
             <AnimatePresence>
               {achievements.map((achievement, index) => {
-                const userAchievement = achievement.achievements[0] || { stepsProgress: 0, progress: 0, completed: false, pendingSteps: [] };
-                const isExpanded = expandedAchievement === achievement.id;
+                const userAchievement = achievement.achievements[0] || {
+                  stepsProgress: 0,
+                  progress: 0,
+                  completed: false,
+                  pendingSteps: [],
+                }
+                const isExpanded = expandedAchievement === achievement.id
                 return (
                   <motion.div
                     key={achievement.id}
@@ -155,26 +170,32 @@ export default function LogrosPage() {
                     transition={{ duration: 0.3, delay: index * 0.05 }}
                     className={`
                       achievement-card p-6 rounded-xl transition-all duration-300 shadow-lg relative
-                      ${userAchievement.completed 
-                        ? 'bg-green-900/30 border-2 border-green-600' 
-                        : 'bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800'}
+                      ${
+                        userAchievement.completed
+                          ? "bg-green-900/30 border-2 border-green-600"
+                          : "bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800"
+                      }
                     `}
                   >
-                    <div 
+                    <div
                       className="flex items-center mb-4 cursor-pointer"
                       onClick={() => toggleAchievementExpansion(achievement.id)}
                     >
-                      <div className={`
+                      <div
+                        className={`
                         mr-4 w-12 h-12 flex items-center justify-center
-                        ${userAchievement.completed ? 'text-green-500' : 'text-gray-500'}
-                      `}>
+                        ${userAchievement.completed ? "text-green-500" : "text-gray-500"}
+                      `}
+                      >
                         <DynamicIcon name={achievement.icon} size={32} />
                       </div>
                       <div className="flex-grow">
-                        <h2 className={`
+                        <h2
+                          className={`
                           text-xl font-bold
-                          ${userAchievement.completed ? 'text-green-300' : 'text-white'}
-                        `}>
+                          ${userAchievement.completed ? "text-green-300" : "text-white"}
+                        `}
+                        >
                           {achievement.title}
                         </h2>
                         <p className="text-gray-400">{achievement.description}</p>
@@ -183,10 +204,10 @@ export default function LogrosPage() {
                     </div>
 
                     <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2 overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         className={`
                           h-2.5 rounded-full
-                          ${userAchievement.completed ? 'bg-green-500' : 'bg-gray-500'}
+                          ${userAchievement.completed ? "bg-green-500" : "bg-gray-500"}
                         `}
                         initial={{ width: 0 }}
                         animate={{ width: `${userAchievement.progress}%` }}
@@ -203,12 +224,12 @@ export default function LogrosPage() {
 
                     {userAchievement.completed ? (
                       <div className="flex items-center text-green-500 mt-4">
-                        <CheckCircle className="mr-2" /> 
+                        <CheckCircle className="mr-2" />
                         Completado
                       </div>
                     ) : (
                       <div className="flex items-center text-yellow-500 mt-4">
-                        <Target className="mr-2" /> 
+                        <Target className="mr-2" />
                         En curso
                       </div>
                     )}
@@ -224,10 +245,10 @@ export default function LogrosPage() {
                         >
                           <div className="space-y-2">
                             {[...Array(achievement.stepsFinal)].map((_, step) => {
-                              const stepNumber = step + 1;
-                              const isPending = userAchievement.pendingSteps?.includes(stepNumber) || false;
-                              const isCompleted = stepNumber <= userAchievement.stepsProgress;
-                              const canSelect = stepNumber === userAchievement.stepsProgress + 1 && !isPending;
+                              const stepNumber = step + 1
+                              const isPending = userAchievement.pendingSteps?.includes(stepNumber) || false
+                              const isCompleted = stepNumber <= userAchievement.stepsProgress
+                              const canSelect = stepNumber === userAchievement.stepsProgress + 1 && !isPending
 
                               return (
                                 <motion.button
@@ -238,12 +259,12 @@ export default function LogrosPage() {
                                   disabled={!canSelect}
                                   className={`w-full py-2 px-4 rounded-md text-white transition-colors duration-300 ${
                                     isCompleted
-                                      ? 'bg-green-600 hover:bg-green-700'
+                                      ? "bg-green-600 hover:bg-green-700"
                                       : isPending
-                                      ? 'bg-yellow-600 hover:bg-yellow-700'
-                                      : canSelect
-                                      ? 'bg-gray-600 hover:bg-gray-700'
-                                      : 'bg-gray-800 cursor-not-allowed'
+                                        ? "bg-yellow-600 hover:bg-yellow-700"
+                                        : canSelect
+                                          ? "bg-gray-600 hover:bg-gray-700"
+                                          : "bg-gray-800 cursor-not-allowed"
                                   }`}
                                 >
                                   {isCompleted ? (
@@ -260,14 +281,14 @@ export default function LogrosPage() {
                                     `Completar Paso ${stepNumber}`
                                   )}
                                 </motion.button>
-                              );
+                              )
                             })}
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </motion.div>
-                );
+                )
               })}
             </AnimatePresence>
           </motion.div>
@@ -292,7 +313,9 @@ export default function LogrosPage() {
                 <AlertCircle className="text-yellow-500 mr-4" size={32} />
                 <h2 className="text-3xl font-bold text-white">Confirmar Paso</h2>
               </div>
-              <p className="text-gray-300 mb-8 text-lg">¿Estás seguro de que quieres marcar este paso como pendiente?</p>
+              <p className="text-gray-300 mb-8 text-lg">
+                ¿Estás seguro de que quieres marcar este paso como pendiente?
+              </p>
               <div className="flex justify-end space-x-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -317,6 +340,6 @@ export default function LogrosPage() {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 

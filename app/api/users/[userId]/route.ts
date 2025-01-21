@@ -5,14 +5,19 @@ import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 
+
+type RouteContext = {
+  params: Promise<{ userId: string }>;
+};
+
 // GET: Obtener un usuario específico
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { userId: string } }
+    req: NextRequest,
+      context: RouteContext
 ) {
   try {
     // Espera la resolución de params
-    const { userId } = await params; // Usar await aquí si params es asincrónico
+    const { userId } = await context.params; // Usar await aquí si params es asincrónico
 
     const user = await prisma.user.findUnique({
       where: { id: parseInt(userId) },
@@ -42,7 +47,7 @@ export async function GET(
 // PUT: Actualizar un usuario
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  context: RouteContext
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -50,7 +55,7 @@ export async function PUT(
       return new NextResponse("No autorizado", { status: 401 });
     }
 
-    const { userId } = await params; // Esperar params de manera asincrónica
+    const { userId } = await context.params; // Esperar params de manera asincrónica
     if (parseInt(session.user.id) !== parseInt(userId)) {
       return new NextResponse("No autorizado", { status: 401 });
     }
@@ -78,10 +83,10 @@ export async function PUT(
 // DELETE: Eliminar un usuario
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  context: RouteContext
 ) {
   try {
-    const { userId } = await params; // Usar await para params
+    const { userId } = await context.params; // Usar await para params
 
     const userDeleted = await prisma.user.delete({
       where: { id: parseInt(userId) }

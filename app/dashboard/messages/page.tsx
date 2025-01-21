@@ -34,6 +34,14 @@ async function loadData() {
         take: 1,
         orderBy: {
           createdAt: 'desc'
+        },
+        include: {
+          sender: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
         }
       }
     }
@@ -59,8 +67,7 @@ export default async function MessagesPage() {
   const { session, conversations, users } = await loadData();
 
   return (
-    <div className="pt-28  font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D]">
-
+    <div className="pt-28 font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D]">
       <MessagesClient session={session} initialConversations={conversations} initialUsers={users} />
     </div>
   );
