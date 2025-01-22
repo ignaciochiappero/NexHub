@@ -1,3 +1,6 @@
+
+//app\api\logros\[logroId]\premios\route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 

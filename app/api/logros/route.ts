@@ -1,11 +1,9 @@
 
 //app\api\logros\route.ts
 
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 
-// GET: Obtener todos los logros
 export async function GET() {
   try {
     const logros = await prisma.logro.findMany({
@@ -38,7 +36,10 @@ export async function GET() {
     // Transformar la respuesta para que sea más fácil de usar en el cliente
     const formattedLogros = logros.map(logro => ({
       ...logro,
-      premios: logro.premios.map(p => p.premio)
+      premios: logro.premios.map(p => p.premio),
+      stepsProgress: 0,
+      progress: 0,
+      completed: false
     }));
 
     return NextResponse.json(formattedLogros);
@@ -48,14 +49,10 @@ export async function GET() {
   }
 }
 
-// Crear un logro
 export async function POST(req: NextRequest) {
   try {
-    // Asegurarse de que el cuerpo de la solicitud no sea nulo
     const body = await req.json();
     
-    console.log('Received request body:', body); // Debug log
-
     if (!body) {
       return new NextResponse(
         JSON.stringify({ error: "El cuerpo de la solicitud está vacío" }), 
@@ -83,14 +80,13 @@ export async function POST(req: NextRequest) {
         description,
         icon,
         stepsFinal: Number(stepsFinal),
-        // Crear las relaciones con los premios si se proporcionaron
-        premios: premioIds.length > 0 ? {
+        premios: {
           create: premioIds.map((premioId: number) => ({
             premio: {
               connect: { id: premioId }
             }
           }))
-        } : undefined
+        }
       },
       include: {
         premios: {

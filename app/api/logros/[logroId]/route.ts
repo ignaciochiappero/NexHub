@@ -1,33 +1,24 @@
 // app\api\logros\[logroId]\route.ts
 
-import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
-import { getServerSession } from "next-auth/next";
-import { config as authOptions } from "@/auth.config";
-
+import { NextRequest, NextResponse } from "next/server";
 
 type RouteContext = {
   params: Promise<{ logroId: string }>;
 };
 
-
-
-// GET: Obtener un logro específico
-export async function GET(
-    req: NextRequest,
-    context: RouteContext
-) {
+export async function GET(req: NextRequest, context: RouteContext) {
   try {
-    // Espera la resolución de params
-    const { logroId } = await context.params; // Usar await aquí si params es asincrónico
+    const { logroId } = await context.params;
 
     const logro = await prisma.logro.findUnique({
       where: { id: parseInt(logroId) },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
       },
     });
 
@@ -37,60 +28,89 @@ export async function GET(
 
     return NextResponse.json(logro);
   } catch (error) {
-    console.error("[logro_GET_ERROR]", error);
+    console.error("[LOGRO_GET_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
   }
 }
 
-// PUT: Actualizar un Logro
-export async function PUT(
-  req: NextRequest,
-  context: RouteContext
-) {
+export async function PUT(req: NextRequest, context: RouteContext) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return new NextResponse("No autorizado", { status: 401 });
+    const { logroId } = await context.params;
+    const {
+      title,
+      description,
+      icon,
+      stepsFinal,
+      premioIds = [],
+    } = await req.json();
+
+    // Validaciones básicas
+    if (!title || !description || !icon || stepsFinal === undefined) {
+      return new NextResponse(
+        JSON.stringify({
+          error: "Faltan campos requeridos",
+          received: { title, description, icon, stepsFinal },
+        }),
+        { status: 400 }
+      );
     }
 
-    const { logroId } = await context.params; // Esperar params de manera asincrónica
-    
-    if (parseInt(session.user.id) !== parseInt(logroId)) {
-      return new NextResponse("No autorizado", { status: 401 });
-    }
-
-    const { title, description } = await req.json();
-
-    const updatedlogro = await prisma.logro.update({
-      where: { id: parseInt(logroId) },
-      data: {
-        title,
-        description
+    // Primero, eliminar todas las relaciones existentes
+    await prisma.logroPremio.deleteMany({
+      where: {
+        logroId: parseInt(logroId),
       },
     });
 
-    return NextResponse.json(updatedlogro);
+    // Luego, actualizar el logro y crear las nuevas relaciones
+    const updatedLogro = await prisma.logro.update({
+      where: { id: parseInt(logroId) },
+      data: {
+        title,
+        description,
+        icon,
+        stepsFinal: Number(stepsFinal),
+        premios: {
+          create: premioIds.map((premioId: number) => ({
+            premio: {
+              connect: { id: premioId },
+            },
+          })),
+        },
+      },
+      include: {
+        premios: {
+          include: {
+            premio: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(updatedLogro);
   } catch (error) {
-    console.error("[logro_UPDATE_ERROR]", error);
+    console.error("[LOGRO_UPDATE_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
   }
 }
 
-// DELETE: Eliminar un Logro
-export async function DELETE(
-  req: NextRequest,
-  context: RouteContext
-) {
+export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
-    const { logroId } = await context.params;  // Usar await para params
+    const { logroId } = await context.params;
 
-    const logroDeleted = await prisma.logro.delete({
-      where: { id: parseInt(logroId) }
+    // Primero eliminar las relaciones
+    await prisma.logroPremio.deleteMany({
+      where: { logroId: parseInt(logroId) },
     });
 
-    return new NextResponse(JSON.stringify(logroDeleted), { status: 200 });
+    // Luego eliminar el logro
+    const logroDeleted = await prisma.logro.delete({
+      where: { id: parseInt(logroId) },
+    });
+
+    return NextResponse.json(logroDeleted, { status: 200 });
   } catch (error) {
-    console.error("[logro_DELETE_ERROR]", error);
+    console.error("[LOGRO_DELETE_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
   }
 }

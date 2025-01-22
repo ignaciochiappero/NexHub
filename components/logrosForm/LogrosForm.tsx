@@ -1,4 +1,8 @@
-//components\logrosForm\LogrosForm.tsx'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+//components\logrosForm\LogrosForm.tsx
+
+'use client'
+
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Pen, Book, X, Target, Gift } from 'lucide-react';
@@ -11,6 +15,15 @@ interface LogrosFormProps {
   isOpen: boolean;
   onClose: () => void;
   onLogroAdded: () => void;
+  logroToEdit?: {
+    id?: number;
+    title: string;
+    description: string;
+    icon: string;
+    stepsFinal: number;
+    premios: Premio[];
+  } | null;
+  isEditing?: boolean;
 }
 
 interface Premio {
@@ -20,8 +33,8 @@ interface Premio {
   imagen: string;
 }
 
-function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+function LogrosForm({ isOpen, onClose, onLogroAdded, logroToEdit, isEditing }: LogrosFormProps) {
+  const { control, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -51,6 +64,19 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (logroToEdit) {
+      setValue('title', logroToEdit.title);
+      setValue('description', logroToEdit.description);
+      setValue('icon', logroToEdit.icon);
+      setValue('stepsFinal', logroToEdit.stepsFinal);
+      setSelectedPremios(logroToEdit.premios.map(p => p.id));
+    } else {
+      reset();
+      setSelectedPremios([]);
+    }
+  }, [logroToEdit, setValue, reset]);
+
   const onSubmit = handleSubmit(async (formData) => {
     setIsLoading(true);
     setError(null);
@@ -65,22 +91,22 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
     };
 
     try {
-      const response = await axios.post('/api/logros', data, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+      let response;
+      if (isEditing && logroToEdit?.id) {
+        response = await axios.put(`/api/logros/${logroToEdit.id}`, data);
+      } else {
+        response = await axios.post('/api/logros', data);
+      }
 
-      if (response.status === 201) {
+      if (response.status === 200 || response.status === 201) {
         onLogroAdded();
         reset();
         setSelectedPremios([]);
         onClose();
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error('Add logro error:', error);
-      setError(error.response?.data?.error || 'Error al crear el logro');
+      console.error(isEditing ? 'Update logro error:' : 'Add logro error:', error);
+      setError(error.response?.data?.error || `Error al ${isEditing ? 'actualizar' : 'crear'} el logro`);
     } finally {
       setIsLoading(false);
     }
@@ -93,16 +119,6 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
         : [...prev, premioId]
     );
   };
-
-  useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
 
   return (
     <AnimatePresence>
@@ -132,7 +148,9 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                 <X size={24} />
               </motion.button>
 
-              <h2 className="font-blender-mayus text-3xl text-white mb-6">Registro Logro</h2>
+              <h2 className="font-blender-mayus text-3xl text-white mb-6">
+                {isEditing ? 'Editar Logro' : 'Registro Logro'}
+              </h2>
 
               {error && (
                 <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-500">
@@ -177,11 +195,11 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                       transition={{ delay: 0.2 }}
                       className="relative"
                     >
-                      <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
+                      <Book className="absolute left-3 top-3 text-gray-400" />
+                      <textarea
                         placeholder="Descripción del logro"
                         className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
+                        rows={4}
                         {...field}
                       />
                       {errors.description && (
@@ -203,7 +221,7 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                     >
                       <IconSelector
                         selectedIcon={field.value}
-                        onSelect={(icon: unknown) => field.onChange(icon)}
+                        onSelect={(icon: string) => field.onChange(icon)}
                       />
                       {errors.icon && (
                         <span className="text-sm text-red-500 mt-1">{errors.icon.message}</span>
@@ -268,12 +286,12 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                         <div className="flex items-center gap-3">
                           {premio.imagen && (
                             <Image
-                            src={premio.imagen}
-                            alt={premio.titulo}
-                            width={40}
-                            height={40}
-                            className="rounded-md object-cover"
-                          />
+                              src={premio.imagen}
+                              alt={premio.titulo}
+                              width={40}
+                              height={40}
+                              className="rounded-md object-cover"
+                            />
                           )}
                           <div>
                             <h3 className="text-white font-medium">{premio.titulo}</h3>
@@ -292,7 +310,9 @@ function LogrosForm({ isOpen, onClose, onLogroAdded }: LogrosFormProps) {
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white p-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all font-geist-sans disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? 'Agregando...' : 'Agregar logro'}
+                  {isLoading 
+                    ? (isEditing ? 'Actualizando...' : 'Agregando...') 
+                    : (isEditing ? 'Actualizar logro' : 'Agregar logro')}
                 </motion.button>
               </form>
             </div>

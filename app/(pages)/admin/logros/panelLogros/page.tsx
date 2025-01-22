@@ -1,16 +1,16 @@
 //app\(pages)\admin\logros\panelLogros\page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from 'next/image';
-
-import { 
-  Search, 
-  Trash2, 
-  Edit2, 
-  AlertCircle, 
-  Trophy, 
+import Image from "next/image";
+import {
+  Search,
+  Trash2,
+  Edit2,
+  AlertCircle,
+  Trophy,
   Plus,
   CheckCircle,
   Target,
@@ -25,54 +25,70 @@ import {
   Database,
   Shield,
   Swords,
-  Zap, Heart, Crown, Diamond, Brain, 
-  Flame,  Award,  Sparkles,
-  Gem, Sword, Book, Compass, Map,
-  Mountain, Sun, Moon,  Lightbulb,
-  Flag, Crosshair, Eye, Gift,
-  ChevronLeft
-} from 'lucide-react';
+  Zap,
+  Heart,
+  Crown,
+  Diamond,
+  Brain,
+  Flame,
+  Award,
+  Sparkles,
+  Gem,
+  Sword,
+  Book,
+  Compass,
+  Map,
+  Mountain,
+  Sun,
+  Moon,
+  Lightbulb,
+  Flag,
+  Crosshair,
+  Eye,
+  Gift,
+  ChevronLeft,
+} from "lucide-react";
 import LogrosForm from "@/components/logrosForm/LogrosForm";
 import Link from "next/link";
 
 // Mapeo de strings a componentes de íconos
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMapping: { [key: string]: any } = {
-  'Gauge': Gauge,
-  'Trophy': Trophy,
-  'Star': Star,
-  'Lock': Lock,
-  'Unlock': Unlock,
-  'Medal': Medal,
-  'Rocket': Rocket,
-  'Target': Target,
-  'CheckCircle': CheckCircle,
-  'Code': Code,
-  'Globe': Globe,
-  'Database': Database,
-  'Shield': Shield,
-  'Swords': Swords,
-  'Zap': Zap,
-  'Heart': Heart,
-  'Crown': Crown,
-  'Diamond': Diamond,
-  'Brain': Brain,
-  'Flame': Flame,
-  'Award': Award,
-  'Sparkles': Sparkles,
-  'Gem': Gem,
-  'Sword': Sword,
-  'Book': Book,
-  'Compass': Compass,
-  'Map': Map,
-  'Mountain': Mountain,
-  'Sun': Sun,
-  'Moon': Moon,
-  'Lightbulb': Lightbulb,
-  'Flag': Flag,
-  'Crosshair': Crosshair,
-  'Eye': Eye,
-  'Gift': Gift,
+  Gauge: Gauge,
+  Trophy: Trophy,
+  Star: Star,
+  Lock: Lock,
+  Unlock: Unlock,
+  Medal: Medal,
+  Rocket: Rocket,
+  Target: Target,
+  CheckCircle: CheckCircle,
+  Code: Code,
+  Globe: Globe,
+  Database: Database,
+  Shield: Shield,
+  Swords: Swords,
+  Zap: Zap,
+  Heart: Heart,
+  Crown: Crown,
+  Diamond: Diamond,
+  Brain: Brain,
+  Flame: Flame,
+  Award: Award,
+  Sparkles: Sparkles,
+  Gem: Gem,
+  Sword: Sword,
+  Book: Book,
+  Compass: Compass,
+  Map: Map,
+  Mountain: Mountain,
+  Sun: Sun,
+  Moon: Moon,
+  Lightbulb: Lightbulb,
+  Flag: Flag,
+  Crosshair: Crosshair,
+  Eye: Eye,
+  Gift: Gift,
 };
 
 interface Logro {
@@ -85,7 +101,6 @@ interface Logro {
   progress: number;
   completed: boolean;
   createdAt: string;
-
   premios: Premio[];
 }
 
@@ -96,18 +111,16 @@ interface Premio {
   imagen: string;
 }
 
-export default function AdminUserPage() {
-  const [logro, setLogro] = useState<Logro[]>([]);
-
+export default function AdminLogroPage() {
+  const [logros, setLogros] = useState<Logro[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [premio, setPremio] = useState<Premio[]>([]);
-
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteLogroId, setDeleteLogroId] = useState<number | null>(null);
   const [isLogrosFormOpen, setIsLogrosFormOpen] = useState(false);
-
-
+  const [logroToEdit, setLogroToEdit] = useState<Logro | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const fetchLogros = async () => {
     setLoading(true);
@@ -115,7 +128,7 @@ export default function AdminUserPage() {
       const response = await fetch("/api/logros");
       if (!response.ok) throw new Error("Error al obtener Logros");
       const data = await response.json();
-      setLogro(data);
+      setLogros(data);
     } catch (error) {
       console.error("Error al cargar logros:", error);
     } finally {
@@ -123,15 +136,7 @@ export default function AdminUserPage() {
     }
   };
 
-  useEffect(() => {
-    fetchLogros();
-  }, []);
-
-
-
-
   const fetchPremios = async () => {
-    setLoading(true);
     try {
       const response = await fetch("/api/premios");
       if (!response.ok) throw new Error("Error al obtener premios");
@@ -139,23 +144,19 @@ export default function AdminUserPage() {
       setPremio(data);
     } catch (error) {
       console.error("Error al cargar premios:", error);
-    } finally {
-      setLoading(false);
     }
   };
-  
+
   useEffect(() => {
+    fetchLogros();
     fetchPremios();
   }, []);
-
-
-
 
   const handleDelete = async (id: number) => {
     try {
       const response = await fetch(`/api/logros/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Error al eliminar el logro");
-      setLogro((prevLogros) => prevLogros.filter((logro) => logro.id !== id));
+      fetchLogros();
       setDeleteLogroId(null);
     } catch (error) {
       console.error("Error al eliminar logro:", error);
@@ -163,44 +164,44 @@ export default function AdminUserPage() {
     }
   };
 
+  const handleEdit = (logro: Logro) => {
+    setLogroToEdit(logro);
+    setIsEditing(true);
+    setIsLogrosFormOpen(true);
+  };
 
+  const handleModalClose = () => {
+    setIsLogrosFormOpen(false);
+    setLogroToEdit(null);
+    setIsEditing(false);
+  };
 
   const getIconComponent = (iconName: string) => {
     const IconComponent = iconMapping[iconName];
     return IconComponent ? <IconComponent size={48} /> : <Trophy size={48} />;
   };
 
-  const filteredLogros = logro.filter(
-    (logros) =>
-      logros.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logros.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredLogros = logros.filter(
+    (logro) =>
+      logro.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      logro.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-
-
-  
 
   return (
     <div className="min-h-screen bg-[#242424] p-8 pt-28 font-[family-name:var(--blender-medium)]">
-      
-          <Link href="/admin/logros">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              
-              className=" text-whitepy-3 rounded-full transition-all flex items-center text-lg"
-            >
-              <ChevronLeft className="mr-2" size={24} />
-            Volver
-            </motion.button>
-          </Link>
-
-
-
-
+      <Link href="/admin/logros">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="text-white py-3 rounded-full transition-all flex items-center text-lg"
+        >
+          <ChevronLeft className="mr-2" size={24} />
+          Volver
+        </motion.button>
+      </Link>
 
       <div className="max-w-6xl mx-auto mt-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -213,7 +214,11 @@ export default function AdminUserPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setIsLogrosFormOpen(true)}
+            onClick={() => {
+              setLogroToEdit(null);
+              setIsEditing(false);
+              setIsLogrosFormOpen(true);
+            }}
             className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-pink-500/25 transition-all flex items-center text-lg"
           >
             <Plus className="mr-2" size={24} />
@@ -221,7 +226,7 @@ export default function AdminUserPage() {
           </motion.button>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -234,7 +239,10 @@ export default function AdminUserPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-4 pl-14 rounded-full shadow-lg border border-gray-700 bg-[#181818] text-white focus:outline-none focus:ring-2 focus:ring-pink-500 text-lg"
           />
-          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
+          <Search
+            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={24}
+          />
         </motion.div>
 
         {loading ? (
@@ -253,99 +261,110 @@ export default function AdminUserPage() {
             ))}
           </div>
         ) : (
-          <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div
+            layout
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             <AnimatePresence>
-              
-              {filteredLogros.map((logros, index) => (
+              {filteredLogros.map((logro, index) => (
                 <motion.div
-                  key={logros.id}
+                  key={logro.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className={`
-                    p-6 rounded-xl transition-all duration-300
-                    ${logros.completed 
-                      ? 'bg-green-900/30 border-2 border-green-600' 
-                      : 'bg-[#353535] hover:bg-[#454545]'}
-                  `}
+        p-6 rounded-xl transition-all duration-300 flex flex-col h-full
+        ${
+          logro.completed
+            ? "bg-green-900/30 border-2 border-green-600"
+            : "bg-[#353535] hover:bg-[#454545]"
+        }
+      `}
                 >
-                  <div className="flex items-center mb-4">
-                    <div className={`
-                      mr-4 w-12 h-12 flex items-center justify-center
-                      ${logros.completed ? 'text-green-500' : 'text-gray-500'}
-                    `}>
-                      {getIconComponent(logros.icon)}
-                    </div>
-                    <div>
-                      <h2 className={`
-                        text-xl font-bold
-                        ${logros.completed ? 'text-green-300' : 'text-white'}
-                      `}>
-                        {logros.title}
-                      </h2>
-                      <p className="text-gray-400">{logros.description}</p>
-                    </div>
-                  </div>
-
-                  <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2">
-                    <div 
-                      className={`
-                        h-2.5 rounded-full
-                        ${logros.completed ? 'bg-green-600' : 'bg-pink-600'}
-                      `}
-                      style={{
-                        width: `${logros.progress}%`
-                      }}
-                    ></div>
-                  </div>
-
-                  <div className="flex justify-between text-sm text-gray-400">
-                    <span>Pasos para completar</span>
-                    <span>
-                      {logros.stepsProgress}/{logros.stepsFinal}
-                    </span>
-                  </div>
-
-                  <div>
-                    <hr className="mt-3 mb-3"/>
-                    
-                    <span className="text-sm text-gray-400">Premios</span>
-
-                  {/* Contenedor para los premios */}
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                      {logros.premios.map((premio) => (
-                        <div 
-                          key={premio.id} 
-                          className="flex items-center gap-2 p-2 bg-gray-700 rounded-lg"
+                  {/* Contenido principal con flex-grow */}
+                  <div className="flex-grow">
+                    {/* Header con ícono y título */}
+                    <div className="flex items-center mb-4">
+                      <div
+                        className={`
+              mr-4 w-12 h-12 flex items-center justify-center
+              ${logro.completed ? "text-green-500" : "text-gray-500"}
+            `}
+                      >
+                        {getIconComponent(logro.icon)}
+                      </div>
+                      <div>
+                        <h2
+                          className={`
+                text-xl font-bold
+                ${logro.completed ? "text-green-300" : "text-white"}
+              `}
                         >
-                          {/* Imagen del premio */}
-                          <Image 
-                            src={premio.imagen} 
-                            alt={premio.titulo} 
-                            width={40} 
-                            height={40} 
-                            className="object-cover rounded-full" 
-                          />
-                          
-                          {/* Información del premio */}
-                          <div>
-                            <h4 className="text-sm text-white font-semibold">{premio.titulo}</h4>
-                            <p className="text-xs text-gray-400">{premio.subtitulo}</p>
-                          </div>
-                        </div>
-                      ))}
+                          {logro.title}
+                        </h2>
+                        <p className="text-gray-400">{logro.description}</p>
+                      </div>
                     </div>
 
+                    {/* Barra de progreso */}
+                    <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2">
+                      <div
+                        className={`
+              h-2.5 rounded-full
+              ${logro.completed ? "bg-green-600" : "bg-pink-600"}
+            `}
+                        style={{
+                          width: `${logro.progress}%`,
+                        }}
+                      ></div>
+                    </div>
+
+                    {/* Contador de pasos */}
+                    <div className="flex justify-between text-sm text-gray-400">
+                      <span>Pasos para completar</span>
+                      <span>
+                        {logro.stepsProgress}/{logro.stepsFinal}
+                      </span>
+                    </div>
+
+                    {/* Sección de premios */}
+                    <div className="mt-4">
+                      <hr className="mb-3 border-gray-600" />
+                      <span className="text-sm text-gray-400">Premios</span>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {logro.premios.map((premio) => (
+                          <div
+                            key={premio.id}
+                            className="flex items-center gap-2 p-2 bg-gray-700 rounded-lg"
+                          >
+                            <Image
+                              src={premio.imagen}
+                              alt={premio.titulo}
+                              width={40}
+                              height={40}
+                              className="object-cover rounded-full"
+                            />
+                            <div>
+                              <h4 className="text-sm text-white font-semibold">
+                                {premio.titulo}
+                              </h4>
+                              <p className="text-xs text-gray-400">
+                                {premio.subtitulo}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                      
-
-                  <div className="flex justify-between mt-6">
+                  {/* Botones de acción fijos al final */}
+                  <div className="flex justify-between mt-auto pt-6">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setDeleteLogroId(logros.id)}
+                      onClick={() => setDeleteLogroId(logro.id)}
                       className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-md transition-colors duration-300 flex items-center"
                     >
                       <Trash2 className="mr-2" size={18} />
@@ -354,6 +373,7 @@ export default function AdminUserPage() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => handleEdit(logro)}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow-md transition-colors duration-300 flex items-center"
                     >
                       <Edit2 className="mr-2" size={18} />
@@ -383,9 +403,13 @@ export default function AdminUserPage() {
             >
               <div className="flex items-center mb-6">
                 <AlertCircle className="text-yellow-500 mr-4" size={32} />
-                <h2 className="text-3xl font-bold text-white">Confirmar eliminación</h2>
+                <h2 className="text-3xl font-bold text-white">
+                  Confirmar eliminación
+                </h2>
               </div>
-              <p className="text-gray-300 mb-8 text-lg">¿Estás seguro de que quieres eliminar este logro?</p>
+              <p className="text-gray-300 mb-8 text-lg">
+                ¿Estás seguro de que quieres eliminar este logro?
+              </p>
               <div className="flex justify-end space-x-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -410,10 +434,12 @@ export default function AdminUserPage() {
         )}
       </AnimatePresence>
 
-      <LogrosForm 
-        isOpen={isLogrosFormOpen} 
-        onClose={() => setIsLogrosFormOpen(false)} 
+      <LogrosForm
+        isOpen={isLogrosFormOpen}
+        onClose={handleModalClose}
         onLogroAdded={fetchLogros}
+        logroToEdit={logroToEdit}
+        isEditing={isEditing}
       />
     </div>
   );

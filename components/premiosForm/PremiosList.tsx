@@ -1,9 +1,9 @@
-//components\premiosForm\PremiosList.tsx
+// components/premiosForm/PremiosList.tsx
 
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
-import { Trash2, Edit2, AlertCircle } from 'lucide-react'
-import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import { Trash2, Edit2, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
 
 interface Premio {
   id: number;
@@ -51,21 +51,31 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             whileHover={{ scale: 1.03 }}
-            className="bg-[#353535] hover:bg-[#454545] p-6 rounded-xl transition-all duration-300"
+            className="bg-[#353535] hover:bg-[#454545] rounded-xl transition-all duration-300 flex flex-col h-full"
           >
-            <div className="mb-4">
-              <Image
-                src={premio.imagen || "/placeholder.svg"}
-                alt={premio.titulo}
-                width={200}
-                height={200}
-                className="rounded-lg object-cover w-full h-48"
-              />
+            {/* Contenedor principal con flex-grow */}
+            <div className="flex-grow p-6">
+              {/* Imagen */}
+              <div className="mb-4">
+                <Image
+                  src={premio.imagen || "/placeholder.svg"}
+                  alt={premio.titulo}
+                  width={200}
+                  height={200}
+                  className="rounded-lg object-cover w-full h-48"
+                />
+              </div>
+
+              {/* Información del premio */}
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold text-white">{premio.titulo}</h2>
+                <p className="text-gray-300">{premio.subtitulo}</p>
+                <p className="text-gray-400">{premio.descripcion}</p>
+              </div>
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">{premio.titulo}</h2>
-            <p className="text-gray-300 mb-2">{premio.subtitulo}</p>
-            <p className="text-gray-400 mb-4">{premio.descripcion}</p>
-            <div className="flex justify-between">
+
+            {/* Botones de acción fijos al final */}
+            <div className="flex justify-between p-6 pt-4 mt-auto  border-gray-600">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -89,6 +99,7 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
         ))}
       </motion.div>
 
+      {/* Modal de confirmación de eliminación */}
       <AnimatePresence>
         {deleteId && (
           <motion.div
