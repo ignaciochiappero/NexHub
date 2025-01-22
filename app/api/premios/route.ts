@@ -1,4 +1,4 @@
-//app\api\premios\route.tsimport { NextRequest, NextResponse } from "next/server";
+//app\api\premios\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 

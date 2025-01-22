@@ -1,50 +1,79 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+//components\premiosForm\PremiosForm.tsx
+"use client";
 
-import { useState, useRef } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { motion, AnimatePresence } from "framer-motion"
-import { Pen, Book, X, ImageIcon } from "lucide-react"
-import axios from "axios"
-import Image from "next/image"
+import { useState, useRef, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
+import { Pen, Book, X, ImageIcon } from "lucide-react";
+import axios from "axios";
+import Image from "next/image";
 
 interface PremioFormProps {
-  isOpen: boolean
-  onClose: () => void
-  onPremioAdded: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onPremioAdded: () => void;
+  premioToEdit?: {
+    id?: number;
+    titulo: string;
+    subtitulo: string;
+    descripcion: string;
+    imagen: string;
+  } | null;
+  isEditing?: boolean;
 }
 
-export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFormProps) {
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+export default function PremioForm({
+  isOpen,
+  onClose,
+  onPremioAdded,
+  premioToEdit,
+  isEditing,
+}: PremioFormProps) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
     defaultValues: {
       titulo: "",
       subtitulo: "",
       descripcion: "",
-    }
-  })
+    },
+  });
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [image, setImage] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (premioToEdit) {
+      setValue("titulo", premioToEdit.titulo);
+      setValue("subtitulo", premioToEdit.subtitulo);
+      setValue("descripcion", premioToEdit.descripcion);
+      setPreviewUrl(premioToEdit.imagen);
+    }
+  }, [premioToEdit, setValue]);
 
   const uploadImage = async (file: File): Promise<string> => {
-    const formData = new FormData()
-    formData.append("file", file)
-
-    const response = await axios.post("/api/upload", formData)
-    return response.data.url
-  }
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await axios.post("/api/upload", formData);
+    return response.data.url;
+  };
 
   const onSubmit = async (formData: any) => {
     try {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
 
-      let imageUrl = null
+      let imageUrl = previewUrl;
       if (image) {
-        imageUrl = await uploadImage(image)
+        imageUrl = await uploadImage(image);
       }
 
       const premioData = {
@@ -52,36 +81,50 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
         subtitulo: formData.subtitulo,
         descripcion: formData.descripcion,
         imagen: imageUrl,
+      };
+
+      let response;
+      if (isEditing && premioToEdit?.id) {
+        response = await axios.put(
+          `/api/premios/${premioToEdit.id}`,
+          premioData
+        );
+      } else {
+        response = await axios.post("/api/premios", premioData);
       }
 
-      const response = await axios.post("/api/premios", premioData)
-
-      if (response.status === 201) {
-        onPremioAdded()
-        reset()
-        setImage(null)
-        setPreviewUrl(null)
-        onClose()
+      if (response.status === 200 || response.status === 201) {
+        onPremioAdded();
+        reset();
+        setImage(null);
+        setPreviewUrl(null);
+        onClose();
       }
     } catch (error: any) {
-      console.error("Add premio error:", error)
-      setError(error.response?.data?.error || "Error al crear el premio")
+      console.error(
+        isEditing ? "Update premio error:" : "Add premio error:",
+        error
+      );
+      setError(
+        error.response?.data?.error ||
+          `Error al ${isEditing ? "actualizar" : "crear"} el premio`
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      setImage(file)
-      const reader = new FileReader()
+      setImage(file);
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
     <AnimatePresence>
@@ -111,7 +154,9 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                 <X size={24} />
               </motion.button>
 
-              <h2 className="font-blender-mayus text-3xl text-white mb-6">Registro Premio</h2>
+              <h2 className="font-blender-mayus text-3xl text-white mb-6">
+                {isEditing ? "Editar Premio" : "Registro Premio"}
+              </h2>
 
               {error && (
                 <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-500">
@@ -139,7 +184,9 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                         {...field}
                       />
                       {errors.titulo && (
-                        <span className="text-sm text-red-500 mt-1">{errors.titulo.message}</span>
+                        <span className="text-sm text-red-500 mt-1">
+                          {errors.titulo.message}
+                        </span>
                       )}
                     </motion.div>
                   )}
@@ -164,7 +211,9 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                         {...field}
                       />
                       {errors.subtitulo && (
-                        <span className="text-sm text-red-500 mt-1">{errors.subtitulo.message}</span>
+                        <span className="text-sm text-red-500 mt-1">
+                          {errors.subtitulo.message}
+                        </span>
                       )}
                     </motion.div>
                   )}
@@ -189,7 +238,9 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                         {...field}
                       />
                       {errors.descripcion && (
-                        <span className="text-sm text-red-500 mt-1">{errors.descripcion.message}</span>
+                        <span className="text-sm text-red-500 mt-1">
+                          {errors.descripcion.message}
+                        </span>
                       )}
                     </motion.div>
                   )}
@@ -218,11 +269,11 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                   </button>
                   {previewUrl && (
                     <div className="mt-2">
-                      <Image 
-                        src={previewUrl} 
-                        alt="Preview" 
-                        width={100} 
-                        height={100} 
+                      <Image
+                        src={previewUrl}
+                        alt="Preview"
+                        width={100}
+                        height={100}
                         className="rounded-lg object-cover"
                       />
                     </div>
@@ -236,7 +287,13 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white p-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all font-geist-sans disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? "Agregando..." : "Agregar premio"}
+                  {isLoading
+                    ? isEditing
+                      ? "Actualizando..."
+                      : "Agregando..."
+                    : isEditing
+                    ? "Actualizar premio"
+                    : "Agregar premio"}
                 </motion.button>
               </form>
             </div>
@@ -244,5 +301,5 @@ export default function PremioForm({ isOpen, onClose, onPremioAdded }: PremioFor
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }

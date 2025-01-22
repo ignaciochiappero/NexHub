@@ -1,12 +1,12 @@
 //app\api\premios\[premioId]\route.ts
+
+
 import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
 
 type RouteContext = {
   params: Promise<{ premioId: string }>;
 };
-
 
 export async function GET(
     req: NextRequest,
@@ -42,7 +42,7 @@ export async function GET(
 
     return NextResponse.json(premio);
   } catch (error) {
-    console.error("[PREMIO_DINAMICO_GET_ERROR]", error);
+    console.error("[PREMIO_GET_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
   }
 }
@@ -53,11 +53,10 @@ export async function PUT(
 ) {
   try {
     const { premioId } = await context.params;
-
     const { titulo, subtitulo, descripcion, imagen } = await req.json();
 
     // Validaciones básicas
-    if (!titulo || !subtitulo || !descripcion || !imagen) {
+    if (!titulo || !subtitulo || !descripcion) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }
 
@@ -67,7 +66,7 @@ export async function PUT(
         titulo,
         subtitulo,
         descripcion,
-        imagen,
+        imagen: imagen || "",
       },
     });
 
@@ -90,10 +89,8 @@ export async function DELETE(
     });
 
     return new NextResponse(JSON.stringify(premioDeleted), { status: 200 });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("[PREMIO_DELETE_ERROR]", error);
     return new NextResponse("Error interno", { status: 500 });
   }
 }
-
