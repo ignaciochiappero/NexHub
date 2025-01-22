@@ -6,12 +6,6 @@ import { getToken } from "next-auth/jwt"
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req })
 
-  // Si intenta acceder a rutas admin
-  if (req.nextUrl.pathname.startsWith('/admin')) {
-    if (token?.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/unauthorized', req.url))
-    }
-  }
 
   // Para otras rutas protegidas
   if (req.nextUrl.pathname.startsWith('/dashboard')) {
@@ -23,4 +17,4 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next()
 }
 
-export const config = { matcher: ["/dashboard/:path*", "/admin/:path*"] }
+export const config = { matcher: ["/dashboard/:path*"] }
