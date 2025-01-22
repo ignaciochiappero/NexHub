@@ -1,10 +1,17 @@
 //app\(pages)\admin\users\page.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, UserPlus, Trash2, Edit2, AlertCircle, Users, ChevronLeft } from 'lucide-react';
+import {
+  Search,
+  UserPlus,
+  Trash2,
+  Edit2,
+  AlertCircle,
+  Users,
+  ChevronLeft,
+} from "lucide-react";
 import SignupModal from "@/components/authComponents/SignupForm";
 import Link from "next/link";
 
@@ -13,6 +20,10 @@ interface User {
   name: string;
   email: string;
   role: string;
+  birthday: string;
+  image: string | null;    // Agregar estas propiedades
+  company: string | null;  // Agregar estas propiedades
+  location: string | null; // Agregar estas propiedades
 }
 
 export default function AdminUserPage() {
@@ -21,6 +32,8 @@ export default function AdminUserPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -28,7 +41,17 @@ export default function AdminUserPage() {
       const response = await fetch("/api/users");
       if (!response.ok) throw new Error("Error al obtener usuarios");
       const data = await response.json();
-      setUsers(data);
+      
+      // Asegurarnos de que todos los campos existan, incluso si son null
+      const formattedData = data.map((user: User) => ({
+        ...user,
+        image: user.image || null,
+        company: user.company || null,
+        location: user.location || null,
+        birthday: user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : null,
+      }));
+      
+      setUsers(formattedData);
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
     } finally {
@@ -52,6 +75,24 @@ export default function AdminUserPage() {
     }
   };
 
+  const handleEdit = (user: User) => {
+    setUserToEdit(user);
+    setIsEditing(true);
+    setIsSignupModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsSignupModalOpen(false);
+    setUserToEdit(null);
+    setIsEditing(false);
+  };
+
+  const handleAddUser = () => {
+    setUserToEdit(null);
+    setIsEditing(false);
+    setIsSignupModalOpen(true);
+  };
+
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,24 +101,19 @@ export default function AdminUserPage() {
 
   return (
     <div className="min-h-screen bg-[#242424] p-8 pt-28 font-[family-name:var(--blender-medium)]">
-      
       <Link href="/admin">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          
-          className=" text-white py-3 rounded-full transition-all flex items-center text-lg "
+          className="text-white py-3 rounded-full transition-all flex items-center text-lg"
         >
           <ChevronLeft className="mr-2" size={24} />
-        Volver
+          Volver
         </motion.button>
       </Link>
-      
-      
-      
-      
+
       <div className="max-w-6xl mx-auto mt-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -90,7 +126,7 @@ export default function AdminUserPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setIsSignupModalOpen(true)}
+            onClick={handleAddUser}
             className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-pink-500/25 transition-all flex items-center text-lg"
           >
             <UserPlus className="mr-2" size={24} />
@@ -98,7 +134,7 @@ export default function AdminUserPage() {
           </motion.button>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -111,7 +147,10 @@ export default function AdminUserPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-6 py-4 pl-14 rounded-full shadow-lg border border-gray-700 bg-[#181818] text-white focus:outline-none focus:ring-2 focus:ring-pink-500 text-lg"
           />
-          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
+          <Search
+            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={24}
+          />
         </motion.div>
 
         {loading ? (
@@ -130,7 +169,10 @@ export default function AdminUserPage() {
             ))}
           </div>
         ) : (
-          <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div
+            layout
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             <AnimatePresence>
               {filteredUsers.map((user, index) => (
                 <motion.div
@@ -143,7 +185,9 @@ export default function AdminUserPage() {
                   className="bg-[#181818] hover:bg-[#1e1e1e] rounded-2xl p-6 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-white mb-2">{user.name}</h3>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {user.name}
+                    </h3>
                     <p className="text-gray-400 text-lg">{user.email}</p>
                     <p className="text-gray-400 text-lg">{user.role}</p>
                   </div>
@@ -160,6 +204,7 @@ export default function AdminUserPage() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => handleEdit(user)}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow-md transition-colors duration-300 flex items-center"
                     >
                       <Edit2 className="mr-2" size={18} />
@@ -189,9 +234,13 @@ export default function AdminUserPage() {
             >
               <div className="flex items-center mb-6">
                 <AlertCircle className="text-yellow-500 mr-4" size={32} />
-                <h2 className="text-3xl font-bold text-white">Confirmar eliminación</h2>
+                <h2 className="text-3xl font-bold text-white">
+                  Confirmar eliminación
+                </h2>
               </div>
-              <p className="text-gray-300 mb-8 text-lg">¿Estás seguro de que quieres eliminar este usuario?</p>
+              <p className="text-gray-300 mb-8 text-lg">
+                ¿Estás seguro de que quieres eliminar este usuario?
+              </p>
               <div className="flex justify-end space-x-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -216,12 +265,13 @@ export default function AdminUserPage() {
         )}
       </AnimatePresence>
 
-      <SignupModal 
-        isOpen={isSignupModalOpen} 
-        onClose={() => setIsSignupModalOpen(false)} 
+      <SignupModal
+        isOpen={isSignupModalOpen}
+        onClose={handleModalClose}
         onUserAdded={fetchUsers}
+        userToEdit={userToEdit}
+        isEditing={isEditing}
       />
     </div>
   );
 }
-

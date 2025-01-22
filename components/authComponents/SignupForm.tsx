@@ -1,51 +1,126 @@
 //components\authComponents\SignupForm.tsx
 
+
 'use client'
 
 import { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Lock, User, Mail, Calendar, X } from 'lucide-react'
+import { Lock, User, Mail, Calendar, X, Key } from 'lucide-react'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface SignupModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onUserAdded: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onUserAdded: () => void;
+  userToEdit?: {
+    id?: number;
+    name: string;
+    email: string;
+    birthday: string;
+    image?: string | null;    
+    company?: string | null;  
+    location?: string | null;
+  } | null;
+  isEditing?: boolean;
 }
 
-function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: SignupModalProps) {
+  const { control, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
     defaultValues: {
       email: '',
       password: '',
+      newPassword: '',
+      confirmPassword: '',
+      changePassword: false,
       name: '',
       birthday: '',
     }
-  })
+  });
 
-  
   const [isLoading, setIsLoading] = useState(false)
+  const changePassword = watch('changePassword');
+
+  useEffect(() => {
+    if (userToEdit) {
+      setValue('name', userToEdit.name);
+      setValue('email', userToEdit.email);
+      if (userToEdit.birthday) {
+        setValue('birthday', new Date(userToEdit.birthday).toISOString().split('T')[0]);
+      }
+      setValue('changePassword', false);
+      setValue('newPassword', '');
+      setValue('confirmPassword', '');
+    }
+  }, [userToEdit, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await axios.post('/api/auth/register', {
-        ...data,
-        birthday: new Date(data.birthday).toISOString(),
-      })
-
-      if (response.status === 201) {
-        onUserAdded()
-        reset()
-        onClose()
+      if (isEditing && userToEdit?.id) {
+        // Validar contraseñas si se está cambiando
+        if (data.changePassword && data.newPassword !== data.confirmPassword) {
+          throw new Error('Las contraseñas no coinciden');
+        }
+  
+        // Preparar los datos para la actualización
+        const updateData = {
+          name: data.name,
+          email: data.email,
+          birthday: data.birthday,  // Ya viene en formato ISO
+          location: userToEdit.location, // Mantener el valor existente
+          company: userToEdit.company,   // Mantener el valor existente
+          image: userToEdit.image,       // Mantener el valor existente
+          password: '', // Add this line
+        };
+  
+        // Solo incluir la contraseña si se está cambiando
+        if (data.changePassword && data.newPassword) {
+          updateData['password'] = data.newPassword;
+        }
+  
+        try {
+          const response = await axios.put(`/api/users/${userToEdit.id}`, updateData);
+          
+          if (response.status === 200) {
+            onUserAdded();
+            reset();
+            onClose();
+          }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (axiosError: any) {
+          console.error('Error en la actualización:', axiosError.response?.data || axiosError.message);
+          throw new Error(axiosError.response?.data || 'Error al actualizar el usuario');
+        }
+      } else {
+        // Crear nuevo usuario
+        try {
+          const response = await axios.post('/api/auth/register', {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            birthday: data.birthday,
+          });
+  
+          if (response.status === 201) {
+            onUserAdded();
+            reset();
+            onClose();
+          }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (axiosError: any) {
+          console.error('Error en el registro:', axiosError.response?.data || axiosError.message);
+          throw new Error(axiosError.response?.data || 'Error al crear el usuario');
+        }
       }
-    } catch (error) {
-      console.error('Registration error:', error)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(isEditing ? 'Error de actualización:' : 'Error de registro:', error);
+      alert(error.message || 'Ocurrió un error inesperado');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  })
+  });
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -87,7 +162,9 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
               >
                 <X size={24} />
               </motion.button>
-              <h2 className="font-blender-mayus text-3xl text-white mb-6">Registro</h2>
+              <h2 className="font-blender-mayus text-3xl text-white mb-6">
+                {isEditing ? 'Editar Usuario' : 'Registro'}
+              </h2>
               <form onSubmit={onSubmit} className="space-y-4">
                 <Controller
                   name="name"
@@ -107,7 +184,9 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
                         className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
                         {...field}
                       />
-                      {errors.name && <span className="text-sm text-red-500 mt-1">{errors.name.message}</span>}
+                      {errors.name && (
+                        <span className="text-sm text-red-500 mt-1">{errors.name.message}</span>
+                      )}
                     </motion.div>
                   )}
                 />
@@ -130,36 +209,9 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
                         className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
                         {...field}
                       />
-                      {errors.email && <span className="text-sm text-red-500 mt-1">{errors.email.message}</span>}
-                    </motion.div>
-                  )}
-                />
-
-                <Controller
-                  name="password"
-                  control={control}
-                  rules={{
-                    required: 'La contraseña es requerida',
-                    minLength: {
-                      value: 8,
-                      message: 'La contraseña debe tener al menos 8 caracteres',
-                    },
-                  }}
-                  render={({ field }) => (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="relative"
-                    >
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="password"
-                        placeholder="Contraseña"
-                        className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
-                        {...field}
-                      />
-                      {errors.password && <span className="text-sm text-red-500 mt-1">{errors.password.message}</span>}
+                      {errors.email && (
+                        <span className="text-sm text-red-500 mt-1">{errors.email.message}</span>
+                      )}
                     </motion.div>
                   )}
                 />
@@ -172,7 +224,7 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
+                      transition={{ delay: 0.3 }}
                       className="relative"
                     >
                       <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -181,10 +233,125 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
                         className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
                         {...field}
                       />
-                      {errors.birthday && <span className="text-sm text-red-500 mt-1">{errors.birthday.message}</span>}
+                      {errors.birthday && (
+                        <span className="text-sm text-red-500 mt-1">{errors.birthday.message}</span>
+                      )}
                     </motion.div>
                   )}
                 />
+
+                {!isEditing ? (
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={{
+                      required: 'La contraseña es requerida',
+                      minLength: {
+                        value: 8,
+                        message: 'La contraseña debe tener al menos 8 caracteres',
+                      },
+                    }}
+                    render={({ field }) => (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="relative"
+                      >
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="password"
+                          placeholder="Contraseña"
+                          className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
+                          {...field}
+                        />
+                        {errors.password && (
+                          <span className="text-sm text-red-500 mt-1">{errors.password.message}</span>
+                        )}
+                      </motion.div>
+                    )}
+                  />
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="space-y-4"
+                  >
+                  <Controller
+                    name="changePassword"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+                          checked={field.value}
+                          onChange={field.onChange}
+                        />
+                        <label className="text-white">Cambiar contraseña</label>
+                      </div>
+                    )}
+                  />
+
+                    {changePassword && (
+                      <>
+                        <Controller
+                          name="newPassword"
+                          control={control}
+                          rules={{
+                            required: 'La nueva contraseña es requerida',
+                            minLength: {
+                              value: 8,
+                              message: 'La contraseña debe tener al menos 8 caracteres',
+                            },
+                          }}
+                          render={({ field }) => (
+                            <div className="relative">
+                              <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                              <input
+                                type="password"
+                                placeholder="Nueva contraseña"
+                                className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
+                                {...field}
+                              />
+                              {errors.newPassword && (
+                                <span className="text-sm text-red-500 mt-1">{errors.newPassword.message}</span>
+                              )}
+                            </div>
+                          )}
+                        />
+
+                        <Controller
+                          name="confirmPassword"
+                          control={control}
+                          rules={{
+                            required: 'Confirma la nueva contraseña',
+                            validate: (val: string) => {
+                              if (watch('newPassword') != val) {
+                                return "Las contraseñas no coinciden";
+                              }
+                            }
+                          }}
+                          render={({ field }) => (
+                            <div className="relative">
+                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                              <input
+                                type="password"
+                                placeholder="Confirmar nueva contraseña"
+                                className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
+                                {...field}
+                              />
+                              {errors.confirmPassword && (
+                                <span className="text-sm text-red-500 mt-1">{errors.confirmPassword.message}</span>
+                              )}
+                            </div>
+                          )}
+                        />
+                      </>
+                    )}
+                  </motion.div>
+                )}
 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -193,7 +360,9 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white p-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all font-geist-sans"
                 >
-                  {isLoading ? 'Registrando...' : 'Registrar usuario'}
+                  {isLoading 
+                    ? (isEditing ? 'Actualizando...' : 'Registrando...') 
+                    : (isEditing ? 'Actualizar usuario' : 'Registrar usuario')}
                 </motion.button>
               </form>
             </div>
@@ -201,8 +370,7 @@ function SignupModal({ isOpen, onClose, onUserAdded }: SignupModalProps) {
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
-export default SignupModal
-
+export default SignupModal;
