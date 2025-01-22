@@ -25,7 +25,8 @@ async function loadData() {
             select: {
               id: true,
               name: true,
-              email: true
+              email: true,
+              image: true
             }
           }
         }
@@ -38,8 +39,10 @@ async function loadData() {
         include: {
           sender: {
             select: {
+              id: true,
               name: true,
-              email: true
+              email: true,
+              image: true
             }
           }
         }
@@ -64,11 +67,13 @@ async function loadData() {
   return { session, conversations, users };
 }
 
+
+
 export default async function MessagesPage() {
   const { session, conversations, users } = await loadData();
 
   return (
-    <div className="pt-28 font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D]">
+    <div className="pt-28 font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] pb-10">
       <MessagesClient session={session} initialConversations={conversations} initialUsers={users} />
     </div>
   );

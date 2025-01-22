@@ -16,11 +16,11 @@ interface ChatMessagesProps {
   selectedMessages: number[];
 }
 
-interface MessageSender {
-  name: string;
-  email: string;
-  image?: string;
-}
+// interface MessageSender {
+//   name: string;
+//   email: string;
+//   image?: string;
+// }
 
 const formatMessageDate = (date: Date) => {
   const messageDate = new Date(date);
@@ -85,18 +85,23 @@ export function ChatMessages({
   const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
+    null
+  );
 
   const isCurrentUserMessage = useCallback(
     (message: Message) => message.sender?.email === currentUserEmail,
     [currentUserEmail]
   );
 
-  const handleEditClick = useCallback((message: Message, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingMessageId(message.id);
-    setEditContent(message.content);
-  }, []);
+  const handleEditClick = useCallback(
+    (message: Message, e: React.MouseEvent) => {
+      e.stopPropagation();
+      setEditingMessageId(message.id);
+      setEditContent(message.content);
+    },
+    []
+  );
 
   const handleCancelEdit = useCallback(() => {
     setEditingMessageId(null);
@@ -136,24 +141,27 @@ export function ChatMessages({
     [editContent, handleCancelEdit, onEditMessage]
   );
 
-  const handleDeleteClick = useCallback(async (messageId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      setShowDeleteConfirm(null);
+  const handleDeleteClick = useCallback(
+    async (messageId: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+      try {
+        setShowDeleteConfirm(null);
 
-      const response = await fetch(`/api/messages/${messageId}`, {
-        method: "DELETE",
-      });
+        const response = await fetch(`/api/messages/${messageId}`, {
+          method: "DELETE",
+        });
 
-      if (!response.ok && response.status !== 404) {
-        throw new Error("Error al eliminar el mensaje");
+        if (!response.ok && response.status !== 404) {
+          throw new Error("Error al eliminar el mensaje");
+        }
+
+        setHoveredMessageId(null);
+      } catch (error) {
+        console.error("Error al eliminar mensaje:", error);
       }
-
-      setHoveredMessageId(null);
-    } catch (error) {
-      console.error("Error al eliminar mensaje:", error);
-    }
-  }, []);
+    },
+    []
+  );
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent, message: Message) => {
@@ -177,7 +185,6 @@ export function ChatMessages({
             animate="animate"
             exit="exit"
             variants={messageVariants}
-            layout
             className={`flex ${
               isCurrentUserMessage(message) ? "justify-end" : "justify-start"
             }`}
@@ -215,15 +222,15 @@ export function ChatMessages({
               <div className="flex items-center gap-2 mb-2">
                 <div className="relative w-8 h-8">
                   <Image
-                    src={(message.sender as MessageSender)?.image || "/user.png"}
-                    alt={(message.sender as MessageSender)?.name || "Usuario"}
+                    src={message.sender?.image || "/user.png"}
+                    alt={message.sender?.name || "Usuario"}
                     fill
                     className="rounded-full object-cover"
                   />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">
-                    {(message.sender as MessageSender)?.name || "Usuario"}
+                    {message.sender?.name || "Usuario"}
                   </span>
                   <span className="text-xs opacity-75">
                     {formatMessageDate(message.createdAt)}

@@ -87,6 +87,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
             id: true,
             name: true,
             email: true,
+            image: true
           },
         },
       },
@@ -98,29 +99,6 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     return new NextResponse(JSON.stringify(message), { status: 201 })
   } catch (error) {
     console.error("[MESSAGE_CREATE_ERROR]", error)
-    return new NextResponse(JSON.stringify({ error: "Error interno" }), { status: 500 })
-  }
-}
-
-export async function DELETE(req: NextRequest, { params }: RouteContext) {
-  try {
-    const { conversationId } = await params
-
-    const session = await getServerSession(authOptions)
-
-    if (!session) {
-      return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 })
-    }
-
-    await prisma.conversation.delete({
-      where: {
-        id: Number.parseInt(conversationId),
-      },
-    })
-
-    return new NextResponse(JSON.stringify({ message: "Conversation deleted successfully" }), { status: 200 })
-  } catch (error) {
-    console.error("[CONVERSATION_DELETE_ERROR]", error)
     return new NextResponse(JSON.stringify({ error: "Error interno" }), { status: 500 })
   }
 }

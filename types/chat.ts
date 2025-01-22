@@ -17,10 +17,15 @@ export interface Message {
   updatedAt: Date;
   conversationId: number;
   isRead: boolean;
-  sender?: {
-    name: string;
-    email: string;
-  };
+  sender?: MessageSender;
+}
+
+
+export interface MessageSender {
+  id: number;
+  name: string;
+  email: string;
+  image?: string | null;
 }
 
 export interface Conversation {

@@ -4,7 +4,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Plus, ArrowLeft } from "lucide-react";
+import { Send, Plus, ArrowLeft, MessageCircle } from "lucide-react";
 import { ConversationList } from "./components/ConversationList";
 import { UserList } from "./components/UserList";
 import { ChatMessages } from "./components/ChatMessages";
@@ -23,6 +23,10 @@ interface MessagesClientProps {
   initialConversations: Conversation[];
   initialUsers: User[];
 }
+
+
+
+
 
 export default function MessagesClient({
   session,
@@ -47,9 +51,24 @@ export default function MessagesClient({
 
   const fetchMessages = useCallback(async (conversationId: number) => {
     try {
-      const res = await fetch(`/api/conversations/${conversationId}`);
+      const res = await fetch(`/api/messages/${conversationId}`);
+      if (!res.ok) throw new Error('Error fetching messages');
+      
       const data = await res.json();
-      setMessages(data);
+      
+      const processedMessages = data.map((message: Message) => ({
+        ...message,
+        createdAt: new Date(message.createdAt),
+        updatedAt: new Date(message.updatedAt),
+        sender: message.sender ? {
+          id: message.sender.id || 0,
+          name: message.sender.name || '',
+          email: message.sender.email || '',
+          image: message.sender.image || '/user.png'
+        } : undefined
+      } as Message));
+  
+      setMessages(processedMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -84,20 +103,52 @@ export default function MessagesClient({
       const channel = pusherClient.subscribe(
         `conversation-${selectedConversation.id}`
       );
-
+  
       channel.bind("new-message", (message: Message) => {
-        setMessages((prev) => [...prev, message]);
+        setMessages((prev) => [...prev, {
+          ...message,
+          createdAt: new Date(message.createdAt),
+          updatedAt: new Date(message.updatedAt),
+          sender: message.sender ? {
+            id: message.sender.id || 0, // Aseguramos que id sea número
+            name: message.sender.name || '',
+            email: message.sender.email || '',
+            image: message.sender.image || '/user.png'
+          } : {
+            id: 0,
+            name: '',
+            email: '',
+            image: '/user.png'
+          }
+        } as Message]); // Forzamos el tipo Message
         scrollToBottom();
       });
-
+  
       channel.bind("message-updated", (updatedMessage: Message) => {
         setMessages((prev) =>
           prev.map((message) =>
-            message.id === updatedMessage.id ? updatedMessage : message
+            message.id === updatedMessage.id 
+              ? {
+                  ...updatedMessage,
+                  createdAt: new Date(updatedMessage.createdAt),
+                  updatedAt: new Date(updatedMessage.updatedAt),
+                  sender: updatedMessage.sender ? {
+                    id: updatedMessage.sender.id || 0,
+                    name: updatedMessage.sender.name || '',
+                    email: updatedMessage.sender.email || '',
+                    image: updatedMessage.sender.image || '/user.png'
+                  } : {
+                    id: 0,
+                    name: '',
+                    email: '',
+                    image: '/user.png'
+                  }
+                } as Message
+              : message
           )
         );
       });
-
+  
       channel.bind(
         "message-deleted",
         ({ messageId }: { messageId: number }) => {
@@ -107,7 +158,7 @@ export default function MessagesClient({
           setSelectedMessages((prev) => prev.filter((id) => id !== messageId));
         }
       );
-
+  
       return () => {
         channel.unbind_all();
         pusherClient.unsubscribe(`conversation-${selectedConversation.id}`);
@@ -183,10 +234,28 @@ export default function MessagesClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: updatedMessage.content.trim() }),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
+  
+      const data = await response.json();
+      // Actualizar el mensaje en el estado con los datos completos
+      setMessages(prev =>
+        prev.map(message =>
+          message.id === data.id
+            ? {
+                ...data,
+                createdAt: new Date(data.createdAt),
+                updatedAt: new Date(data.updatedAt),
+                sender: {
+                  ...data.sender,
+                  image: data.sender?.image || '/user.png'
+                }
+              }
+            : message
+        )
+      );
     } catch (error) {
       console.error("Error updating message:", error);
     }
@@ -221,14 +290,13 @@ export default function MessagesClient({
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full mx-auto text-white px-4 md:px-20">
-      <div className="md:w-1/3 h-full overflow-hidden">
-        <motion.div
-          initial={{ width: "100%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="h-full overflow-hidden rounded-2xl bg-[#242424] shadow-2xl"
-        >
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto gap-4 p-4">
+    <div className="lg:w-1/3 h-[350px] lg:h-full ">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="h-full rounded-2xl bg-[#242424] shadow-2xl overflow-hidden"
+      >
           <div className="p-6 h-full flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <h1 className="font-blender-mayus text-3xl text-white">
@@ -271,14 +339,13 @@ export default function MessagesClient({
       </div>
 
       <AnimatePresence>
-        {selectedConversation && (
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "100%", opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="md:w-2/3 h-full ml-0 md:ml-6 bg-[#242424] flex flex-col rounded-2xl shadow-2xl overflow-hidden"
-          >
+      {selectedConversation ? (
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 20 }}
+          className="lg:w-2/3 h-[calc(100vh-24rem)] lg:h-full bg-[#242424] flex flex-col rounded-2xl shadow-2xl overflow-hidden"
+        >
             <div className="p-6 border-b border-gray-700/50 flex items-center justify-between backdrop-blur-sm bg-black/10">
               <div className="flex items-center">
                 <motion.button
@@ -341,6 +408,37 @@ export default function MessagesClient({
                 </motion.button>
               </form>
             </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="lg:w-2/3 h-[calc(100vh-24rem)] lg:h-full bg-[#242424] flex flex-col items-center justify-center rounded-2xl shadow-2xl overflow-hidden"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="text-center px-6"
+            >
+              <MessageCircle className="w-16 h-16 mx-auto text-pink-500/20 mb-4" />
+              <h2 className="text-2xl font-blender-medium text-white mb-2">
+                ¡Comienza a chatear!
+              </h2>
+              <p className="text-gray-400 max-w-md mb-6">
+                Selecciona una conversación existente o inicia una nueva para comenzar a chatear con otras personas.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowUserList(true)}
+                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-xl
+                         shadow-lg hover:shadow-pink-500/25 transition-all"
+              >
+                Iniciar nueva conversación
+              </motion.button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

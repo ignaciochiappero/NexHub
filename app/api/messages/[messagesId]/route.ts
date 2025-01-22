@@ -21,6 +21,68 @@ type RouteContext = {
 };
 
 
+// Añadir el método GET
+export async function GET(
+  req: NextRequest,
+  context: RouteContext
+) {
+  try {
+    const { messagesId } = await context.params;
+
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return new NextResponse(
+        JSON.stringify({ error: "No autorizado" }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Obtener los mensajes de la conversación
+    const messages = await prisma.message.findMany({
+      where: {
+        conversationId: Number(messagesId)
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'asc'
+      }
+    });
+
+    return new NextResponse(
+      JSON.stringify(messages),
+      { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  } catch (error) {
+    console.error("[MESSAGES_GET_ERROR]", error)
+    return new NextResponse(
+      JSON.stringify({ 
+        error: "Error interno del servidor",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  }
+}
+
+
 export async function PUT(
   req: NextRequest,
   context: RouteContext
