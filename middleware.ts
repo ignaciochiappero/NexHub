@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   // Para otras rutas protegidas
   if (req.nextUrl.pathname.startsWith('/dashboard')) {
     if (!token) {
-      return NextResponse.redirect(new URL('//unauthorized', req.url))
+      return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
   }
 
