@@ -69,7 +69,9 @@ const UserDropdown = () => {
     {
       label: 'Logout',
       icon: LogOut,
-      onClick: () => signOut(),
+      onClick: () => signOut({ 
+        callbackUrl: '/' // Esto redireccionará al usuario al home después del logout
+      }),
     },
   ];
 
