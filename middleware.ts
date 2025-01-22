@@ -1,23 +1,26 @@
-
-
 // middleware.ts
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { withAuth } from "next-auth/middleware"
+import { getToken } from "next-auth/jwt"
 
-export default withAuth(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function middleware(request: NextRequest) {
-    return NextResponse.next()
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token,
-    },
-  },
-)
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req })
 
-export const config = { matcher: ["/dashboard/:path*"] }
+  // Si intenta acceder a rutas admin
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    if (token?.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL('/unauthorized', req.url))
+    }
+  }
 
+  // Para otras rutas protegidas
+  if (req.nextUrl.pathname.startsWith('/dashboard')) {
+    if (!token) {
+      return NextResponse.redirect(new URL('//unauthorized', req.url))
+    }
+  }
 
+  return NextResponse.next()
+}
 
+export const config = { matcher: ["/dashboard/:path*", "/admin/:path*"] }

@@ -1,4 +1,4 @@
-
+// app\(pages)\admin\page.tsx
 
 import Link from 'next/link';
 
