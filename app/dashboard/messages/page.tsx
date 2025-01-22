@@ -56,7 +56,8 @@ async function loadData() {
     select: {
       id: true,
       name: true,
-      email: true
+      email: true,
+      image: true
     }
   });
 

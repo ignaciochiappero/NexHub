@@ -1,9 +1,12 @@
 
 //types\chat.ts
 export interface User {
+  image: string | null | undefined;
   id: number;
   name: string;
   email: string;
+  
+
 }
 
 export interface Message {
