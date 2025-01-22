@@ -1,7 +1,10 @@
+//auth.config.ts
+
 import { AuthOptions } from "next-auth";
 import CreadentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs'; 
+
 
 export const config: AuthOptions = {
     providers: [
@@ -11,6 +14,7 @@ export const config: AuthOptions = {
                 email: { label: "Email", type: "email", placeholder: "Tu Email" },
                 password: { label: "Password", type: "password" }
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async authorize(credentials: any) {
                 const {email, password} = credentials;
 

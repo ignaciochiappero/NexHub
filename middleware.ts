@@ -7,6 +7,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req })
 
 
+
   // Para otras rutas protegidas
   if (req.nextUrl.pathname.startsWith('/dashboard')) {
     if (!token) {
@@ -17,4 +18,4 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next()
 }
 
-export const config = { matcher: ["/dashboard/:path*"] }
+export const config = { matcher: ["/dashboard/:path*", "/admin/:path*"] }
