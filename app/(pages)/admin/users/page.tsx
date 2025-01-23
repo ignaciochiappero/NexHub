@@ -177,7 +177,6 @@ export default function AdminUserPage() {
               {filteredUsers.map((user, index) => (
                 <motion.div
                   key={user.id}
-                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -218,7 +217,7 @@ export default function AdminUserPage() {
         )}
       </div>
 
-      <AnimatePresence>
+      
         {deleteUserId && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -263,7 +262,7 @@ export default function AdminUserPage() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      
 
       <SignupModal
         isOpen={isSignupModalOpen}
