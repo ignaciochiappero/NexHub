@@ -14,6 +14,9 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
     return NextResponse.json(premios);

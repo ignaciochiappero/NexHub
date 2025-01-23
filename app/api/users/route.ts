@@ -30,6 +30,9 @@ export async function GET() {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
     const usersWithOnlineStatus = users.map(user => ({
