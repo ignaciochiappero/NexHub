@@ -210,7 +210,7 @@ export default function LogrosPage() {
         ) : (
           <>
             <motion.div
-              layout
+              
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
               ref={achievementsRef}
             >
@@ -226,7 +226,7 @@ export default function LogrosPage() {
                   return (
                     <motion.div
                       key={achievement.id}
-                      layout
+                      
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
@@ -485,7 +485,7 @@ export default function LogrosPage() {
                       : "bg-gray-600 hover:bg-gray-500"
                   } text-white transition-colors`}
                 >
-                  Anterior
+                  <ChevronLeft />
                 </motion.button>
 
                 <div className="flex space-x-2">
@@ -522,7 +522,7 @@ export default function LogrosPage() {
                       : "bg-gray-600 hover:bg-gray-500"
                   } text-white transition-colors`}
                 >
-                  Siguiente
+                  <ChevronRight />
                 </motion.button>
               </div>
             )}
