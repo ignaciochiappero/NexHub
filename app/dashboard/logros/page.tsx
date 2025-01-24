@@ -15,8 +15,11 @@ import { LoadingSkeleton } from "./components/LoadingSkeleton";
 export default function LogrosPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
-  const [confirmationModal, setConfirmationModal] = useState<ConfirmationModalType | null>(null);
-  const [expandedAchievement, setExpandedAchievement] = useState<number | null>(null);
+  const [confirmationModal, setConfirmationModal] =
+    useState<ConfirmationModalType | null>(null);
+  const [expandedAchievement, setExpandedAchievement] = useState<number | null>(
+    null
+  );
   const achievementsRef = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -128,10 +131,10 @@ export default function LogrosPage() {
       [achievementId]: page,
     }));
   };
-
+  // En //app/dashboard/logros/page.tsx
   return (
-    <div className="min-h-screen p-8 pt-40 font-[family-name:var(--blender-medium)]">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen p-8 pt-20 pb-24 font-[family-name:var(--blender-medium)] relative">
+      <div className="max-w-6xl mx-auto flex flex-col min-h-[calc(100vh-theme(spacing.20))]">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -147,9 +150,9 @@ export default function LogrosPage() {
         {loading ? (
           <LoadingSkeleton />
         ) : (
-          <>
+          <div className="flex flex-col flex-grow">
             <motion.div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative flex-grow"
               ref={achievementsRef}
             >
               {currentAchievements.map((achievement, index) => (
@@ -168,14 +171,16 @@ export default function LogrosPage() {
             </motion.div>
 
             {achievements.length > achievementsPerPage && (
-              <Pagination
-                currentPage={currentPage}
-                totalItems={achievements.length}
-                itemsPerPage={achievementsPerPage}
-                onPageChange={handlePageChange}
-              />
+              <div className="mt-auto pt-8">
+                <Pagination
+                  currentPage={currentPage}
+                  totalItems={achievements.length}
+                  itemsPerPage={achievementsPerPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             )}
-          </>
+          </div>
         )}
       </div>
 

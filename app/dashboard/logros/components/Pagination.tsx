@@ -10,7 +10,6 @@ interface PaginationProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
 }
-
 export const Pagination = ({
   currentPage,
   totalItems,
@@ -20,7 +19,7 @@ export const Pagination = ({
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
-    <div className="flex justify-center items-center mt-8 space-x-2">
+    <div className="w-full flex justify-center items-center space-x-2 bg-background/80 backdrop-blur-sm ">
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
