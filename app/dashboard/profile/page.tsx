@@ -1,6 +1,9 @@
 
 
 //app\(pages)\profile\page.tsx'use client';
+
+
+
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma";
@@ -39,12 +42,17 @@ const formattedUser = {
   birthday: new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
 };
 
-  return (
-    <div className="mt-40 p-4 font-[family-name:var(--blender-medium)] flex flex-col justify-center items-center">
-      <h1 className="text-3xl text-center mb-6">Perfil</h1>
-      <div className="w-full max-w-6xl bg-[#212121] rounded-3xl p-6">
+// No modificamos mucho este archivo ya que es un componente servidor
+return (
+  <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] pt-20 p-6">
+    <div className="max-w-7xl mx-auto">
+      <h1 className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500  text-center font-[family-name:var(--blender-bold)] tracking-wider">
+        Perfil de Usuario
+      </h1>
+      <div className="w-full bg-[#242424] rounded-2xl p-8 shadow-2xl">
         <ProfileForm initialUser={formattedUser} />
       </div>
     </div>
-  );
+  </div>
+);
 }
