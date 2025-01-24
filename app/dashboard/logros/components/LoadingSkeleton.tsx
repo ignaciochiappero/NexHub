@@ -1,3 +1,4 @@
+//app/dashboard/logros/components/LoadingSkeleton.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -11,10 +12,10 @@ export const LoadingSkeleton = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          className="bg-gray-800 rounded-2xl p-6 animate-pulse"
+          className="bg-[#353535]/50 backdrop-blur-sm rounded-xl p-6 animate-pulse"
         >
-          <div className="h-6 bg-gray-700 rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+          <div className="h-6 bg-[#404040] rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-[#404040] rounded w-1/2"></div>
         </motion.div>
       ))}
     </div>

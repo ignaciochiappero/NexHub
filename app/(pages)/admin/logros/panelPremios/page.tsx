@@ -1,5 +1,4 @@
-//app\(pages)\admin\logros\panelPremios\page.tsx
-
+//app/(pages)/admin/logros/panelPremios/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -58,12 +57,13 @@ export default function AdminPremiosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#242424] p-5 pt-28 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen p-8 pt-24 font-[family-name:var(--blender-medium)]">
       <Link href="/admin/logros">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="text-white py-3 rounded-full transition-all flex items-center text-lg"
+          className="text-white py-3 rounded-xl transition-all flex items-center text-lg
+                   hover:text-pink-500"
         >
           <ChevronLeft className="mr-2" size={24} />
           Volver
@@ -72,20 +72,24 @@ export default function AdminPremiosPage() {
 
       <div className="max-w-6xl mx-auto mt-10">
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="flex justify-between items-center mb-12"
         >
-          <h1 className="text-5xl text-white flex items-center">
-            <Gift className="mr-4 text-yellow-500" size={48} />
+          <h1 className="text-5xl font-bold bg-clip-text text-transparent 
+                       bg-gradient-to-r from-pink-500 to-purple-500 flex items-center">
+            <Gift className="mr-4 text-pink-500" size={48} />
             Administrar Premios
           </h1>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleAddNew}
-            className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-pink-500/25 transition-all flex items-center text-lg"
+            className="bg-gradient-to-r from-pink-600 to-purple-600 
+                     hover:from-pink-700 hover:to-purple-700 text-white 
+                     px-6 py-3 rounded-xl shadow-lg hover:shadow-pink-500/25 
+                     transition-all flex items-center text-lg"
           >
             <Plus className="mr-2" size={24} />
             Agregar premio
@@ -103,9 +107,16 @@ export default function AdminPremiosPage() {
             placeholder="Buscar premios..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-6 py-4 pl-14 rounded-full shadow-lg border border-gray-700 bg-[#181818] text-white focus:outline-none focus:ring-2 focus:ring-pink-500 text-lg"
+            className="w-full px-6 py-4 pl-14 rounded-xl shadow-lg border border-gray-700 
+                     bg-[#353535]/50 backdrop-blur-sm text-white 
+                     focus:outline-none focus:ring-2 focus:ring-pink-500/20 
+                     focus:border-pink-500 hover:border-pink-500/30 
+                     transition-all text-lg"
           />
-          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
+          <Search 
+            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" 
+            size={24} 
+          />
         </motion.div>
 
         <PremioList

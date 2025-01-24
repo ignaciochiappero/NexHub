@@ -129,7 +129,7 @@ export default function AdminLogrosPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] p-4 sm:p-6 pt-16 sm:pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] p-4 sm:p-6 pt-16 sm:pt-20 font-[family-name:var(--blender-medium)]">
       <motion.div 
         className="max-w-5xl mx-auto"
         variants={containerVariants}

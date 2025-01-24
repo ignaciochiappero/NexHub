@@ -1,3 +1,4 @@
+//app/dashboard/logros/components/DynamicIcon.tsx
 "use client";
 
 import * as LucideIcons from "lucide-react";

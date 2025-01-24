@@ -1,5 +1,4 @@
-// components/premiosForm/PremiosList.tsx
-
+//components/premiosForm/PremiosList.tsx
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Trash2, Edit2, AlertCircle } from 'lucide-react';
@@ -48,39 +47,39 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
         {filteredPremios.map((premio) => (
           <motion.div
             key={premio.id}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            whileHover={{ scale: 1.03 }}
-            className="bg-[#353535] hover:bg-[#454545] rounded-xl transition-all duration-300 flex flex-col h-full"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-[#353535]/50 backdrop-blur-sm rounded-xl border border-gray-800 
+                     hover:border-pink-500/30 transition-all flex flex-col h-full 
+                     shadow-lg"
           >
-            {/* Contenedor principal con flex-grow */}
             <div className="flex-grow p-6">
-              {/* Imagen */}
-              <div className="mb-4">
+              <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                 <Image
                   src={premio.imagen || "/placeholder.svg"}
                   alt={premio.titulo}
-                  width={200}
-                  height={200}
-                  className="rounded-lg object-cover w-full h-48"
+                  fill
+                  className="object-cover transition-transform hover:scale-105 duration-300"
+                  style={{ boxShadow: "0 0 20px rgba(236,72,153,0.3)" }}
                 />
               </div>
 
-              {/* Información del premio */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h2 className="text-xl font-bold text-white">{premio.titulo}</h2>
-                <p className="text-gray-300">{premio.subtitulo}</p>
-                <p className="text-gray-400">{premio.descripcion}</p>
+                <p className="text-gray-300 text-sm">{premio.subtitulo}</p>
+                <p className="text-gray-400 text-sm">{premio.descripcion}</p>
               </div>
             </div>
 
-            {/* Botones de acción fijos al final */}
-            <div className="flex justify-between p-6 pt-4 mt-auto  border-gray-600">
+            <div className="flex justify-between p-6 pt-4 mt-auto border-t border-gray-800">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setDeleteId(premio.id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-md transition-colors duration-300 flex items-center"
+                className="bg-[#404040] hover:bg-[#454545] text-white 
+                         px-4 py-2 rounded-xl shadow-md transition-all 
+                         flex items-center hover:text-red-500"
               >
                 <Trash2 className="mr-2" size={18} />
                 Eliminar
@@ -89,7 +88,10 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onEdit(premio)}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow-md transition-colors duration-300 flex items-center"
+                className="bg-gradient-to-r from-pink-600 to-purple-600 
+                         hover:from-pink-700 hover:to-purple-700 text-white 
+                         px-4 py-2 rounded-xl shadow-md transition-all 
+                         flex items-center"
               >
                 <Edit2 className="mr-2" size={18} />
                 Editar
@@ -99,23 +101,23 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
         ))}
       </motion.div>
 
-      {/* Modal de confirmación de eliminación */}
       <AnimatePresence>
         {deleteId && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-gray-800 rounded-2xl p-8 max-w-sm w-full shadow-2xl"
+              className="bg-[#353535]/90 backdrop-blur-sm rounded-xl p-8 
+                       max-w-sm w-full shadow-xl border border-gray-800"
             >
               <div className="flex items-center mb-6">
-                <AlertCircle className="text-yellow-500 mr-4" size={32} />
+                <AlertCircle className="text-pink-500 mr-4" size={32} />
                 <h2 className="text-3xl font-bold text-white">
                   Confirmar eliminación
                 </h2>
@@ -128,7 +130,8 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setDeleteId(null)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-full shadow-md transition-colors duration-300 text-lg"
+                  className="bg-[#404040] hover:bg-[#454545] text-white 
+                           px-6 py-3 rounded-xl shadow-md transition-all text-lg"
                 >
                   Cancelar
                 </motion.button>
@@ -136,7 +139,10 @@ export default function PremioList({ premios, searchTerm, onPremioDeleted, onEdi
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => deleteId && handleDelete(deleteId)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full shadow-md transition-colors duration-300 flex items-center text-lg"
+                  className="bg-gradient-to-r from-pink-600 to-purple-600 
+                           hover:from-pink-700 hover:to-purple-700 text-white 
+                           px-6 py-3 rounded-xl shadow-md transition-all 
+                           flex items-center text-lg"
                 >
                   <Trash2 className="mr-2" size={20} />
                   Eliminar

@@ -1,5 +1,6 @@
 //app\dashboard\logros\page.tsx
 
+//app/dashboard/logros/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -18,7 +19,6 @@ export default function LogrosPage() {
   const [expandedAchievement, setExpandedAchievement] = useState<number | null>(null);
   const achievementsRef = useRef<HTMLDivElement>(null);
 
-  // Estados para la paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [stepPages, setStepPages] = useState<{ [key: number]: number }>({});
   const achievementsPerPage = 6;
@@ -139,7 +139,7 @@ export default function LogrosPage() {
           className="flex justify-between items-center mb-12"
         >
           <h1 className="text-5xl text-white flex items-center">
-            <Trophy className="mr-4 text-yellow-500" size={48} />
+            <Trophy className="mr-4 text-pink-500" size={48} />
             Mis Logros
           </h1>
         </motion.div>
