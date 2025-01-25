@@ -21,6 +21,7 @@ interface User {
   email: string;
   role: string;
   birthday: string;
+  position: string;
   image: string | null;
   company: string | null;
   location: string | null;
@@ -41,15 +42,17 @@ export default function AdminUserPage() {
       const response = await fetch("/api/users");
       if (!response.ok) throw new Error("Error al obtener usuarios");
       const data = await response.json();
-      
+
       const formattedData = data.map((user: User) => ({
         ...user,
         image: user.image || null,
         company: user.company || null,
         location: user.location || null,
-        birthday: user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : null,
+        birthday: user.birthday
+          ? new Date(user.birthday).toISOString().split("T")[0]
+          : null,
       }));
-      
+
       setUsers(formattedData);
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
@@ -193,10 +196,21 @@ export default function AdminUserPage() {
                       {user.name}
                     </h3>
                     <p className="text-gray-400 text-lg">{user.email}</p>
-                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                                   text-pink-400 text-sm inline-block mt-2">
-                      {user.role}
+                    <span
+                      className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
+                                   text-pink-400 text-sm inline-block mt-2"
+                    >
+                      {user.position}
                     </span>
+
+                    {user.role === "ADMIN" && (
+                      <span
+                        className="mx-3 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-600/20 to-purple-600/20 
+                        text-cyan-400 text-sm inline-block mt-2"
+                      >
+                        {user.role}
+                      </span>
+                    )}
                   </div>
                   <div className="flex justify-between mt-6">
                     <motion.button

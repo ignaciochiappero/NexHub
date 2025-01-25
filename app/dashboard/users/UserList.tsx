@@ -25,6 +25,7 @@ type User = {
   image: string | null;
   role: string;
   email: string;
+  position: string;
   projectCount: number;
   isOnline: boolean;
   location: string | null;
@@ -212,10 +213,26 @@ export default function UserList() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">{user.name}</h2>
-                  <span className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                                 text-pink-400 text-sm inline-block mt-1">
-                    {user.role}
-                  </span>
+                  
+                  <div className='flex flex-col items-start justify-start'>
+
+                    <span
+                        className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
+                                    text-pink-400 text-sm inline-block mt-2"
+                      >
+                        {user.position}
+                      </span>
+
+                      {user.role === "ADMIN" && (
+                        <span
+                          className=" px-3 py-1 rounded-full bg-gradient-to-r from-cyan-600/20 to-purple-600/20 
+                          text-cyan-400 text-sm inline-block mt-2"
+                        >
+                          {user.role}
+                        </span>
+                      )}
+                  </div>
+                  
                 </div>
               </div>
 

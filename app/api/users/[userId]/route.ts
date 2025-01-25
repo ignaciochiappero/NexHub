@@ -1,5 +1,4 @@
 // app/api/users/[userId]/route.ts
-// app/api/users/[userId]/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
@@ -32,6 +31,9 @@ export async function GET(
         location: true,
         company: true,
         role: true,
+        position: true,
+        createdAt: true,
+        lastActive: true
       },
     });
 
@@ -71,6 +73,7 @@ export async function PUT(
     const updateData: any = {
       name: body.name || undefined,
       email: body.email || undefined,
+      position: body.position || undefined,
       birthday: body.birthday ? new Date(body.birthday) : undefined,
       location: body.location || undefined,
       company: body.company || undefined,
@@ -96,6 +99,9 @@ export async function PUT(
           location: true,
           company: true,
           role: true,
+          position: true,
+          createdAt: true,
+          lastActive: true
         }
       });
 

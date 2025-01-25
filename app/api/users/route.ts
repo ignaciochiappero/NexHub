@@ -21,6 +21,7 @@ export async function GET() {
         location: true,
         company: true,
         role: true,
+        position:true,
         createdAt: true,
         lastActive: true,
         achievements: {
@@ -56,10 +57,10 @@ export async function POST(req: NextRequest) {
       return new NextResponse("No autorizado", { status: 401 });
     }
 
-    const { name, email, password, birthday, location, company, image } = await req.json();
+    const { name, email, password, birthday, location, company, image, position  } = await req.json();
 
     // Validaciones básicas
-    if (!name || !email || !password || !birthday) {
+    if (!name || !email || !password || !birthday|| !position) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }
 
@@ -68,6 +69,8 @@ export async function POST(req: NextRequest) {
         name,
         email,
         password,
+        role: "USER",
+        position,
         birthday: new Date(birthday),
         location: location || null,
         company: company || null,

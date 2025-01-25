@@ -9,6 +9,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+model Premio {
+  id           Int      @id @default(autoincrement())
+  titulo       String
+  subtitulo    String
+  descripcion  String
+  imagen       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  logros       LogroPremio[]
+}
+
+
+model Logro {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String   @default("Trophy")
+  stepsFinal  Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  achievements       UserAchievement[]
+  AchievementRequest AchievementRequest[]
+
+  premios            LogroPremio[]
+}
+
+model Project {
+  //Campos de contenido
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+
+  //FK -> Esta va a ser la relación
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //Otros campos de contenido
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String
@@ -16,6 +61,7 @@ model User {
   password  String
   image     String?
   birthday  DateTime
+  position  String
   location  String?
   company   String?
   createdAt DateTime @default(now())
@@ -41,47 +87,6 @@ model User {
 enum Role {
   ADMIN
   USER
-}
-
-model Project {
-  //Campos de contenido
-  id          Int    @id @default(autoincrement())
-  title       String
-  description String
-
-  //FK -> Esta va a ser la relación
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  //Otros campos de contenido
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model Logro {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  icon        String   @default("Trophy")
-  stepsFinal  Int      @default(1)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  achievements       UserAchievement[]
-  AchievementRequest AchievementRequest[]
-
-  premios            LogroPremio[]
-}
-
-model Premio {
-  id           Int      @id @default(autoincrement())
-  titulo       String
-  subtitulo    String
-  descripcion  String
-  imagen       String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  logros       LogroPremio[]
 }
 
 model LogroPremio {

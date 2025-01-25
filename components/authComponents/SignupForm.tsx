@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Lock, User, Mail, Calendar, X, Key } from 'lucide-react'
+import { Lock, User, Mail, Calendar, X, Key, BriefcaseBusiness } from 'lucide-react'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -18,6 +18,7 @@ interface SignupModalProps {
     name: string;
     email: string;
     birthday: string;
+    position: string;
     image?: string | null;    
     company?: string | null;  
     location?: string | null;
@@ -35,6 +36,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
       changePassword: false,
       name: '',
       birthday: '',
+      position: ''
     }
   });
 
@@ -45,6 +47,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
     if (userToEdit) {
       setValue('name', userToEdit.name);
       setValue('email', userToEdit.email);
+      setValue('position', userToEdit.position);
       if (userToEdit.birthday) {
         setValue('birthday', new Date(userToEdit.birthday).toISOString().split('T')[0]);
       }
@@ -68,6 +71,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
           name: data.name,
           email: data.email,
           birthday: data.birthday,  // Ya viene en formato ISO
+          position: data.position,
           location: userToEdit.location, // Mantener el valor existente
           company: userToEdit.company,   // Mantener el valor existente
           image: userToEdit.image,       // Mantener el valor existente
@@ -100,6 +104,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
             email: data.email,
             password: data.password,
             birthday: data.birthday,
+            position: data.position
           });
   
           if (response.status === 201) {
@@ -216,6 +221,32 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
                   )}
                 />
 
+
+                <Controller
+                  name="position"
+                  control={control}
+                  rules={{ required: 'El puesto es requerido' }}
+                  render={({ field }) => (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="relative"
+                    >
+                      <BriefcaseBusiness  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Cargo en la empresa"
+                        className="w-full bg-[#353535] text-white p-3 pl-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 transition-all font-geist-sans"
+                        {...field}
+                      />
+                      {errors.position && (
+                        <span className="text-sm text-red-500 mt-1">{errors.position.message}</span>
+                      )}
+                    </motion.div>
+                  )}
+                />
+
                 <Controller
                   name="birthday"
                   control={control}
@@ -239,6 +270,8 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
                     </motion.div>
                   )}
                 />
+
+                
 
                 {!isEditing ? (
                   <Controller

@@ -21,6 +21,7 @@ interface ProfileFormProps {
     image: string | null;
     email: string;
     password: string;
+    position: string;
     birthday: string | Date;
     location: string | null;
     company: string | null;
@@ -632,12 +633,24 @@ export default function ProfileForm({ initialUser }: ProfileFormProps) {
                 >
                   {user.name}
                 </h2>
-                <span
-                  className="px-4 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                    text-pink-400 text-sm"
-                >
-                  {user.role}
-                </span>
+                
+                <div className="flex flex-col ">
+                  <span
+                    className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
+                text-pink-400 text-xl inline-block mt-2"
+                  >
+                    {user.position}
+                  </span>
+
+                  {user.role === "ADMIN" && (
+                    <span
+                      className=" px-3 py-1 rounded-full bg-gradient-to-r from-cyan-600/20 to-purple-600/20 
+      text-cyan-400 text-sm inline-block mt-2"
+                    >
+                      {user.role}
+                    </span>
+                  )}
+                </div>
               </motion.div>
 
               <motion.div
