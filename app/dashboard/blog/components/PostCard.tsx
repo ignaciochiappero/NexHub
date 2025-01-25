@@ -131,13 +131,14 @@ export default function PostCard({ post, currentUser, onPostUpdate, onPostDelete
           ) : (
             // Avatar y nombre para posts normales
             <>
-              <Image
-                src={post.user.image || "/user.png"}
-                alt={post.user.name}
-                width={40}
-                height={40}
-                className="rounded-full mr-3"
-              />
+
+                <Image
+                  src={post.user.image || "/user.png"}
+                  alt={post.user.name}
+                  width={40}
+                  height={40}
+                  className="rounded-full mr-3 h-10 w-10 "
+                />
               <div>
                 <h3 className="font-semibold text-white">{post.user.name}</h3>
                 <p className="text-sm text-gray-400">

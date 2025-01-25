@@ -1,5 +1,3 @@
-//app\dashboard\messages\components\UserList.tsx
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -25,20 +23,17 @@ export function UserList({
   const [filteredUsers, setFilteredUsers] = useState(users)
   const [displayedUsers, setDisplayedUsers] = useState(users)
 
-  // Efecto para manejar la búsqueda y filtrado
   useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !currentConversationParticipants.includes(user.id)
+    const filtered = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !currentConversationParticipants.includes(user.id),
     )
     setFilteredUsers(filtered)
   }, [searchTerm, users, currentConversationParticipants])
 
-  // Efecto para actualizar los usuarios mostrados
   useEffect(() => {
-    setDisplayedUsers(users.filter(user => 
-      !currentConversationParticipants.includes(user.id)
-    ))
+    setDisplayedUsers(users.filter((user) => !currentConversationParticipants.includes(user.id)))
   }, [users, currentConversationParticipants])
 
   const containerVariants = {
@@ -56,11 +51,10 @@ export function UserList({
     show: { y: 0, opacity: 1 },
   }
 
-  // Determinar qué usuarios mostrar
   const usersToDisplay = searchTerm ? filteredUsers : displayedUsers
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
+    <div className="flex flex-col h-full">
       <div className="p-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
@@ -73,9 +67,7 @@ export function UserList({
               <ArrowLeft size={24} />
             </motion.button>
             <Users className="w-5 h-5 text-pink-500" />
-            <h3 className="font-blender-medium text-lg text-white">
-              Usuarios disponibles ({usersToDisplay.length})
-            </h3>
+            <h3 className="font-blender-medium text-lg text-white">Usuarios disponibles ({usersToDisplay.length})</h3>
           </div>
         </div>
         <div className="relative mb-4">
@@ -91,12 +83,7 @@ export function UserList({
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <motion.div 
-          variants={containerVariants} 
-          initial="hidden" 
-          animate="show" 
-          className="space-y-2 px-4 pb-4"
-        >
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-2 px-4 pb-4">
           <AnimatePresence>
             {usersToDisplay.length > 0 ? (
               usersToDisplay.map((user) => (
@@ -111,32 +98,21 @@ export function UserList({
                   whileHover={{ scale: 1.02, x: 4 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="relative w-10 h-10">
-                    <Image
-                      src={user.image || "/user.png"}
-                      alt={user.name}
-                      fill
-                      className="rounded-full object-cover"
-                    />
+                  <div className="relative w-10 h-10 flex-shrink-0">
+                    <Image src={user.image || "/user.png"} alt={user.name} fill className="rounded-full object-cover" />
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="font-blender-medium text-gray-200 group-hover:text-pink-300 transition-colors duration-300">
+                    <p className="font-blender-medium text-gray-200 group-hover:text-pink-300 transition-colors duration-300 truncate">
                       {user.name}
                     </p>
-                    <p className="text-sm text-gray-400">{user.email}</p>
+                    <p className="text-sm text-gray-400 truncate">{user.email}</p>
                   </div>
                 </motion.button>
               ))
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-8"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
                 <p className="text-gray-400">
-                  {searchTerm 
-                    ? "No se encontraron usuarios con ese nombre" 
-                    : "No hay usuarios disponibles"}
+                  {searchTerm ? "No se encontraron usuarios con ese nombre" : "No hay usuarios disponibles"}
                 </p>
               </motion.div>
             )}
@@ -146,3 +122,4 @@ export function UserList({
     </div>
   )
 }
+

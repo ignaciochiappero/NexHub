@@ -87,7 +87,7 @@ const UserDropdown = () => {
   }
 
   return (
-    <div ref={dropdownRef} className={`absolute top-6 right-6 font-[family-name:var(--blender-bold)] transition-opacity duration-300 ${isAtTop ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+    <div ref={dropdownRef} className={` z-50 absolute top-6 right-6 font-[family-name:var(--blender-bold)] transition-opacity duration-300 ${isAtTop ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
       <button onClick={() => setIsOpen(!isOpen)} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#353535] text-white transform transition-all duration-300 hover:bg-[#454545] ${isOpen ? 'ring-2 ring-rose-500' : ''}`}>
         {loading ? (
           <div className="w-8 h-8 bg-gray-300 rounded-full animate-pulse" />
@@ -97,7 +97,7 @@ const UserDropdown = () => {
             width={30} 
             src={user?.image || "/user.png"} 
             alt="profile"
-            className='rounded-full'
+            className='rounded-full w-8 h-8 object-cover'
           />
         )}
         <span className={`text-sm ${loading ? 'bg-gray-300 w-20 h-4 rounded animate-pulse' : ''}`}>
@@ -106,7 +106,7 @@ const UserDropdown = () => {
         <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      <div className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg transform transition-all duration-300 origin-top-right ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
+      <div className={`absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg transform transition-all duration-300 origin-top-right ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none '}`}>
         <div className="py-2">
           {menuItems.map((item, index) => {
             const ItemIcon = item.icon;

@@ -200,7 +200,7 @@ export default function UserList() {
                     alt={user.name}
                     width={60}
                     height={60}
-                    className="rounded-full mr-4 border-2 border-pink-500/30"
+                    className="rounded-full mr-4 border-2 border-pink-500/30 w-16 h-16"
                     style={{ boxShadow: "0 0 20px rgba(236,72,153,0.3)" }}
                   />
                   <div 
@@ -300,13 +300,13 @@ export default function UserList() {
                   alt={selectedUser.name}
                   width={100}
                   height={100}
-                  className="rounded-full mr-4 border-2 border-pink-500/30"
+                  className="rounded-full mr-4 border-2 border-pink-500/30 w-32 h-32 object-cover"
                   style={{ boxShadow: "0 0 30px rgba(236,72,153,0.3)" }}
                 />
                 <div>
                   <span className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                                 text-pink-400 text-sm inline-block mb-2">
-                    {selectedUser.role}
+                                 text-pink-400 text-lg inline-block mb-2">
+                    {selectedUser.position}
                   </span>
                   <p className="text-gray-400">{selectedUser.email}</p>
                 </div>

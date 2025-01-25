@@ -1,51 +1,44 @@
 //app\dashboard\messages\components\ChatMessages.tsx
 
-"use client";
 
-import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Edit, Trash } from "lucide-react";
-import Image from "next/image";
-import type { Message } from "@/types/chat";
+"use client"
+
+import { useState, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Edit, Trash } from "lucide-react"
+import Image from "next/image"
+import type { Message } from "@/types/chat"
 
 interface ChatMessagesProps {
-  messages: Message[];
-  currentUserEmail: string;
-  onEditMessage: (message: Message) => void;
-  onSelectMessage: (messageId: number) => void;
-  selectedMessages: number[];
+  messages: Message[]
+  currentUserEmail: string
+  onEditMessage: (message: Message) => void
+  onSelectMessage: (messageId: number) => void
+  selectedMessages: number[]
 }
 
-// interface MessageSender {
-//   name: string;
-//   email: string;
-//   image?: string;
-// }
-
 const formatMessageDate = (date: Date) => {
-  const messageDate = new Date(date);
-  const now = new Date();
-  const diffMinutes = Math.floor(
-    (now.getTime() - messageDate.getTime()) / (1000 * 60)
-  );
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
+  const messageDate = new Date(date)
+  const now = new Date()
+  const diffMinutes = Math.floor((now.getTime() - messageDate.getTime()) / (1000 * 60))
+  const diffHours = Math.floor(diffMinutes / 60)
+  const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMinutes < 1) return "Justo ahora";
+  if (diffMinutes < 1) return "Justo ahora"
   if (diffMinutes < 60) {
-    return `Hace ${diffMinutes} ${diffMinutes === 1 ? "minuto" : "minutos"}`;
+    return `Hace ${diffMinutes} ${diffMinutes === 1 ? "minuto" : "minutos"}`
   }
   if (diffHours < 24) {
     return messageDate.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    });
+    })
   }
   if (diffDays === 1) {
     return `Ayer ${messageDate.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    })}`;
+    })}`
   }
   return messageDate.toLocaleString([], {
     year: "numeric",
@@ -53,8 +46,8 @@ const formatMessageDate = (date: Date) => {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  });
-};
+  })
+}
 
 const messageVariants = {
   initial: { opacity: 0, y: 20, scale: 0.95 },
@@ -73,7 +66,7 @@ const messageVariants = {
     scale: 0.95,
     transition: { duration: 0.2 },
   },
-};
+}
 
 export function ChatMessages({
   messages,
@@ -82,38 +75,33 @@ export function ChatMessages({
   onSelectMessage,
   selectedMessages,
 }: ChatMessagesProps) {
-  const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null);
-  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [editContent, setEditContent] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(
-    null
-  );
+  const [hoveredMessageId, setHoveredMessageId] = useState<number | null>(null)
+  const [editingMessageId, setEditingMessageId] = useState<number | null>(null)
+  const [editContent, setEditContent] = useState("")
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null)
 
   const isCurrentUserMessage = useCallback(
     (message: Message) => message.sender?.email === currentUserEmail,
-    [currentUserEmail]
-  );
+    [currentUserEmail],
+  )
 
-  const handleEditClick = useCallback(
-    (message: Message, e: React.MouseEvent) => {
-      e.stopPropagation();
-      setEditingMessageId(message.id);
-      setEditContent(message.content);
-    },
-    []
-  );
+  const handleEditClick = useCallback((message: Message, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setEditingMessageId(message.id)
+    setEditContent(message.content)
+  }, [])
 
   const handleCancelEdit = useCallback(() => {
-    setEditingMessageId(null);
-    setEditContent("");
-    setHoveredMessageId(null);
-  }, []);
+    setEditingMessageId(null)
+    setEditContent("")
+    setHoveredMessageId(null)
+  }, [])
 
   const handleEditSubmit = useCallback(
     async (message: Message) => {
       try {
         if (!editContent.trim()) {
-          return handleCancelEdit();
+          return handleCancelEdit()
         }
 
         const response = await fetch(`/api/messages/${message.id}`, {
@@ -124,56 +112,53 @@ export function ChatMessages({
           body: JSON.stringify({
             content: editContent.trim(),
           }),
-        });
+        })
 
         if (!response.ok) {
-          throw new Error("Error al actualizar el mensaje");
+          throw new Error("Error al actualizar el mensaje")
         }
 
-        const updatedMessage = await response.json();
-        onEditMessage(updatedMessage);
-        handleCancelEdit();
+        const updatedMessage = await response.json()
+        onEditMessage(updatedMessage)
+        handleCancelEdit()
       } catch (error) {
-        console.error("Error al editar el mensaje:", error);
-        handleCancelEdit();
+        console.error("Error al editar el mensaje:", error)
+        handleCancelEdit()
       }
     },
-    [editContent, handleCancelEdit, onEditMessage]
-  );
+    [editContent, handleCancelEdit, onEditMessage],
+  )
 
-  const handleDeleteClick = useCallback(
-    async (messageId: number, e: React.MouseEvent) => {
-      e.stopPropagation();
-      try {
-        setShowDeleteConfirm(null);
+  const handleDeleteClick = useCallback(async (messageId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      setShowDeleteConfirm(null)
 
-        const response = await fetch(`/api/messages/${messageId}`, {
-          method: "DELETE",
-        });
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "DELETE",
+      })
 
-        if (!response.ok && response.status !== 404) {
-          throw new Error("Error al eliminar el mensaje");
-        }
-
-        setHoveredMessageId(null);
-      } catch (error) {
-        console.error("Error al eliminar mensaje:", error);
+      if (!response.ok && response.status !== 404) {
+        throw new Error("Error al eliminar el mensaje")
       }
-    },
-    []
-  );
+
+      setHoveredMessageId(null)
+    } catch (error) {
+      console.error("Error al eliminar mensaje:", error)
+    }
+  }, [])
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent, message: Message) => {
       if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleEditSubmit(message);
+        e.preventDefault()
+        handleEditSubmit(message)
       } else if (e.key === "Escape") {
-        handleCancelEdit();
+        handleCancelEdit()
       }
     },
-    [handleEditSubmit, handleCancelEdit]
-  );
+    [handleEditSubmit, handleCancelEdit],
+  )
 
   return (
     <div className="space-y-4">
@@ -185,37 +170,19 @@ export function ChatMessages({
             animate="animate"
             exit="exit"
             variants={messageVariants}
-            className={`flex ${
-              isCurrentUserMessage(message) ? "justify-end" : "justify-start"
-            }`}
-            onMouseEnter={() =>
-              !editingMessageId && setHoveredMessageId(message.id)
-            }
+            className={`flex ${isCurrentUserMessage(message) ? "justify-end" : "justify-start"}`}
+            onMouseEnter={() => !editingMessageId && setHoveredMessageId(message.id)}
             onMouseLeave={() => setHoveredMessageId(null)}
           >
             <div
               className={`
                 max-w-[70%] rounded-lg p-4 relative group
-                ${
-                  isCurrentUserMessage(message)
-                    ? "bg-gradient-to-r from-pink-600 to-purple-600"
-                    : "bg-[#353535]"
-                }
-                ${
-                  selectedMessages.includes(message.id)
-                    ? "ring-2 ring-blue-500 ring-opacity-75"
-                    : ""
-                }
-                ${
-                  isCurrentUserMessage(message) ? "text-white" : "text-gray-100"
-                }
+                ${isCurrentUserMessage(message) ? "bg-gradient-to-r from-pink-600 to-purple-600" : "bg-[#353535]"}
+                ${selectedMessages.includes(message.id) ? "ring-2 ring-blue-500 ring-opacity-75" : ""}
+                ${isCurrentUserMessage(message) ? "text-white" : "text-gray-100"}
                 transition-all duration-200 ease-in-out
                 hover:shadow-lg
-                ${
-                  isCurrentUserMessage(message)
-                    ? "hover:shadow-pink-500/20"
-                    : "hover:shadow-gray-500/20"
-                }
+                ${isCurrentUserMessage(message) ? "hover:shadow-pink-500/20" : "hover:shadow-gray-500/20"}
               `}
               onClick={() => !editingMessageId && onSelectMessage(message.id)}
             >
@@ -229,12 +196,8 @@ export function ChatMessages({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {message.sender?.name || "Usuario"}
-                  </span>
-                  <span className="text-xs opacity-75">
-                    {formatMessageDate(message.createdAt)}
-                  </span>
+                  <span className="text-sm font-medium">{message.sender?.name || "Usuario"}</span>
+                  <span className="text-xs opacity-75">{formatMessageDate(message.createdAt)}</span>
                 </div>
               </div>
 
@@ -264,39 +227,35 @@ export function ChatMessages({
                   </div>
                 </div>
               ) : (
-                <p className="text-base break-words whitespace-pre-wrap">
-                  {message.content}
-                </p>
+                <p className="text-base break-words whitespace-pre-wrap">{message.content}</p>
               )}
 
-              {isCurrentUserMessage(message) &&
-                hoveredMessageId === message.id &&
-                !editingMessageId && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute top-2 right-2 flex items-center gap-2 bg-black/20 rounded-md p-1"
+              {isCurrentUserMessage(message) && hoveredMessageId === message.id && !editingMessageId && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="absolute top-2 right-2 flex items-center gap-2 bg-black/20 rounded-md p-1"
+                >
+                  <button
+                    onClick={(e) => handleEditClick(message, e)}
+                    className="p-1 hover:bg-white/10 rounded transition-colors"
+                    title="Editar mensaje"
                   >
-                    <button
-                      onClick={(e) => handleEditClick(message, e)}
-                      className="p-1 hover:bg-white/10 rounded transition-colors"
-                      title="Editar mensaje"
-                    >
-                      <Edit size={16} />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowDeleteConfirm(message.id);
-                      }}
-                      className="p-1 hover:bg-white/10 rounded transition-colors"
-                      title="Eliminar mensaje"
-                    >
-                      <Trash size={16} />
-                    </button>
-                  </motion.div>
-                )}
+                    <Edit size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowDeleteConfirm(message.id)
+                    }}
+                    className="p-1 hover:bg-white/10 rounded transition-colors"
+                    title="Eliminar mensaje"
+                  >
+                    <Trash size={16} />
+                  </button>
+                </motion.div>
+              )}
 
               {showDeleteConfirm === message.id && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -306,12 +265,8 @@ export function ChatMessages({
                     exit={{ scale: 0.95, opacity: 0 }}
                     className="bg-[#353535] p-6 rounded-xl max-w-sm w-full mx-4"
                   >
-                    <h3 className="text-lg font-semibold mb-4">
-                      ¿Estás seguro de eliminar este mensaje?
-                    </h3>
-                    <p className="text-gray-300 mb-6">
-                      Esta acción no se puede deshacer.
-                    </p>
+                    <h3 className="text-lg font-semibold mb-4">¿Estás seguro de eliminar este mensaje?</h3>
+                    <p className="text-gray-300 mb-6">Esta acción no se puede deshacer.</p>
                     <div className="flex justify-end gap-3">
                       <button
                         onClick={() => setShowDeleteConfirm(null)}
@@ -334,5 +289,6 @@ export function ChatMessages({
         ))}
       </AnimatePresence>
     </div>
-  );
+  )
 }
+

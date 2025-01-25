@@ -1,17 +1,10 @@
 //app/(pages)/admin/users/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  UserPlus,
-  Trash2,
-  Edit2,
-  AlertCircle,
-  Users,
-  ChevronLeft,
-} from "lucide-react";
+import { Search, UserPlus, Trash2, Edit2, AlertCircle, Users, ChevronLeft } from 'lucide-react';
 import SignupModal from "@/components/authComponents/SignupForm";
 import Link from "next/link";
 
@@ -102,7 +95,7 @@ export default function AdminUserPage() {
   );
 
   return (
-    <div className="min-h-screen p-8 pt-40 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen p-4 sm:p-8 pt-24 sm:pt-24 font-[family-name:var(--blender-medium)]">
       <Link href="/admin">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -119,9 +112,9 @@ export default function AdminUserPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-between items-center mb-12"
+          className="flex flex-col sm:flex-row justify-between items-center mb-12"
         >
-          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 flex items-center">
+          <h1 className="text-3xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 flex items-center mb-4 sm:mb-0">
             <Users className="mr-4 text-pink-500" size={48} />
             Administrar Usuarios
           </h1>
@@ -129,7 +122,7 @@ export default function AdminUserPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleAddUser}
-            className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all flex items-center text-lg"
+            className="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all flex items-center justify-center text-lg"
           >
             <UserPlus className="mr-2" size={24} />
             Agregar usuario
@@ -147,11 +140,11 @@ export default function AdminUserPage() {
             placeholder="Buscar usuarios..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-6 py-4 pl-14 rounded-xl shadow-lg border border-gray-700 
+            className="w-full px-4 sm:px-6 py-3 sm:py-4 pl-12 sm:pl-14 rounded-xl shadow-lg border border-gray-700 
                      bg-[#353535]/50 backdrop-blur-sm text-white 
                      focus:outline-none focus:ring-2 focus:ring-pink-500/20 
                      focus:border-pink-500 hover:border-pink-500/30 
-                     transition-all text-lg"
+                     transition-all text-base sm:text-lg"
           />
           <Search
             className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -187,39 +180,40 @@ export default function AdminUserPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="bg-[#353535]/50 backdrop-blur-sm rounded-xl p-6 
+                  className="bg-[#353535]/50 backdrop-blur-sm rounded-xl p-4 sm:p-6 
                            transition-all duration-300 shadow-lg hover:shadow-xl
                            border border-gray-800 hover:border-pink-500/30"
                 >
                   <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-white mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                       {user.name}
                     </h3>
-                    <p className="text-gray-400 text-lg">{user.email}</p>
-                    <span
-                      className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                                   text-pink-400 text-sm inline-block mt-2"
-                    >
-                      {user.position}
-                    </span>
-
-                    {user.role === "ADMIN" && (
+                    <p className="text-gray-400 text-base sm:text-lg">{user.email}</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
                       <span
-                        className="mx-3 px-3 py-1 rounded-full bg-gradient-to-r from-cyan-600/20 to-purple-600/20 
-                        text-cyan-400 text-sm inline-block mt-2"
+                        className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
+                                   text-pink-400 text-sm inline-block"
                       >
-                        {user.role}
+                        {user.position}
                       </span>
-                    )}
+                      {user.role === "ADMIN" && (
+                        <span
+                          className="px-3 py-1 rounded-full bg-gradient-to-r from-cyan-600/20 to-purple-600/20 
+                          text-cyan-400 text-sm inline-block"
+                        >
+                          {user.role}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex justify-between mt-6">
+                  <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mt-4 sm:mt-6">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDeleteUserId(user.id)}
                       className="bg-[#404040] hover:bg-[#454545] text-white px-4 py-2 
                                rounded-xl shadow-md transition-colors duration-300 
-                               flex items-center hover:text-red-500"
+                               flex items-center justify-center hover:text-red-500"
                     >
                       <Trash2 className="mr-2" size={18} />
                       Eliminar
@@ -231,7 +225,7 @@ export default function AdminUserPage() {
                       className="bg-gradient-to-r from-pink-600 to-purple-600 
                                hover:from-pink-700 hover:to-purple-700 text-white 
                                px-4 py-2 rounded-xl shadow-md transition-all 
-                               duration-300 flex items-center"
+                               duration-300 flex items-center justify-center"
                     >
                       <Edit2 className="mr-2" size={18} />
                       Editar

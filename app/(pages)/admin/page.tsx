@@ -158,7 +158,7 @@ const AdminPanel = () => {
         animate="visible"
       >
         <motion.h1 
-          className="text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mb-16 text-center font-[family-name:var(--blender-bold)] tracking-wider"
+          className="md:text-6xl max-sm:text-4xl  text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mb-16 text-center font-[family-name:var(--blender-bold)] tracking-wider"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}

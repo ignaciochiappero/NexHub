@@ -46,7 +46,7 @@ const formattedUser = {
 return (
   <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] pt-20 p-6">
     <div className="max-w-7xl mx-auto">
-      <h1 className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500  text-center font-[family-name:var(--blender-bold)] tracking-wider">
+      <h1 className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500  text-center font-[family-name:var(--blender-bold)] tracking-wider pb-10">
         Perfil de Usuario
       </h1>
       <div className="w-full bg-[#242424] rounded-2xl p-8 shadow-2xl">

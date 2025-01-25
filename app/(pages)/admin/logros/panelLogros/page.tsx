@@ -1,10 +1,10 @@
 //app\(pages)\admin\logros\panelLogros\page.tsx
 
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 import {
   Search,
   Trash2,
@@ -47,9 +47,9 @@ import {
   Eye,
   Gift,
   ChevronLeft,
-} from "lucide-react";
-import LogrosForm from "@/components/logrosForm/LogrosForm";
-import Link from "next/link";
+} from "lucide-react"
+import LogrosForm from "@/components/logrosForm/LogrosForm"
+import Link from "next/link"
 
 // Mapeo de strings a componentes de íconos
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,107 +89,106 @@ const iconMapping: { [key: string]: any } = {
   Crosshair: Crosshair,
   Eye: Eye,
   Gift: Gift,
-};
+}
 
 interface Logro {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  stepsProgress: number;
-  stepsFinal: number;
-  progress: number;
-  completed: boolean;
-  createdAt: string;
-  premios: Premio[];
+  id: number
+  title: string
+  description: string
+  icon: string
+  stepsProgress: number
+  stepsFinal: number
+  progress: number
+  completed: boolean
+  createdAt: string
+  premios: Premio[]
 }
 
 interface Premio {
-  id: number;
-  titulo: string;
-  subtitulo: string;
-  imagen: string;
+  id: number
+  titulo: string
+  subtitulo: string
+  imagen: string
 }
 
 export default function AdminLogroPage() {
-  const [logros, setLogros] = useState<Logro[]>([]);
+  const [logros, setLogros] = useState<Logro[]>([])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [premio, setPremio] = useState<Premio[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [deleteLogroId, setDeleteLogroId] = useState<number | null>(null);
-  const [isLogrosFormOpen, setIsLogrosFormOpen] = useState(false);
-  const [logroToEdit, setLogroToEdit] = useState<Logro | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [premio, setPremio] = useState<Premio[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [deleteLogroId, setDeleteLogroId] = useState<number | null>(null)
+  const [isLogrosFormOpen, setIsLogrosFormOpen] = useState(false)
+  const [logroToEdit, setLogroToEdit] = useState<Logro | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const fetchLogros = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch("/api/logros");
-      if (!response.ok) throw new Error("Error al obtener Logros");
-      const data = await response.json();
-      setLogros(data);
+      const response = await fetch("/api/logros")
+      if (!response.ok) throw new Error("Error al obtener Logros")
+      const data = await response.json()
+      setLogros(data)
     } catch (error) {
-      console.error("Error al cargar logros:", error);
+      console.error("Error al cargar logros:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const fetchPremios = async () => {
     try {
-      const response = await fetch("/api/premios");
-      if (!response.ok) throw new Error("Error al obtener premios");
-      const data = await response.json();
-      setPremio(data);
+      const response = await fetch("/api/premios")
+      if (!response.ok) throw new Error("Error al obtener premios")
+      const data = await response.json()
+      setPremio(data)
     } catch (error) {
-      console.error("Error al cargar premios:", error);
+      console.error("Error al cargar premios:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchLogros();
-    fetchPremios();
-  }, []);
+    fetchLogros()
+    fetchPremios()
+  }, [])
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`/api/logros/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error("Error al eliminar el logro");
-      fetchLogros();
-      setDeleteLogroId(null);
+      const response = await fetch(`/api/logros/${id}`, { method: "DELETE" })
+      if (!response.ok) throw new Error("Error al eliminar el logro")
+      fetchLogros()
+      setDeleteLogroId(null)
     } catch (error) {
-      console.error("Error al eliminar logro:", error);
-      alert("Hubo un problema al eliminar el logro");
+      console.error("Error al eliminar logro:", error)
+      alert("Hubo un problema al eliminar el logro")
     }
-  };
+  }
 
   const handleEdit = (logro: Logro) => {
-    setLogroToEdit(logro);
-    setIsEditing(true);
-    setIsLogrosFormOpen(true);
-  };
+    setLogroToEdit(logro)
+    setIsEditing(true)
+    setIsLogrosFormOpen(true)
+  }
 
   const handleModalClose = () => {
-    setIsLogrosFormOpen(false);
-    setLogroToEdit(null);
-    setIsEditing(false);
-  };
+    setIsLogrosFormOpen(false)
+    setLogroToEdit(null)
+    setIsEditing(false)
+  }
 
   const getIconComponent = (iconName: string) => {
-    const IconComponent = iconMapping[iconName];
-    return IconComponent ? <IconComponent size={48} /> : <Trophy size={48} />;
-  };
+    const IconComponent = iconMapping[iconName]
+    return IconComponent ? <IconComponent size={48} /> : <Trophy size={48} />
+  }
 
   const filteredLogros = logros.filter(
     (logro) =>
       logro.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      logro.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      logro.description.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
- 
   return (
-    <div className="min-h-screen p-8 pt-24 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen p-4 sm:p-8 pt-16 sm:pt-24 font-[family-name:var(--blender-medium)]">
       <Link href="/admin/logros">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -207,10 +206,12 @@ export default function AdminLogroPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-between items-center mb-12"
+          className="flex flex-col sm:flex-row justify-between items-center mb-12"
         >
-          <h1 className="text-5xl font-bold bg-clip-text text-transparent 
-                       bg-gradient-to-r from-pink-500 to-purple-500 flex items-center">
+          <h1
+            className="text-3xl sm:text-5xl font-bold bg-clip-text text-transparent 
+                       bg-gradient-to-r from-pink-500 to-purple-500 flex items-center mb-4 sm:mb-0"
+          >
             <Trophy className="mr-4 text-pink-500" size={48} />
             Administrar Logros
           </h1>
@@ -218,13 +219,13 @@ export default function AdminLogroPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
-              setLogroToEdit(null);
-              setIsEditing(false);
-              setIsLogrosFormOpen(true);
+              setLogroToEdit(null)
+              setIsEditing(false)
+              setIsLogrosFormOpen(true)
             }}
-            className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 
+            className="w-full sm:w-auto bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 
                      hover:to-purple-700 text-white px-6 py-3 rounded-xl shadow-lg 
-                     hover:shadow-pink-500/25 transition-all flex items-center text-lg"
+                     hover:shadow-pink-500/25 transition-all flex items-center justify-center text-lg"
           >
             <Plus className="mr-2" size={24} />
             Agregar logro
@@ -242,21 +243,18 @@ export default function AdminLogroPage() {
             placeholder="Buscar logros..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-6 py-4 pl-14 rounded-xl shadow-lg border border-gray-700 
+            className="w-full px-4 sm:px-6 py-3 sm:py-4 pl-12 sm:pl-14 rounded-xl shadow-lg border border-gray-700 
                      bg-[#353535]/50 backdrop-blur-sm text-white 
                      focus:outline-none focus:ring-2 focus:ring-pink-500/20 
                      focus:border-pink-500 hover:border-pink-500/30 
-                     transition-all text-lg"
+                     transition-all text-base sm:text-lg"
           />
-          <Search
-            className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400"
-            size={24}
-          />
+          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
         </motion.div>
 
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+            {[...Array(8)].map((_, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -270,10 +268,7 @@ export default function AdminLogroPage() {
             ))}
           </div>
         ) : (
-          <motion.div
-            layout
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
             <AnimatePresence>
               {filteredLogros.map((logro, index) => (
                 <motion.div
@@ -283,7 +278,7 @@ export default function AdminLogroPage() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className={`
-                    p-6 rounded-xl transition-all duration-300 flex flex-col h-full
+                    p-4 sm:p-6 rounded-xl transition-all duration-300 flex flex-col h-full
                     ${
                       logro.completed
                         ? "bg-[#353535]/50 backdrop-blur-sm border-2 border-teal-500/30"
@@ -291,29 +286,27 @@ export default function AdminLogroPage() {
                     }
                     border border-gray-800 hover:border-pink-500/30
                   `}
-                  style={
-                    logro.completed
-                      ? { boxShadow: "0 0 30px rgba(20,184,166,0.3)" }
-                      : undefined
-                  }
+                  style={logro.completed ? { boxShadow: "0 0 30px rgba(20,184,166,0.3)" } : undefined}
                 >
                   {/* Contenido principal */}
                   <div className="flex-grow">
                     {/* Header */}
-                    <div className="flex items-center mb-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
                       <div
                         className={`
-                          mr-4 w-12 h-12 flex items-center justify-center
+                          mb-2 sm:mb-0 sm:mr-4 w-12 h-12 flex items-center justify-center
                           ${logro.completed ? "text-teal-500" : "text-gray-400"}
                         `}
                       >
                         {getIconComponent(logro.icon)}
                       </div>
                       <div>
-                        <h2 className={`
-                          text-xl font-bold mb-1
+                        <h2
+                          className={`
+                          text-lg sm:text-xl font-bold mb-1
                           ${logro.completed ? "text-teal-400" : "text-white"}
-                        `}>
+                        `}
+                        >
                           {logro.title}
                         </h2>
                         <p className="text-gray-400 text-sm">{logro.description}</p>
@@ -337,7 +330,9 @@ export default function AdminLogroPage() {
                     {/* Progress Counter */}
                     <div className="flex justify-between text-sm text-gray-400 mb-4">
                       <span>Pasos para completar</span>
-                      <span>{logro.stepsProgress}/{logro.stepsFinal}</span>
+                      <span>
+                        {logro.stepsProgress}/{logro.stepsFinal}
+                      </span>
                     </div>
 
                     {/* Premios Section */}
@@ -358,7 +353,7 @@ export default function AdminLogroPage() {
                             <div className="flex items-center gap-3">
                               <div className="relative w-10 h-10">
                                 <Image
-                                  src={premio.imagen}
+                                  src={premio.imagen || "/placeholder.svg"}
                                   alt={premio.titulo}
                                   fill
                                   className="object-cover rounded-lg"
@@ -366,12 +361,8 @@ export default function AdminLogroPage() {
                                 />
                               </div>
                               <div>
-                                <h4 className="text-sm font-semibold text-white">
-                                  {premio.titulo}
-                                </h4>
-                                <p className="text-xs text-gray-400">
-                                  {premio.subtitulo}
-                                </p>
+                                <h4 className="text-sm font-semibold text-white">{premio.titulo}</h4>
+                                <p className="text-xs text-gray-400">{premio.subtitulo}</p>
                               </div>
                             </div>
                           </motion.div>
@@ -381,14 +372,14 @@ export default function AdminLogroPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex justify-between mt-6 pt-4 border-t border-gray-800">
+                  <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mt-4 sm:mt-6 pt-4 border-t border-gray-800">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setDeleteLogroId(logro.id)}
                       className="bg-[#404040] hover:bg-[#454545] text-white px-4 py-2 
                                rounded-xl shadow-md transition-colors duration-300 
-                               flex items-center hover:text-red-500"
+                               flex items-center justify-center hover:text-red-500"
                     >
                       <Trash2 className="mr-2" size={18} />
                       Eliminar
@@ -400,7 +391,7 @@ export default function AdminLogroPage() {
                       className="bg-gradient-to-r from-pink-600 to-purple-600 
                                hover:from-pink-700 hover:to-purple-700 text-white 
                                px-4 py-2 rounded-xl shadow-md transition-all 
-                               duration-300 flex items-center"
+                               duration-300 flex items-center justify-center"
                     >
                       <Edit2 className="mr-2" size={18} />
                       Editar
@@ -431,13 +422,9 @@ export default function AdminLogroPage() {
             >
               <div className="flex items-center mb-6">
                 <AlertCircle className="text-pink-500 mr-4" size={32} />
-                <h2 className="text-3xl font-bold text-white">
-                  Confirmar eliminación
-                </h2>
+                <h2 className="text-3xl font-bold text-white">Confirmar eliminación</h2>
               </div>
-              <p className="text-gray-300 mb-8 text-lg">
-                ¿Estás seguro de que quieres eliminar este logro?
-              </p>
+              <p className="text-gray-300 mb-8 text-lg">¿Estás seguro de que quieres eliminar este logro?</p>
               <div className="flex justify-end space-x-4">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -474,5 +461,6 @@ export default function AdminLogroPage() {
         isEditing={isEditing}
       />
     </div>
-  );
+  )
 }
+

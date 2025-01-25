@@ -1,4 +1,5 @@
 //app\api\conversations\[conversationId]\route.ts
+
 import { type NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
 import { getServerSession } from "next-auth/next"
@@ -100,5 +101,25 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
   } catch (error) {
     console.error("[MESSAGE_CREATE_ERROR]", error)
     return new NextResponse(JSON.stringify({ error: "Error interno" }), { status: 500 })
+  }
+}
+
+
+// DELETE: Eliminar un usuario
+export async function DELETE(
+  req: NextRequest,
+  context: RouteContext
+) {
+  try {
+    const { conversationId } = await context.params;
+
+    const conversationDeleted = await prisma.conversation.delete({
+      where: { id: parseInt(conversationId) }
+    });
+
+    return new NextResponse(JSON.stringify(conversationDeleted), { status: 200 });
+  } catch (error) {
+    console.error("[CONVERSATION_DELETE_ERROR]", error);
+    return new NextResponse("Error interno", { status: 500 });
   }
 }

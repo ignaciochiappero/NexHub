@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import SignupModal from '@/components/authComponents/SignupForm';
+import { redirect } from 'next/navigation';
 
 export default function RegisterPage() {
   const [masterPassword, setMasterPassword] = useState('');
@@ -70,6 +71,7 @@ export default function RegisterPage() {
             onUserAdded={() => {
               // Manejar la adición del usuario aquí
               setShowSignupForm(false);
+              redirect('/auth/login');            
             }}
           />
         )}

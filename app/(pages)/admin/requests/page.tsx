@@ -1,4 +1,5 @@
 //app/(pages)/admin/requests/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -64,7 +65,7 @@ export default function AchievementRequestsPage() {
   };
 
   return (
-    <div className="min-h-screen p-8 pt-20 font-[family-name:var(--blender-medium)]">
+    <div className="min-h-screen p-4 sm:p-8 pt-16 sm:pt-20 font-[family-name:var(--blender-medium)]">
       <Link href="/admin/logros">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -83,7 +84,7 @@ export default function AchievementRequestsPage() {
           transition={{ duration: 0.5 }}
           className="flex justify-between items-center mb-12"
         >
-          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 flex items-center">
+          <h1 className="text-3xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500 flex items-center">
             <AlertCircle className="mr-4 text-pink-500" size={48} />
             Solicitudes de Logros
           </h1>
@@ -115,21 +116,21 @@ export default function AchievementRequestsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="bg-[#353535]/50 backdrop-blur-sm p-6 rounded-xl shadow-lg
+                  className="bg-[#353535]/50 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-lg
                            border border-gray-800 hover:border-pink-500/30 transition-all"
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h2 className="text-xl font-bold text-white mb-2">{request.logro.title}</h2>
-                      <div className="flex items-center">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <div className="mb-4 sm:mb-0">
+                      <h2 className="text-lg sm:text-xl font-bold text-white mb-2">{request.logro.title}</h2>
+                      <div className="flex flex-col sm:flex-row sm:items-center">
                         <span className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 
-                                     text-pink-400 text-sm mr-3">
+                                     text-pink-400 text-sm mb-2 sm:mb-0 sm:mr-3">
                           Paso {request.step}
                         </span>
-                        <p className="text-gray-400">Solicitado por {request.user.name}</p>
+                        <p className="text-gray-400 text-sm">Solicitado por {request.user.name}</p>
                       </div>
                     </div>
-                    <div className="flex space-x-4">
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                       {request.status === 'pending' && (
                         <>
                           <motion.button
@@ -139,7 +140,7 @@ export default function AchievementRequestsPage() {
                             className="bg-gradient-to-r from-pink-600 to-purple-600 
                                      hover:from-pink-700 hover:to-purple-700 text-white 
                                      px-6 py-3 rounded-xl shadow-lg hover:shadow-pink-500/25 
-                                     transition-all flex items-center"
+                                     transition-all flex items-center justify-center"
                           >
                             <Check className="mr-2" size={18} />
                             Aprobar
@@ -150,7 +151,7 @@ export default function AchievementRequestsPage() {
                             onClick={() => handleRequestAction(request.id, 'reject')}
                             className="bg-[#404040] hover:bg-[#454545] text-white 
                                      px-6 py-3 rounded-xl shadow-md transition-colors 
-                                     flex items-center hover:text-red-500"
+                                     flex items-center justify-center hover:text-red-500"
                           >
                             <X className="mr-2" size={18} />
                             Rechazar

@@ -184,7 +184,7 @@ export default function CommentSection({
                   alt={comment.user.name}
                   width={32}
                   height={32}
-                  className="rounded-full mr-2"
+                  className="rounded-full mr-2 h-9 w-9 "
                 />
                 <div>
                   <h4 className="font-semibold text-white">{comment.user.name}</h4>
