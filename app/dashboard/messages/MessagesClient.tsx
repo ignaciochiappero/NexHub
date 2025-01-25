@@ -294,7 +294,7 @@ export default function MessagesClient({ session, initialConversations, initialU
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto gap-4 p-4">
+    <div className="z-40 flex flex-col md:flex-row h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto gap-4 p-4">
       <AnimatePresence initial={false}>
         {(!isMobile || (!selectedConversation && !showUserList)) && (
           <motion.div
@@ -307,7 +307,7 @@ export default function MessagesClient({ session, initialConversations, initialU
               isMobile ? "fixed inset-0 z-50 bg-[#242424]" : "md:w-1/3"
             } h-full flex-shrink-0 overflow-hidden`}
           >
-            <div className="h-full rounded-2xl bg-[#242424] shadow-2xl overflow-hidden flex flex-col">
+            <div className=" max-sm:mt-20 h-full rounded-2xl bg-[#242424] shadow-2xl overflow-hidden flex flex-col">
               <div className="p-6 flex-shrink-0">
                 <div className="flex justify-between items-center mb-6">
                   <h1 className="font-blender-mayus text-3xl text-white">Mensajes</h1>
