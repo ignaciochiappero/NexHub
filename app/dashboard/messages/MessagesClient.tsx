@@ -323,7 +323,7 @@ export default function MessagesClient({ session, initialConversations, initialU
                 </div>
               </div>
 
-              <div className="flex-grow overflow-y-auto">
+              <div className="flex-grow  overflow-y-auto">
                 <AnimatePresence mode="wait">
                   {showUserList ? (
                     <UserList
@@ -360,13 +360,13 @@ export default function MessagesClient({ session, initialConversations, initialU
             } h-full bg-[#242424] flex flex-col rounded-2xl shadow-2xl overflow-hidden`}
           >
             <div className="p-6 border-b border-gray-700/50 flex items-center justify-between backdrop-blur-sm bg-black/10">
-              <div className="flex items-center">
+              <div className="flex items-center max-sm:mt-20">
                 {isMobile && (
                   <motion.button
                     whileHover={{ scale: 1.1, x: -5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleBackToList}
-                    className="mr-4 text-gray-400 hover:text-white transition-colors"
+                    className="mr-4  text-gray-400 hover:text-white transition-colors"
                   >
                     <ArrowLeft size={24} />
                   </motion.button>

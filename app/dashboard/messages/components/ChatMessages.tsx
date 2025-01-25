@@ -161,7 +161,7 @@ export function ChatMessages({
   )
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <AnimatePresence>
         {messages.map((message) => (
           <motion.div
