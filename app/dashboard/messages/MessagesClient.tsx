@@ -1,4 +1,8 @@
+//app\dashboard\messages\MessagesClient.tsx
+
+
 "use client"
+
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -25,6 +29,7 @@ interface MessagesClientProps {
 }
 
 export default function MessagesClient({ session, initialConversations, initialUsers }: MessagesClientProps) {
+  
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations)
   const [users] = useState<User[]>(initialUsers)
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
@@ -32,15 +37,21 @@ export default function MessagesClient({ session, initialConversations, initialU
   const [newMessage, setNewMessage] = useState("")
   const [showUserList, setShowUserList] = useState(false)
   const [selectedMessages, setSelectedMessages] = useState<number[]>([])
+  
+  // Referencias y hooks para manejar eventos y tamaños de ventana
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const searchParams = useSearchParams()
   const { width } = useWindowSize()
   const isMobile = width ? width < 768 : false
 
+
+  // Función para desplazarse automáticamente al final del contenedor de mensajes
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [])
 
+  
+  // Función para traer los mensajes desde la base de datos
   const fetchMessages = useCallback(async (conversationId: number) => {
     try {
       const res = await fetch(`/api/messages/${conversationId}`)
@@ -71,6 +82,8 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }, [])
 
+
+  // Función para seleccionar una conversación y traer sus mensajes, además de esconder la lista de usuarios en el caso de dispositivos móviles
   const handleSelectConversation = useCallback(
     (id: number) => {
       const conversation = conversations.find((c) => c.id === id)
@@ -83,6 +96,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     [conversations, fetchMessages],
   )
 
+  // useEffect para manejar la selección de conversación basada en los parámetros de búsqueda
   useEffect(() => {
     const conversationId = searchParams.get("conversationId")
     if (conversationId) {
@@ -93,6 +107,8 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }, [searchParams, conversations, handleSelectConversation])
 
+
+  // useEffect para suscribirse a eventos de nuevos mensajes usando Pusher
   useEffect(() => {
     if (selectedConversation) {
       const channel = pusherClient.subscribe(`conversation-${selectedConversation.id}`)
@@ -161,10 +177,12 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }, [selectedConversation, scrollToBottom])
 
+  // useEffect para desplazarse al final del contenedor de mensajes cuando sea necesario
   useEffect(() => {
     scrollToBottom()
   }, [scrollToBottom])
 
+  // Función para iniciar una nueva conversación con un usuario
   const handleStartConversation = useCallback(
     async (userId: number) => {
       const existingConversation = conversations.find((conv) => conv.participants.some((p) => p.user.id === userId))
@@ -192,6 +210,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     [conversations, handleSelectConversation, fetchMessages],
   )
 
+  // Función para enviar un nuevo mensaje en la conversación seleccionada
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedConversation || !newMessage.trim()) return
@@ -208,6 +227,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }
 
+  // Función para eliminar una conversación
   const handleDeleteConversation = async (conversationId: number) => {
     try {
       await fetch(`/api/conversations/${conversationId}`, { method: "DELETE" })
@@ -220,6 +240,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }
 
+  // Función para editar un mensaje
   const handleEditMessage = async (updatedMessage: Message) => {
     try {
       const response = await fetch(`/api/messages/${updatedMessage.id}`, {
@@ -253,6 +274,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }
 
+  // Función para eliminar un mensaje
   const handleDeleteMessage = async (messageId: number) => {
     try {
       const response = await fetch(`/api/messages/${messageId}`, {
@@ -267,6 +289,7 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }
 
+  // Función para seleccionar y deseleccionar mensajes
   const handleSelectMessage = useCallback((messageId: number) => {
     setSelectedMessages((prev) => {
       if (prev.includes(messageId)) {
@@ -276,15 +299,18 @@ export default function MessagesClient({ session, initialConversations, initialU
     })
   }, [])
 
+  // Función para eliminar los mensajes seleccionados
   const handleDeleteSelectedMessages = async () => {
     await Promise.all(selectedMessages.map(handleDeleteMessage))
     setSelectedMessages([])
   }
 
+  // Función para volver a la lista de conversaciones
   const handleBackToList = () => {
     setSelectedConversation(null)
   }
 
+  // Función para obtener los datos del otro usuario en una conversación
   const getOtherUser = (conversation: Conversation) => {
     const otherUser = conversation.participants.find((p) => p.user.email !== session.user.email)?.user
     return {
@@ -293,9 +319,12 @@ export default function MessagesClient({ session, initialConversations, initialU
     }
   }
 
+
   return (
     <div className="z-40 flex flex-col md:flex-row h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto gap-4 p-4">
       <AnimatePresence initial={false}>
+        
+        
         {(!isMobile || (!selectedConversation && !showUserList)) && (
           <motion.div
             key="conversation-list"
@@ -467,4 +496,3 @@ export default function MessagesClient({ session, initialConversations, initialU
     </div>
   )
 }
-
