@@ -1,63 +1,64 @@
 //app\dashboard\messages\MessagesClient.tsx
 
+"use client";
 
-"use client"
-
-
-import { useState, useRef, useEffect, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Send, Plus, ArrowLeft, MessageCircle } from "lucide-react"
-import { ConversationList } from "./components/ConversationList"
-import { UserList } from "./components/UserList"
-import { ChatMessages } from "./components/ChatMessages"
-import type { Conversation, User, Message } from "@/types/chat"
-import { useSearchParams } from "next/navigation"
-import { pusherClient } from "@/libs/pusher"
-import { useWindowSize } from "@/hooks/useWindowSize"
-import Image from "next/image"
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, Plus, ArrowLeft, MessageCircle } from "lucide-react";
+import { ConversationList } from "./components/ConversationList";
+import { UserList } from "./components/UserList";
+import { ChatMessages } from "./components/ChatMessages";
+import type { Conversation, User, Message } from "@/types/chat";
+import { useSearchParams } from "next/navigation";
+import { pusherClient } from "@/libs/pusher";
+import { useWindowSize } from "@/hooks/useWindowSize";
+import Image from "next/image";
 
 interface MessagesClientProps {
   session: {
     user: {
-      id: string
-      name: string
-      email: string
-    }
-  }
-  initialConversations: Conversation[]
-  initialUsers: User[]
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  initialConversations: Conversation[];
+  initialUsers: User[];
 }
 
-export default function MessagesClient({ session, initialConversations, initialUsers }: MessagesClientProps) {
-  
-  const [conversations, setConversations] = useState<Conversation[]>(initialConversations)
-  const [users] = useState<User[]>(initialUsers)
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
-  const [newMessage, setNewMessage] = useState("")
-  const [showUserList, setShowUserList] = useState(false)
-  const [selectedMessages, setSelectedMessages] = useState<number[]>([])
-  
-  // Referencias y hooks para manejar eventos y tamaños de ventana
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const searchParams = useSearchParams()
-  const { width } = useWindowSize()
-  const isMobile = width ? width < 768 : false
+export default function MessagesClient({
+  session,
+  initialConversations,
+  initialUsers,
+}: MessagesClientProps) {
+  const [conversations, setConversations] =
+    useState<Conversation[]>(initialConversations);
+  const [users] = useState<User[]>(initialUsers);
+  const [selectedConversation, setSelectedConversation] =
+    useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [showUserList, setShowUserList] = useState(false);
+  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
 
+  // Referencias y hooks para manejar eventos y tamaños de ventana
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  const { width } = useWindowSize();
+  const isMobile = width ? width < 768 : false;
 
   // Función para desplazarse automáticamente al final del contenedor de mensajes
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
-  
   // Función para traer los mensajes desde la base de datos
   const fetchMessages = useCallback(async (conversationId: number) => {
     try {
-      const res = await fetch(`/api/messages/${conversationId}`)
-      if (!res.ok) throw new Error("Error fetching messages")
+      const res = await fetch(`/api/messages/${conversationId}`);
+      if (!res.ok) throw new Error("Error fetching messages");
 
-      const data = await res.json()
+      const data = await res.json();
 
       const processedMessages = data.map(
         (message: Message) =>
@@ -73,45 +74,47 @@ export default function MessagesClient({ session, initialConversations, initialU
                   image: message.sender.image || "/user.png",
                 }
               : undefined,
-          }) as Message,
-      )
+          } as Message)
+      );
 
-      setMessages(processedMessages)
+      setMessages(processedMessages);
     } catch (error) {
-      console.error("Error fetching messages:", error)
+      console.error("Error fetching messages:", error);
     }
-  }, [])
-
+  }, []);
 
   // Función para seleccionar una conversación y traer sus mensajes, además de esconder la lista de usuarios en el caso de dispositivos móviles
   const handleSelectConversation = useCallback(
     (id: number) => {
-      const conversation = conversations.find((c) => c.id === id)
-      setSelectedConversation(conversation || null)
+      const conversation = conversations.find((c) => c.id === id);
+      setSelectedConversation(conversation || null);
       if (conversation) {
-        fetchMessages(conversation.id)
+        fetchMessages(conversation.id);
       }
-      setShowUserList(false)
+      setShowUserList(false);
     },
-    [conversations, fetchMessages],
-  )
+    [conversations, fetchMessages]
+  );
 
   // useEffect para manejar la selección de conversación basada en los parámetros de búsqueda
   useEffect(() => {
-    const conversationId = searchParams.get("conversationId")
+    const conversationId = searchParams.get("conversationId");
     if (conversationId) {
-      const conversation = conversations.find((c) => c.id === Number.parseInt(conversationId))
+      const conversation = conversations.find(
+        (c) => c.id === Number.parseInt(conversationId)
+      );
       if (conversation) {
-        handleSelectConversation(conversation.id)
+        handleSelectConversation(conversation.id);
       }
     }
-  }, [searchParams, conversations, handleSelectConversation])
-
+  }, [searchParams, conversations, handleSelectConversation]);
 
   // useEffect para suscribirse a eventos de nuevos mensajes usando Pusher
   useEffect(() => {
     if (selectedConversation) {
-      const channel = pusherClient.subscribe(`conversation-${selectedConversation.id}`)
+      const channel = pusherClient.subscribe(
+        `conversation-${selectedConversation.id}`
+      );
 
       channel.bind("new-message", (message: Message) => {
         setMessages((prev) => [
@@ -134,9 +137,9 @@ export default function MessagesClient({ session, initialConversations, initialU
                   image: "/user.png",
                 },
           } as Message,
-        ])
-        scrollToBottom()
-      })
+        ]);
+        scrollToBottom();
+      });
 
       channel.bind("message-updated", (updatedMessage: Message) => {
         setMessages((prev) =>
@@ -160,36 +163,43 @@ export default function MessagesClient({ session, initialConversations, initialU
                         image: "/user.png",
                       },
                 } as Message)
-              : message,
-          ),
-        )
-      })
+              : message
+          )
+        );
+      });
 
-      channel.bind("message-deleted", ({ messageId }: { messageId: number }) => {
-        setMessages((prev) => prev.filter((message) => message.id !== messageId))
-        setSelectedMessages((prev) => prev.filter((id) => id !== messageId))
-      })
+      channel.bind(
+        "message-deleted",
+        ({ messageId }: { messageId: number }) => {
+          setMessages((prev) =>
+            prev.filter((message) => message.id !== messageId)
+          );
+          setSelectedMessages((prev) => prev.filter((id) => id !== messageId));
+        }
+      );
 
       return () => {
-        channel.unbind_all()
-        pusherClient.unsubscribe(`conversation-${selectedConversation.id}`)
-      }
+        channel.unbind_all();
+        pusherClient.unsubscribe(`conversation-${selectedConversation.id}`);
+      };
     }
-  }, [selectedConversation, scrollToBottom])
+  }, [selectedConversation, scrollToBottom]);
 
   // useEffect para desplazarse al final del contenedor de mensajes cuando sea necesario
   useEffect(() => {
-    scrollToBottom()
-  }, [scrollToBottom])
+    scrollToBottom();
+  }, [scrollToBottom]);
 
   // Función para iniciar una nueva conversación con un usuario
   const handleStartConversation = useCallback(
     async (userId: number) => {
-      const existingConversation = conversations.find((conv) => conv.participants.some((p) => p.user.id === userId))
+      const existingConversation = conversations.find((conv) =>
+        conv.participants.some((p) => p.user.id === userId)
+      );
 
       if (existingConversation) {
-        handleSelectConversation(existingConversation.id)
-        return
+        handleSelectConversation(existingConversation.id);
+        return;
       }
 
       try {
@@ -197,48 +207,48 @@ export default function MessagesClient({ session, initialConversations, initialU
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ participantIds: [userId] }),
-        })
-        const newConversation = await res.json()
-        setConversations((prev) => [...prev, newConversation])
-        setSelectedConversation(newConversation)
-        setShowUserList(false)
-        fetchMessages(newConversation.id)
+        });
+        const newConversation = await res.json();
+        setConversations((prev) => [...prev, newConversation]);
+        setSelectedConversation(newConversation);
+        setShowUserList(false);
+        fetchMessages(newConversation.id);
       } catch (error) {
-        console.error("Error starting conversation:", error)
+        console.error("Error starting conversation:", error);
       }
     },
-    [conversations, handleSelectConversation, fetchMessages],
-  )
+    [conversations, handleSelectConversation, fetchMessages]
+  );
 
   // Función para enviar un nuevo mensaje en la conversación seleccionada
   const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!selectedConversation || !newMessage.trim()) return
+    e.preventDefault();
+    if (!selectedConversation || !newMessage.trim()) return;
 
     try {
       await fetch(`/api/conversations/${selectedConversation.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: newMessage.trim() }),
-      })
-      setNewMessage("")
+      });
+      setNewMessage("");
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error("Error sending message:", error);
     }
-  }
+  };
 
   // Función para eliminar una conversación
   const handleDeleteConversation = async (conversationId: number) => {
     try {
-      await fetch(`/api/conversations/${conversationId}`, { method: "DELETE" })
-      setConversations((prev) => prev.filter((c) => c.id !== conversationId))
+      await fetch(`/api/conversations/${conversationId}`, { method: "DELETE" });
+      setConversations((prev) => prev.filter((c) => c.id !== conversationId));
       if (selectedConversation?.id === conversationId) {
-        setSelectedConversation(null)
+        setSelectedConversation(null);
       }
     } catch (error) {
-      console.error("Error deleting conversation:", error)
+      console.error("Error deleting conversation:", error);
     }
-  }
+  };
 
   // Función para editar un mensaje
   const handleEditMessage = async (updatedMessage: Message) => {
@@ -247,13 +257,13 @@ export default function MessagesClient({ session, initialConversations, initialU
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: updatedMessage.content.trim() }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`)
+        throw new Error(`Error: ${response.status}`);
       }
 
-      const data = await response.json()
+      const data = await response.json();
       setMessages((prev) =>
         prev.map((message) =>
           message.id === data.id
@@ -266,66 +276,65 @@ export default function MessagesClient({ session, initialConversations, initialU
                   image: data.sender?.image || "/user.png",
                 },
               }
-            : message,
-        ),
-      )
+            : message
+        )
+      );
     } catch (error) {
-      console.error("Error updating message:", error)
+      console.error("Error updating message:", error);
     }
-  }
+  };
 
   // Función para eliminar un mensaje
   const handleDeleteMessage = async (messageId: number) => {
     try {
       const response = await fetch(`/api/messages/${messageId}`, {
         method: "DELETE",
-      })
+      });
 
       if (!response.ok && response.status !== 404) {
-        throw new Error("Error deleting message")
+        throw new Error("Error deleting message");
       }
     } catch (error) {
-      console.error("Error deleting message:", error)
+      console.error("Error deleting message:", error);
     }
-  }
+  };
 
   // Función para seleccionar y deseleccionar mensajes
   const handleSelectMessage = useCallback((messageId: number) => {
     setSelectedMessages((prev) => {
       if (prev.includes(messageId)) {
-        return prev.filter((id) => id !== messageId)
+        return prev.filter((id) => id !== messageId);
       }
-      return [...prev, messageId]
-    })
-  }, [])
+      return [...prev, messageId];
+    });
+  }, []);
 
   // Función para eliminar los mensajes seleccionados
   const handleDeleteSelectedMessages = async () => {
-    await Promise.all(selectedMessages.map(handleDeleteMessage))
-    setSelectedMessages([])
-  }
+    await Promise.all(selectedMessages.map(handleDeleteMessage));
+    setSelectedMessages([]);
+  };
 
   // Función para volver a la lista de conversaciones
   const handleBackToList = () => {
-    setSelectedConversation(null)
-  }
+    setSelectedConversation(null);
+  };
 
   // Función para obtener los datos del otro usuario en una conversación
   const getOtherUser = (conversation: Conversation) => {
-    const otherUser = conversation.participants.find((p) => p.user.email !== session.user.email)?.user
+    const otherUser = conversation.participants.find(
+      (p) => p.user.email !== session.user.email
+    )?.user;
     return {
       name: otherUser?.name || "Usuario desconocido",
       image: otherUser?.image || "/user.png",
-    }
-  }
-
+    };
+  };
 
   return (
     <div className="z-40 flex flex-col md:flex-row h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto gap-4 p-4">
       <AnimatePresence initial={false}>
-        
-        
-        {(!isMobile || (!selectedConversation && !showUserList)) && (
+        {(!isMobile || !selectedConversation) && (
           <motion.div
             key="conversation-list"
             initial={{ opacity: 0, x: isMobile ? -300 : -20 }}
@@ -336,10 +345,12 @@ export default function MessagesClient({ session, initialConversations, initialU
               isMobile ? "fixed inset-0 z-50 bg-[#242424]" : "md:w-1/3"
             } h-full flex-shrink-0 overflow-hidden`}
           >
-            <div className=" max-sm:mt-20 h-full rounded-2xl bg-[#242424] shadow-2xl overflow-hidden flex flex-col">
+            <div className="max-sm:mt-20 h-full rounded-2xl bg-[#242424] shadow-2xl overflow-hidden flex flex-col">
               <div className="p-6 flex-shrink-0">
                 <div className="flex justify-between items-center mb-6">
-                  <h1 className="font-blender-mayus text-3xl text-white">Mensajes</h1>
+                  <h1 className="font-blender-mayus text-3xl text-white">
+                    Mensajes
+                  </h1>
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
@@ -359,7 +370,11 @@ export default function MessagesClient({ session, initialConversations, initialU
                       users={users}
                       onStartConversation={handleStartConversation}
                       onBackToChats={() => setShowUserList(false)}
-                      currentConversationParticipants={selectedConversation?.participants?.map((p) => p.user.id) || []}
+                      currentConversationParticipants={
+                        selectedConversation?.participants?.map(
+                          (p) => p.user.id
+                        ) || []
+                      }
                     />
                   ) : (
                     <ConversationList
@@ -404,7 +419,10 @@ export default function MessagesClient({ session, initialConversations, initialU
                   <>
                     <div className="relative w-10 h-10 mr-3">
                       <Image
-                        src={getOtherUser(selectedConversation).image || "/placeholder.svg"}
+                        src={
+                          getOtherUser(selectedConversation).image ||
+                          "/placeholder.svg"
+                        }
                         alt={getOtherUser(selectedConversation).name}
                         fill
                         className="rounded-full object-cover"
@@ -440,7 +458,10 @@ export default function MessagesClient({ session, initialConversations, initialU
             </div>
 
             <div className="p-6 border-t border-gray-700/50 backdrop-blur-sm bg-black/10">
-              <form onSubmit={handleSendMessage} className="flex items-center gap-4">
+              <form
+                onSubmit={handleSendMessage}
+                className="flex items-center gap-4"
+              >
                 <input
                   type="text"
                   value={newMessage}
@@ -476,9 +497,12 @@ export default function MessagesClient({ session, initialConversations, initialU
               className="text-center px-6"
             >
               <MessageCircle className="w-16 h-16 mx-auto text-pink-500/20 mb-4" />
-              <h2 className="text-2xl font-blender-medium text-white mb-2">¡Comienza a chatear!</h2>
+              <h2 className="text-2xl font-blender-medium text-white mb-2">
+                ¡Comienza a chatear!
+              </h2>
               <p className="text-gray-400 max-w-md mb-6">
-                Selecciona una conversación existente o inicia una nueva para comenzar a chatear con otras personas.
+                Selecciona una conversación existente o inicia una nueva para
+                comenzar a chatear con otras personas.
               </p>
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -494,5 +518,5 @@ export default function MessagesClient({ session, initialConversations, initialU
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
