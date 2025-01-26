@@ -77,7 +77,7 @@ const UserDropdown = () => {
 
   if (!session && showLoginButton) { // Condición para mostrar el botón de login después de un segundo
     return (
-      <div className="absolute top-6 right-6 opacity-100 pointer-events-auto">
+      <div className="z-50 absolute top-6 right-6 opacity-100 pointer-events-auto">
         <Link href="/auth/login" className="font-[family-name:var(--blender-bold)] bg-gradient-to-r from-pink-600 to-purple-600 shadow-lg hover:shadow-pink-500/25 transition-all rounded-xl px-4 py-2 duration-300 flex items-center gap-2 transform hover:scale-105">
           <User2 className="w-4 h-4" />
           <span>Login</span>

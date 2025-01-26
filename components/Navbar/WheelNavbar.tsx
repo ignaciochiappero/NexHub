@@ -19,7 +19,7 @@ const RadialNavbar = ({ userData }: { userData: UserData }) => {
   const unauthenticatedMenuItems = [
     { id: 1, icon: Home, angle: 0, label: "Inicio", site: "/" },
     { id: 2, icon: Info, angle: 45, label: "About Us", site: "/about-us" },
-    { id: 3, icon: LogIn, angle: 90, label: "Login", site: "/login" },
+    { id: 3, icon: LogIn, angle: 90, label: "Login", site: "/auth/login" },
   ];
 
   const authenticatedMenuItems = [

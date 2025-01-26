@@ -42,7 +42,9 @@ export async function POST(  req: NextRequest,
     await prisma.postLike.delete({
       where: { id: existingLike.id },
     });
+
   } else {
+    
     await prisma.postLike.create({
       data: {
         postId: Number(postId),
