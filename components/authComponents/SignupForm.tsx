@@ -27,6 +27,7 @@ interface SignupModalProps {
 }
 
 function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: SignupModalProps) {
+  
   const { control, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
     defaultValues: {
       email: '',
@@ -59,8 +60,12 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
 
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
+    
     try {
+      
+      
       if (isEditing && userToEdit?.id) {
+
         // Validar contraseñas si se está cambiando
         if (data.changePassword && data.newPassword !== data.confirmPassword) {
           throw new Error('Las contraseñas no coinciden');
@@ -72,10 +77,10 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
           email: data.email,
           birthday: data.birthday,  // Ya viene en formato ISO
           position: data.position,
-          location: userToEdit.location, // Mantener el valor existente
-          company: userToEdit.company,   // Mantener el valor existente
-          image: userToEdit.image,       // Mantener el valor existente
-          password: '', // Add this line
+          location: userToEdit.location,
+          company: userToEdit.company,   
+          image: userToEdit.image,       
+          password: '',
         };
   
         // Solo incluir la contraseña si se está cambiando
@@ -96,7 +101,11 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
           console.error('Error en la actualización:', axiosError.response?.data || axiosError.message);
           throw new Error(axiosError.response?.data || 'Error al actualizar el usuario');
         }
-      } else {
+      }
+      
+      else {
+
+
         // Crear nuevo usuario
         try {
           const response = await axios.post('/api/auth/register', {

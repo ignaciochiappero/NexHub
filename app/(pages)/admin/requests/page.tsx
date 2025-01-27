@@ -145,6 +145,8 @@ export default function AchievementRequestsPage() {
                             <Check className="mr-2" size={18} />
                             Aprobar
                           </motion.button>
+
+
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -159,8 +161,8 @@ export default function AchievementRequestsPage() {
                         </>
                       )}
                       {request.status === 'approved' && (
-                        <span className="text-pink-500 flex items-center px-4 py-2 
-                                     bg-pink-500/10 rounded-xl">
+                        <span className="text-cyan-500 flex items-center px-4 py-2 
+                                     bg-cyan-500/10 rounded-xl">
                           <Check className="mr-2" size={18} />
                           Aprobado
                         </span>

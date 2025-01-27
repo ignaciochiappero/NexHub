@@ -13,6 +13,7 @@ import { Pagination } from "./components/Pagination";
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
 
 export default function LogrosPage() {
+
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
   const [confirmationModal, setConfirmationModal] =
@@ -24,7 +25,11 @@ export default function LogrosPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [stepPages, setStepPages] = useState<{ [key: number]: number }>({});
+
+  //paginación de la página
   const achievementsPerPage = 6;
+
+  //paginación del logro
   const stepsPerPage = 5;
 
   const indexOfLastAchievement = currentPage * achievementsPerPage;
@@ -34,9 +39,27 @@ export default function LogrosPage() {
     indexOfLastAchievement
   );
 
+
+  //trae los logros
+  const fetchAchievements = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/achievements");
+      if (!response.ok) throw new Error("Error al obtener logros");
+      const data = await response.json();
+      setAchievements(data);
+    } catch (error) {
+      console.error("Error al cargar logros:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchAchievements();
   }, []);
+
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,19 +78,7 @@ export default function LogrosPage() {
     };
   }, [expandedAchievement]);
 
-  const fetchAchievements = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/achievements");
-      if (!response.ok) throw new Error("Error al obtener logros");
-      const data = await response.json();
-      setAchievements(data);
-    } catch (error) {
-      console.error("Error al cargar logros:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const handleStepCompletion = async (achievementId: number, step: number) => {
     setConfirmationModal({ show: true, achievementId, step });
@@ -131,6 +142,7 @@ export default function LogrosPage() {
       [achievementId]: page,
     }));
   };
+  
   // En //app/dashboard/logros/page.tsx
   return (
     <div className="min-h-screen p-8 pt-20 pb-24 font-[family-name:var(--blender-medium)] relative">

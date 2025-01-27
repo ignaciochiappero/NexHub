@@ -42,6 +42,7 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm }: ConfirmationMo
               >
                 Cancelar
               </motion.button>
+              
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
