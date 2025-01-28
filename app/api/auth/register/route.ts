@@ -1,14 +1,15 @@
 // app\api\auth\register\route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, birthday } = await req.json();
+    const { name, email, password, birthday, position } = await req.json();
 
     // Validación básica
-    if (!name || !email || !password || !birthday) {
+    if (!name || !email || !password || !birthday || !position) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }
 
