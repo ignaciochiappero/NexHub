@@ -116,11 +116,19 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
             position: data.position
           });
   
-          if (response.status === 201) {
+          if (response.status === 200) {
             onUserAdded();
+
+          }
+
+          
+          if (response.status === 201) {
+            
             reset();
             onClose();
           }
+
+        
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (axiosError: any) {
           console.error('Error en el registro:', axiosError.response?.data || axiosError.message);

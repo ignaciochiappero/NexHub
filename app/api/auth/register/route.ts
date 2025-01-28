@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         name,
         email,
         role: "USER",
-        position : "",
+        position,
         password: hashedPassword,
         birthday: new Date(birthday),
       },
