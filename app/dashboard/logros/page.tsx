@@ -6,11 +6,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Trophy } from "lucide-react";
-import { Achievement, ConfirmationModalType } from "./components/types";
-import { AchievementCard } from "./components/AchievementCard";
-import { ConfirmationModal } from "./components/ConfirmationModal";
-import { Pagination } from "./components/Pagination";
-import { LoadingSkeleton } from "./components/LoadingSkeleton";
+import { Achievement, ConfirmationModalType } from "../../../components/logrosComponents/types";
+import { AchievementCard } from "../../../components/logrosComponents/AchievementCard";
+import { ConfirmationModal } from "../../../components/logrosComponents/ConfirmationModal";
+import { Pagination } from "../../../components/logrosComponents/Pagination";
+import { LoadingSkeleton } from "../../../components/logrosComponents/LoadingSkeleton";
 
 export default function LogrosPage() {
 

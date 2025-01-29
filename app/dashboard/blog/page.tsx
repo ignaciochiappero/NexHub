@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma"
-import BlogFeed from "./components/BlogFeed"
+import BlogFeed from "@/components/blogComponents/BlogFeed";
 
 async function getBlogData() {
   const session = await getServerSession(authOptions)

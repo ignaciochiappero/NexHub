@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config"
 import prisma from "@/libs/prisma"
-import MessagesClient from "./MessagesClient"
+import MessagesClient from "../../../components/messagesComponents/MessagesClient"
 
 async function loadData() {
   const session = await getServerSession(authOptions)

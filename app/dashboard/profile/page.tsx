@@ -7,7 +7,7 @@
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma";
-import ProfileForm from "./ProfileForm";
+import ProfileForm from "../../../components/profileComponents/ProfileForm";
 
 import { redirect } from "next/navigation";
 

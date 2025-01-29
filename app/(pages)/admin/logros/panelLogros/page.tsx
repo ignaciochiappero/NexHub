@@ -48,7 +48,7 @@ import {
   Gift,
   ChevronLeft,
 } from "lucide-react"
-import LogrosForm from "@/components/logrosForm/LogrosForm"
+import LogrosForm from "@/components/logrosComponents/logrosForm/LogrosForm"
 import Link from "next/link"
 
 // Mapeo de strings a componentes de íconos

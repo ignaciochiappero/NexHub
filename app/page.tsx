@@ -157,7 +157,7 @@ export default function Home() {
           className="group animate-float cursor-pointer relative"
           onClick={handleClick}
         >
-          {/* Efecto de brillo mejorado */}
+          {/* Efecto de brillo */}
           <div
             className="absolute inset-0 rounded-full transition-all duration-300"
             style={{

@@ -5,9 +5,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Plus, ArrowLeft, MessageCircle } from "lucide-react";
-import { ConversationList } from "./components/ConversationList";
-import { UserList } from "./components/UserList";
-import { ChatMessages } from "./components/ChatMessages";
+import { ConversationList } from "./ConversationList";
+import { UserList } from "./UserList";
+import { ChatMessages } from "./ChatMessages";
 import type { Conversation, User, Message } from "@/types/chat";
 import { useSearchParams } from "next/navigation";
 import { pusherClient } from "@/libs/pusher";

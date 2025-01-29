@@ -1,6 +1,6 @@
-import UserList from './UserList';
+import UserList from '../../../components/usersComponents/UserList';
 
-export default function UsersPage() {
+export default function UsdersPage() {
   return (
     <UserList />
   );
