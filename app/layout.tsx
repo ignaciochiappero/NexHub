@@ -8,7 +8,7 @@ import ContextProvider from "@/context/GlobalContext";
 import WheelNavbar from "@/components/Navbar/WheelNavbar";
 import UserDropdown from "@/components/UserDropdown/UserDropdown";
 
-import { getSessionUser } from "@/SessionUserAdmin";
+import { getSessionUser } from "@/utils/SessionUserAdmin";
 
 
 //FUENTES
