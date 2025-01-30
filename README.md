@@ -48,9 +48,9 @@
 |:-------------:|:--------------:|:-------:|
 |<img src="public/readme-screenshots/carga-foto.png" width="250">|<img src="public/readme-screenshots/crop-foto.png" width="250">|<img src="public/readme-screenshots/edit-message.png" width="250">|
 
-|| Comentarios ||
-|:-------------:|:----------:|:----------:|
-||<img src="public/readme-screenshots/comentario.png" width="250">||
+| Comentarios |
+|:-------------:|
+|<img src="public/readme-screenshots/comentario.png" width="250">|
 
 ## ⚙️ Instalación
 
