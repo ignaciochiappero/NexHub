@@ -4,8 +4,13 @@
   </a>
 
   <p align="center">
-      <strong> <a href="https://nex-hub-beta.vercel.app/"> </strong>
-    <strong>Última actualización:</strong> 2025-01-30 01:25:20 UTC<br>
+    <a href="https://nex-hub-beta.vercel.app/" target="_blank">
+      <img src="https://img.shields.io/badge/Website-Nex%20Hub-F700D9?style=for-the-badge&logo=vercel&logoColor=white" alt="Nex Hub Website"/>
+    </a>
+  </p>
+
+  <p align="center">
+    <strong>Última actualización:</strong> 2025-01-30 01:32:53 UTC<br>
     <strong>Desarrollador:</strong> <a href="https://github.com/ignaciochiappero">@ignaciochiappero</a>
   </p>
 </p>
