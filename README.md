@@ -4,6 +4,7 @@
   </a>
 
   <p align="center">
+      <strong> <a href="https://nex-hub-beta.vercel.app/"> </strong>
     <strong>Última actualización:</strong> 2025-01-30 01:25:20 UTC<br>
     <strong>Desarrollador:</strong> <a href="https://github.com/ignaciochiappero">@ignaciochiappero</a>
   </p>
