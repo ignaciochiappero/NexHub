@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -9,9 +8,7 @@ import UserDropdown from "@/components/UserDropdown/UserDropdown";
 
 import { getSessionUser } from "@/utils/SessionUserAdmin";
 
-
-//FUENTES CUSTOM
-
+// FUENTES CUSTOM
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -24,8 +21,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-
-//paquete Blender
+// paquete Blender
 const blenderBold = localFont({
   src: "./fonts/BlenderPro-Bold.woff",
   variable: "--blender-bold",
@@ -56,8 +52,7 @@ const blenderThin = localFont({
   weight: "100 900",
 });
 
-
-//METADATA
+// METADATA
 export const metadata: Metadata = {
   title: "Nex | Hub",
   description: "Made by Nacho Dev",
@@ -68,31 +63,30 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const userData = await getSessionUser();
 
-  
   return (
-
     <html lang="en">
-      
+      <head>
+        <link rel="icon" href="/app/favicon.ico" />
 
+        <meta property="og:title" content="Nex | Hub" />
+        <meta property="og:description" content="Made by Nacho Dev" />
+        <meta property="og:image" content="/poster-perfil.jpg" />
+        <meta property="og:url" content="https://nex-hub-beta.vercel.app/" />
+        <meta property="og:type" content="website" />
+
+
+      </head>
       <body
         className={`${blenderMayus.variable} ${blenderMedium.variable} ${blenderNormal.variable} ${blenderThin.variable} ${blenderBold.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        
         <ContextProvider>
-          <div className=" flex justify-center ">
-
-
-          <UserDropdown/>
-
-          <WheelNavbar userData={userData}/>
-
+          <div className="flex justify-center">
+            <UserDropdown />
+            <WheelNavbar userData={userData} />
           </div>
         </ContextProvider>
-
-
         {children}
       </body>
     </html>
