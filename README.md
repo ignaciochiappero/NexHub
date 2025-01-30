@@ -1,7 +1,5 @@
 <div align="center">
-  <h1>
-    <img src="https://readme-typing-svg.herokuapp.com/?font=Roboto+Slab&color=%237E3ACE&size=30&center=true&vCenter=true&width=450&lines=NEX+HUB;Your+Next+Gen+Platform" alt="Nex Hub"/>
-  </h1>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&size=35&pause=1000&color=F700D9&width=435&lines=%F0%9F%92%BBNex+Hub%F0%9F%92%BB" alt="Typing SVG" /></a>
 
   <p>
     <strong>Última actualización:</strong> 2025-01-30 00:16:47 UTC<br>
@@ -9,13 +7,6 @@
   </p>
 </div>
 
-## 📹 Demostración
-
-<div align="center">
-  <video src="public/NexHub-Presentation.mp4" controls width="700">
-    Tu navegador no soporta la reproducción de videos.
-  </video>
-</div>
 
 ## 🖼️ Vistas del Proyecto
 
