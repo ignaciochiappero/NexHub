@@ -12,7 +12,11 @@ type RouteContext = {
 export async function GET( req: NextRequest,
   { params }: RouteContext) {
 
-
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+    }
+  
   const { postId } = await params;
 
   const comments = await prisma.comment.findMany({

@@ -6,6 +6,7 @@ import { config as authOptions } from "@/auth.config";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
+  
   if (!session) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }

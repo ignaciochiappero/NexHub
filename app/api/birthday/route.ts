@@ -2,7 +2,18 @@
 import { NextResponse } from "next/server"
 import { checkAndCreateBirthdayPosts } from "@/utils/birthdayPosts"
 
+
+import { getServerSession } from "next-auth/next";
+import { config as authOptions } from "@/auth.config";
+
 export async function GET() {
+
+    const session = await getServerSession(authOptions);
+    
+    if (!session) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+    }
+  
 
 
   try {

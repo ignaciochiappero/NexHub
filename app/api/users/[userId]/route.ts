@@ -15,6 +15,12 @@ export async function GET(
     req: NextRequest,
     context: RouteContext
 ) {
+
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+  }
+
   try {
     const { userId } = await context.params;
 
@@ -55,6 +61,8 @@ export async function PUT(
   req: NextRequest,
   context: RouteContext
 ) {
+
+  
   try {
     const session = await getServerSession(authOptions);
     if (!session ) {

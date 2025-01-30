@@ -8,6 +8,12 @@ import { config as authOptions } from "@/auth.config";
 const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1 minuto refresca info
 
 export async function GET() {
+
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+  }
+
   try {
     const users = await prisma.user.findMany({
       select: {

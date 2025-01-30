@@ -7,10 +7,15 @@ import { config as authOptions } from "@/auth.config";
 
 export async function POST(request: Request) {
 
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+    }
+  
+
     const data = await request.json(); 
 
 
-    const session = await getServerSession(authOptions);
 
 
 

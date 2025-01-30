@@ -5,6 +5,12 @@ import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 
 export async function GET() {
+
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return new NextResponse(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+  }
+
   try {
     const premios = await prisma.premio.findMany({
       select: {
