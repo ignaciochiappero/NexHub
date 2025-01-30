@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "framer-motion"
-import type React from "react" // Import React
 
 interface IconPulseProps {
   Icon: React.ElementType

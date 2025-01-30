@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//components\logrosForm\LogrosForm.tsx
 
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Pen, Book, X, Target, Gift } from 'lucide-react';

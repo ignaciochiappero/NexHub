@@ -1,4 +1,3 @@
-//app/dashboard/logros/components/AchievementCard.tsx
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -75,7 +74,7 @@ export const AchievementCard = ({
             : undefined
         }
       >
-        {/* Header */}
+
         <div
           className="flex items-center mb-3 cursor-pointer"
           onClick={() => onToggleExpand(achievement.id)}
@@ -106,7 +105,6 @@ export const AchievementCard = ({
           )}
         </div>
 
-        {/* Progress Bar */}
         <div className="w-full bg-gray-700 rounded-full h-2 mb-2 overflow-hidden">
           <motion.div
             className={`h-2 rounded-full ${
@@ -120,7 +118,6 @@ export const AchievementCard = ({
           />
         </div>
 
-        {/* Progress Text */}
         <div className="flex justify-between text-xs text-gray-400">
           <span>Progreso</span>
           <span>
@@ -128,7 +125,6 @@ export const AchievementCard = ({
           </span>
         </div>
 
-        {/* Status */}
         {userAchievement.completed ? (
           <div className="flex items-center text-teal-500 mt-3 text-sm">
             <CheckCircle className="mr-2" size={16} />
@@ -142,7 +138,6 @@ export const AchievementCard = ({
         )}
       </motion.div>
 
-      {/* Expanded Content */}
       <AnimatePresence>
         {isExpanded && !userAchievement.completed && (
           <motion.div

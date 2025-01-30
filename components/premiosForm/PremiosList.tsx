@@ -1,4 +1,3 @@
-//components/premiosForm/PremiosList.tsx
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Trash2, Edit2, AlertCircle } from 'lucide-react';

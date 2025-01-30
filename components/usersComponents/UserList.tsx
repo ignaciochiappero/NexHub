@@ -1,13 +1,8 @@
-//app\(pages)\users\UserList.tsx
-
-
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 
 
 'use client';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Users, Search, UserPlus, MapPin, Briefcase, Cake, MessageSquare } from 'lucide-react';
@@ -50,7 +45,7 @@ export default function UserList() {
 
   useEffect(() => {
     fetchUsers();
-    const interval = setInterval(fetchUsers, 30000); // Actualizar cada 30 segundos
+    const interval = setInterval(fetchUsers, 30000); // actualizar cada 30 segundos
     return () => clearInterval(interval);
   }, []);
 
@@ -59,14 +54,13 @@ export default function UserList() {
       await fetch('/api/users/online', { method: 'POST' });
     };
 
-    const interval = setInterval(updateUserStatus, 60000); // Actualizar cada minuto
-    updateUserStatus(); // Actualizar inmediatamente al montar el componente
+    const interval = setInterval(updateUserStatus, 60000); // actualizar cada minuto
+    updateUserStatus(); // actualizar inmediatamente al montar el componente
 
     return () => clearInterval(interval);
   }, []);
 
 
-  //Función para buscar usuarios
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) 
     
@@ -101,17 +95,14 @@ export default function UserList() {
   const handleSendMessage = async (userId: number) => {
     setIsLoading(true);
     try {
-      // First, check if a conversation already exists
       const checkResponse = await fetch(`/api/conversations/check/${userId}`);
       const existingConversation = await checkResponse.json();
 
       let conversationId;
 
       if (existingConversation) {
-        // If a conversation exists, use its ID
         conversationId = existingConversation.id;
       } else {
-        // If no conversation exists, create a new one
         const createResponse = await fetch('/api/conversations', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -126,11 +117,9 @@ export default function UserList() {
         conversationId = newConversation.id;
       }
 
-      // Navigate to the messages page with the conversation ID
       router.push(`/dashboard/messages?conversationId=${conversationId}`);
     } catch (error) {
       console.error('Error handling conversation:', error);
-      // You might want to show an error message to the user here
     } finally {
       setIsLoading(false);
     }

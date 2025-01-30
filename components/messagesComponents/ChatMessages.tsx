@@ -1,5 +1,3 @@
-//app\dashboard\messages\components\ChatMessages.tsx
-
 
 "use client"
 

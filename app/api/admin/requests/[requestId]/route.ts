@@ -1,5 +1,4 @@
 
-//app\api\admin\requests\[requestId]\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";

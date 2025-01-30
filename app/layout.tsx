@@ -1,4 +1,3 @@
-//app\layout.tsx
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -11,7 +10,7 @@ import UserDropdown from "@/components/UserDropdown/UserDropdown";
 import { getSessionUser } from "@/utils/SessionUserAdmin";
 
 
-//FUENTES
+//FUENTES CUSTOM
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,7 +24,8 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-//Paquete Blender
+
+//paquete Blender
 const blenderBold = localFont({
   src: "./fonts/BlenderPro-Bold.woff",
   variable: "--blender-bold",
@@ -77,8 +77,6 @@ export default async function RootLayout({
     <html lang="en">
       
 
-
-
       <body
         className={`${blenderMayus.variable} ${blenderMedium.variable} ${blenderNormal.variable} ${blenderThin.variable} ${blenderBold.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -93,8 +91,6 @@ export default async function RootLayout({
 
           </div>
         </ContextProvider>
-
-
 
 
         {children}

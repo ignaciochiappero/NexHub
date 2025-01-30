@@ -29,9 +29,9 @@ function SigninForm() {
         setAuthError('Usuario o contraseña incorrectos');
         setIsLoading(false);
       } else {
-        // Esperar un poco menos y verificar la sesión antes de redirigir
+        
         await new Promise(resolve => setTimeout(resolve, 500));
-        window.location.href = '/dashboard/profile';  // Usar redirección del navegador en lugar de router.push
+        window.location.href = '/dashboard/profile';  
       }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
@@ -108,7 +108,7 @@ function SigninForm() {
               transition={{ duration: 0.4 }}
               className="w-full max-w-md overflow-hidden rounded-2xl bg-[#242424] shadow-2xl"
             >
-              {/* Resto del formulario existente */}
+              
               <form onSubmit={onSubmit} className="p-6 space-y-6">
                   <div className="text-center">
                   <Image 

@@ -1,4 +1,3 @@
-//app\dashboard\messages\MessagesClient.tsx
 
 "use client";
 
@@ -41,18 +40,17 @@ export default function MessagesClient({
   const [showUserList, setShowUserList] = useState(false);
   const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
 
-  // Referencias y hooks para manejar eventos y tamaños de ventana
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
 
-  // Función para desplazarse automáticamente al final del contenedor de mensajes
+  // funcion para desplazarse automáticamente al final del contenedor de mensajes
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Función para traer los mensajes desde la base de datos
+  // funcion para traer los mensajes desde la base de datos
   const fetchMessages = useCallback(async (conversationId: number) => {
     try {
       const res = await fetch(`/api/messages/${conversationId}`);
@@ -83,7 +81,7 @@ export default function MessagesClient({
     }
   }, []);
 
-  // Función para seleccionar una conversación y traer sus mensajes, además de esconder la lista de usuarios en el caso de dispositivos móviles
+  // funcion para seleccionar una conversacion y traer sus mensajes, ademas de esconder la lista de usuarios en el caso de dispositivos moviles
   const handleSelectConversation = useCallback(
     (id: number) => {
       const conversation = conversations.find((c) => c.id === id);
@@ -96,7 +94,7 @@ export default function MessagesClient({
     [conversations, fetchMessages]
   );
 
-  // useEffect para manejar la selección de conversación basada en los parámetros de búsqueda
+  // useEffect para manejar la seleccion de conversacion basada en los parametros de busqueda
   useEffect(() => {
     const conversationId = searchParams.get("conversationId");
     if (conversationId) {
@@ -185,12 +183,12 @@ export default function MessagesClient({
     }
   }, [selectedConversation, scrollToBottom]);
 
-  // useEffect para desplazarse al final del contenedor de mensajes cuando sea necesario
+
   useEffect(() => {
     scrollToBottom();
   }, [scrollToBottom]);
 
-  // Función para iniciar una nueva conversación con un usuario
+  // funcion para iniciar una nueva conversacion con un usuario
   const handleStartConversation = useCallback(
     async (userId: number) => {
       const existingConversation = conversations.find((conv) =>
@@ -220,7 +218,7 @@ export default function MessagesClient({
     [conversations, handleSelectConversation, fetchMessages]
   );
 
-  // Función para enviar un nuevo mensaje en la conversación seleccionada
+  // funcion para enviar un nuevo mensaje en la conversacion seleccionada
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedConversation || !newMessage.trim()) return;
@@ -237,7 +235,7 @@ export default function MessagesClient({
     }
   };
 
-  // Función para eliminar una conversación
+  // funcion para eliminar una conversacion
   const handleDeleteConversation = async (conversationId: number) => {
     try {
       await fetch(`/api/conversations/${conversationId}`, { method: "DELETE" });
@@ -250,7 +248,7 @@ export default function MessagesClient({
     }
   };
 
-  // Función para editar un mensaje
+  // funcion para editar un mensaje
   const handleEditMessage = async (updatedMessage: Message) => {
     try {
       const response = await fetch(`/api/messages/${updatedMessage.id}`, {
@@ -284,7 +282,7 @@ export default function MessagesClient({
     }
   };
 
-  // Función para eliminar un mensaje
+  // funcion para eliminar un mensaje
   const handleDeleteMessage = async (messageId: number) => {
     try {
       const response = await fetch(`/api/messages/${messageId}`, {
@@ -299,7 +297,7 @@ export default function MessagesClient({
     }
   };
 
-  // Función para seleccionar y deseleccionar mensajes
+  // funcion para seleccionar y deseleccionar mensajes
   const handleSelectMessage = useCallback((messageId: number) => {
     setSelectedMessages((prev) => {
       if (prev.includes(messageId)) {
@@ -309,18 +307,18 @@ export default function MessagesClient({
     });
   }, []);
 
-  // Función para eliminar los mensajes seleccionados
+  // funcion para eliminar los mensajes seleccionados
   const handleDeleteSelectedMessages = async () => {
     await Promise.all(selectedMessages.map(handleDeleteMessage));
     setSelectedMessages([]);
   };
 
-  // Función para volver a la lista de conversaciones
+  // funcion para volver a la lista de conversaciones
   const handleBackToList = () => {
     setSelectedConversation(null);
   };
 
-  // Función para obtener los datos del otro usuario en una conversación
+  // funcion para obtener los datos del otro usuario en una conversacion
   const getOtherUser = (conversation: Conversation) => {
     const otherUser = conversation.participants.find(
       (p) => p.user.email !== session.user.email
@@ -501,7 +499,7 @@ export default function MessagesClient({
                 ¡Comienza a chatear!
               </h2>
               <p className="text-gray-400 max-w-md mb-6">
-                Selecciona una conversación existente o inicia una nueva para
+                Selecciona una conversacion existente o inicia una nueva para
                 comenzar a chatear con otras personas.
               </p>
               <motion.button
@@ -511,7 +509,7 @@ export default function MessagesClient({
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-xl
                          shadow-lg hover:shadow-pink-500/25 transition-all"
               >
-                Iniciar nueva conversación
+                Iniciar nueva conversacion
               </motion.button>
             </motion.div>
           </motion.div>

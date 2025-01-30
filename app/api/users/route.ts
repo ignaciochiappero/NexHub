@@ -1,14 +1,12 @@
 
-//app\api\users\route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 
-const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1 minuto
+const ONLINE_THRESHOLD = 1 * 60 * 1000; // 1 minuto refresca info
 
-// GET: Obtener todos los usuarios
 export async function GET() {
   try {
     const users = await prisma.user.findMany({
@@ -49,7 +47,6 @@ export async function GET() {
   }
 }
 
-// POST: Crear un nuevo usuario
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -59,7 +56,6 @@ export async function POST(req: NextRequest) {
 
     const { name, email, password, birthday, location, company, image, position  } = await req.json();
 
-    // Validaciones básicas
     if (!name || !email || !password || !birthday|| !position) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }

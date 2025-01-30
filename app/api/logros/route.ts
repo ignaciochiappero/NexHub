@@ -1,5 +1,4 @@
 
-//app\api\logros\route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
@@ -33,7 +32,6 @@ export async function GET() {
       }
     });
 
-    // Transformar la respuesta para que sea más fácil de usar en el cliente
     const formattedLogros = logros.map(logro => ({
       ...logro,
       premios: logro.premios.map(p => p.premio),
@@ -62,7 +60,6 @@ export async function POST(req: NextRequest) {
 
     const { title, description, icon, stepsFinal, premioIds = [] } = body;
 
-    // Validar campos requeridos
     if (!title || !description || !icon || stepsFinal === undefined) {
       return new NextResponse(
         JSON.stringify({ 
@@ -73,7 +70,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Crear el logro con sus relaciones de premios
     const logro = await prisma.logro.create({
       data: {
         title,

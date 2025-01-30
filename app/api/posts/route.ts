@@ -1,5 +1,4 @@
 
-//app\api\posts\route.ts
 
 import { NextResponse } from "next/server"
 import prisma from "@/libs/prisma"

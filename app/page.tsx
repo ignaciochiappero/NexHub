@@ -34,14 +34,13 @@ const ParticleBackground = ({ color = "#d946ef" }: { color?: string }) => {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // Aumentado el número de partículas y su opacidad
     const particles: ParticleProps[] = Array.from({ length: 50 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 1,
-      speedX: (Math.random() - 0.5) * 1.5, // Velocidad aumentada
-      speedY: (Math.random() - 0.5) * 1.5, // Velocidad aumentada
-      opacity: Math.random() * 0.7 + 0.3, // Opacidad base más alta
+      x: Math.random() * canvas.width, //posicion x
+      y: Math.random() * canvas.height, //posicion y
+      size: Math.random() * 2 + 1, //tamaño
+      speedX: (Math.random() - 0.5) * 1.5, //velocidad en x
+      speedY: (Math.random() - 0.5) * 1.5, //velocidad en y
+      opacity: Math.random() * 0.7 + 0.3,  //transparencia
     }));
 
     let mouseX = 0;
@@ -93,8 +92,9 @@ const ParticleBackground = ({ color = "#d946ef" }: { color?: string }) => {
           const dy = particle.y - other.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
+          //dibuka linea de conexion entre particulas
           if (distance < 120) {
-            // Aumentado el rango de conexión
+             
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);
@@ -124,7 +124,7 @@ const ParticleBackground = ({ color = "#d946ef" }: { color?: string }) => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full"
-      style={{ opacity: 0.5 }} // Aumentada la opacidad base
+      style={{ opacity: 0.5 }} 
     />
   );
 };
@@ -142,14 +142,14 @@ export default function Home() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-[#1a1a1a] text-white">
-      {/* Overlay para la transición de página */}
+      
+      
       <div
         className={`fixed inset-0 bg-white z-50 transition-opacity duration-700 ease-in-out ${
           isClicked ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
 
-      {/* Partículas de fondo */}
       <ParticleBackground />
 
       <main className="flex flex-col gap-8 row-start-2 items-center justify-center mt-20 relative z-10">
@@ -157,7 +157,6 @@ export default function Home() {
           className="group animate-float cursor-pointer relative"
           onClick={handleClick}
         >
-          {/* Efecto de brillo */}
           <div
             className="absolute inset-0 rounded-full transition-all duration-300"
             style={{
@@ -169,7 +168,6 @@ export default function Home() {
             }}
           />
 
-          {/* Brillo adicional en hover */}
           <div
             className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
             style={{
@@ -180,7 +178,6 @@ export default function Home() {
             }}
           />
 
-          {/* Contenedor de la imagen con efecto de reducción en hover */}
           <div className="relative transform transition-all duration-700 ease-in-out group-hover:scale-95">
             <Image
               className={`animate-neon-pulse relative z-10 transition-transform duration-500

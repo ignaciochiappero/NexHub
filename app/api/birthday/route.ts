@@ -1,4 +1,3 @@
-// app/api/birthday/route.ts
 
 import { NextResponse } from "next/server"
 import { checkAndCreateBirthdayPosts } from "@/utils/birthdayPosts"

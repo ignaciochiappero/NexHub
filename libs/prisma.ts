@@ -1,4 +1,3 @@
-//libs\prisma.ts
 
 import { PrismaClient } from '@prisma/client'
 

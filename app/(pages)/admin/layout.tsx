@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config"
 import prisma from "@/libs/prisma"
@@ -24,7 +23,7 @@ export default async function AdminLayout({
     redirect("/auth/login")
   }
 
-  // Verificar el rol del usuario
+  // verificar el rol del usuario
   const user = await prisma.user.findUnique({
     where: {
       email: session.user?.email as string

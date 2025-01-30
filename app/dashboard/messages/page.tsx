@@ -1,4 +1,3 @@
-//app\dashboard\messages\page.tsx
 
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config"

@@ -1,4 +1,3 @@
-//app\api\premios\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 
@@ -31,7 +30,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { titulo, subtitulo, descripcion, imagen } = body;
 
-    // Validaciones básicas
     if (!titulo || !subtitulo || !descripcion) {
       return NextResponse.json(
         { error: "Faltan campos requeridos" }, 

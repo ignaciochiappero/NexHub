@@ -69,7 +69,7 @@ export default function RegisterPage() {
             isOpen={true}
             onClose={() => setShowSignupForm(false)}
             onUserAdded={() => {
-              // Manejar la adición del usuario aquí
+
               setShowSignupForm(false);
               redirect('/auth/login');            
             }}

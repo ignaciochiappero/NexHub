@@ -1,4 +1,3 @@
-// app\api\auth\register\route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
@@ -8,12 +7,10 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, password, birthday, position } = await req.json();
 
-    // Validación básica
     if (!name || !email || !password || !birthday || !position) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }
 
-    // Verificar si el usuario ya existe
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -22,10 +19,8 @@ export async function POST(req: NextRequest) {
       return new NextResponse("El usuario ya existe", { status: 400 });
     }
 
-    // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear usuario
     const user = await prisma.user.create({
       data: {
         name,
@@ -37,7 +32,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Eliminar la contraseña de la respuesta
+    // eliminar la contraseña de la respuesta
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 

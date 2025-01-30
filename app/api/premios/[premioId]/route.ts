@@ -1,4 +1,3 @@
-//app\api\premios\[premioId]\route.ts
 
 
 import prisma from "@/libs/prisma";
@@ -55,7 +54,6 @@ export async function PUT(
     const { premioId } = await context.params;
     const { titulo, subtitulo, descripcion, imagen } = await req.json();
 
-    // Validaciones básicas
     if (!titulo || !subtitulo || !descripcion) {
       return new NextResponse("Faltan campos requeridos", { status: 400 });
     }

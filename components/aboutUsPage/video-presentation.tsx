@@ -126,7 +126,7 @@ export const VideoPresentation = () => {
                 className="relative"
                 whileHover="hover"
               >
-                {/* Primer efecto de brillo (más grande y difuso) */}
+                
                 <motion.div
                   className="absolute inset-0 -z-10 rounded-full bg-stone-100/20 blur-3xl"
                   variants={{
@@ -147,7 +147,7 @@ export const VideoPresentation = () => {
                   }}
                 />
                 
-                {/* Segundo efecto de brillo (más pequeño y concentrado) */}
+                
                 <motion.div
                   className="absolute inset-0 -z-10 rounded-full bg-stone-50/40 blur-xl"
                   variants={{

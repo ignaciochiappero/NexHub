@@ -1,4 +1,3 @@
-//app\(pages)\admin\logros\panelLogros\page.tsx
 
 "use client"
 
@@ -51,7 +50,6 @@ import {
 import LogrosForm from "@/components/logrosComponents/logrosForm/LogrosForm"
 import Link from "next/link"
 
-// Mapeo de strings a componentes de íconos
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMapping: { [key: string]: any } = {
   Gauge: Gauge,
@@ -288,9 +286,10 @@ export default function AdminLogroPage() {
                   `}
                   style={logro.completed ? { boxShadow: "0 0 30px rgba(20,184,166,0.3)" } : undefined}
                 >
-                  {/* Contenido principal */}
+
+
+
                   <div className="flex-grow">
-                    {/* Header */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
                       <div
                         className={`
@@ -313,7 +312,7 @@ export default function AdminLogroPage() {
                       </div>
                     </div>
 
-                    {/* Progress Bar */}
+
                     <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
                       <motion.div
                         className={`h-2 rounded-full ${
@@ -327,7 +326,7 @@ export default function AdminLogroPage() {
                       />
                     </div>
 
-                    {/* Progress Counter */}
+
                     <div className="flex justify-between text-sm text-gray-400 mb-4">
                       <span>Pasos para completar</span>
                       <span>
@@ -335,7 +334,7 @@ export default function AdminLogroPage() {
                       </span>
                     </div>
 
-                    {/* Premios Section */}
+
                     <div className="space-y-3">
                       <div className="flex items-center text-sm text-gray-400">
                         <Gift className="mr-2" size={16} />
@@ -371,7 +370,7 @@ export default function AdminLogroPage() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
+
                   <div className="flex flex-col sm:flex-row justify-between gap-2 sm:gap-0 mt-4 sm:mt-6 pt-4 border-t border-gray-800">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -404,7 +403,7 @@ export default function AdminLogroPage() {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
+
       <AnimatePresence>
         {deleteLogroId && (
           <motion.div

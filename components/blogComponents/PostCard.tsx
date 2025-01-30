@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//app\dashboard\blog\components\PostCard.tsx
 "use client"
 
 import { useState } from "react"
 import Image from "next/image"
 import { Heart, MessageCircle, Edit, Trash } from "lucide-react"
 import CommentSection from "./CommentSection"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const formatRelativeTime = (date: Date) => {
   const now = new Date()
@@ -13,22 +12,22 @@ const formatRelativeTime = (date: Date) => {
   const diffInMinutes = Math.floor(diffInSeconds / 60)
   const diffInHours = Math.floor(diffInMinutes / 60)
   const diffInDays = Math.floor(diffInHours / 24)
-
+  
   if (diffInDays > 0) {
-    // Si han pasado más de 24 horas, mostrar la fecha
+    // si paso mas de 24 sh
     return new Intl.DateTimeFormat("es-ES", {
       year: "numeric",
       month: "numeric",
       day: "numeric"
     }).format(date)
   } else if (diffInHours > 0) {
-    // Si han pasado horas
+    // si pasaron hs
     return `Publicado hace ${diffInHours === 1 ? 'una hora' : `${diffInHours} horas`}`
   } else if (diffInMinutes > 0) {
-    // Si han pasado minutos
+    // si pasaron min
     return `Publicado hace ${diffInMinutes === 1 ? 'un minuto' : `${diffInMinutes} minutos`}`
   } else {
-    // Si ha pasado menos de un minuto
+    // si paso menos de un min
     return "Publicado hace un momento"
   }
 }
@@ -116,7 +115,8 @@ export default function PostCard({ post, currentUser, onPostUpdate, onPostDelete
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
         {post.systemPost ? (
-            // Avatar y nombre para posts del sistema
+          
+            // avatar y nombre para posts del sistema
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 flex items-center justify-center mr-3">
                 <span className="text-white text-lg">N</span>
@@ -129,7 +129,7 @@ export default function PostCard({ post, currentUser, onPostUpdate, onPostDelete
               </div>
             </div>
           ) : (
-            // Avatar y nombre para posts normales
+            // avatar y nombre para posts normales
             <>
 
                 <Image
@@ -149,7 +149,7 @@ export default function PostCard({ post, currentUser, onPostUpdate, onPostDelete
           )}
         </div>
         
-        {/* Mostrar botones de edición/eliminación según los permisos */}
+
         {(canEditPost || canDeletePost) && (
           <div className="flex space-x-2">
             {canEditPost && (

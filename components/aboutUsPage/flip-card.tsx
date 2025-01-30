@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { IconPulse } from "./icon-pulse"
-import type React from "react" // Added import for React
 
 interface FeatureProps {
   frontIcon: React.ElementType

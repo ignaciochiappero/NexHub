@@ -1,4 +1,3 @@
-// app/dashboard/blog/page.tsx
 import { getServerSession } from "next-auth/next"
 import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma"
@@ -14,7 +13,7 @@ async function getBlogData() {
 
   if (!user) throw new Error("Usuario no encontrado")
 
-  // Verificar cumpleaños a través de la API
+  // verificar cumpleaños a través de la API
   try {
     await fetch(`${process.env.NEXTAUTH_URL}/api/birthday`, {
       cache: 'no-store',

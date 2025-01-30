@@ -1,4 +1,3 @@
-//app\api\posts\[postId]\comments\route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";

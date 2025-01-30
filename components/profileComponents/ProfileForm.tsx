@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-//app\dashboard\profile\ProfileForm.tsx
 
 "use client";
 
@@ -47,7 +46,7 @@ export default function ProfileForm({ initialUser }: ProfileFormProps) {
   const [instructionsTimer, setInstructionsTimer] =
     useState<NodeJS.Timeout | null>(null);
 
-  // Estados para el recortador de imágenes
+  // rstados para el recortador de imágenes
   const [showCropper, setShowCropper] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imgSrc, setImgSrc] = useState("");
@@ -70,10 +69,10 @@ export default function ProfileForm({ initialUser }: ProfileFormProps) {
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       setImgSrc(reader.result?.toString() || "");
-      // Mostrar instrucciones primero
+      // mostrar instrucciones 
       setShowInstructions(true);
 
-      // Configurar el timer para mostrar el cropper después de 3 segundos
+      // duración de 3 segundos de las instrucciones
       const timer = setTimeout(() => {
         setShowInstructions(false);
         setShowCropper(true);

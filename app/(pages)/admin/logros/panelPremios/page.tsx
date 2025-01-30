@@ -1,4 +1,3 @@
-//app/(pages)/admin/logros/panelPremios/page.tsx
 
 "use client"
 

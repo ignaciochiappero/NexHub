@@ -1,4 +1,3 @@
-// utils/birthdayPosts.ts
 import prisma from "@/libs/prisma"
 import { User } from "@/types/user"
 import { NextResponse } from "next/server"
@@ -10,10 +9,10 @@ export async function checkAndCreateBirthdayPosts() {
   tomorrow.setDate(tomorrow.getDate() + 1)
   
   try {
-    // Primero se compruega si ya se crearon los posts de cumpleaños para hoy
+    // se cpomrueba si se crearon los posts de cumpleaños para hoy
     const existingSystemPost = await prisma.post.findFirst({
       where: {
-        userId: 1, // System user ID
+        userId: 1, 
         systemPost: true,
         createdAt: {
           gte: today,
@@ -30,7 +29,7 @@ export async function checkAndCreateBirthdayPosts() {
       })
     }
 
-    // Obtener los usuarios que cumplen años hoy si no se crearon los posts del dia
+    // Buscar los usuarios que cumplen años hoy
     const birthdayUsers = await prisma.$queryRaw`
       SELECT * FROM User 
       WHERE MONTH(birthday) = ${today.getMonth() + 1} 
@@ -46,13 +45,13 @@ export async function checkAndCreateBirthdayPosts() {
       })
     }
 
-    // Crear las publicaciones de cumpleaños para cada usuario 
+    // crear publi de cumple para cada user 
     await prisma.$transaction(async (tx) => {
       for (const user of birthdayUsers) {
         await tx.post.create({
           data: {
             content: `¡Hoy es el cumpleaños de ${user.name}! 🎉🎂 Toda la comunidad le desea un día maravilloso lleno de alegría y celebraciones.`,
-            userId: 1, // System user ID
+            userId: 1, 
             systemPost: true
           },
         })

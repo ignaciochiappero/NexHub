@@ -1,4 +1,3 @@
-//components\authComponents\SignupForm.tsx
 
 
 'use client'
@@ -66,16 +65,14 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
       
       if (isEditing && userToEdit?.id) {
 
-        // Validar contraseñas si se está cambiando
         if (data.changePassword && data.newPassword !== data.confirmPassword) {
           throw new Error('Las contraseñas no coinciden');
         }
   
-        // Preparar los datos para la actualización
         const updateData = {
           name: data.name,
           email: data.email,
-          birthday: data.birthday,  // Ya viene en formato ISO
+          birthday: data.birthday, 
           position: data.position,
           location: userToEdit.location,
           company: userToEdit.company,   
@@ -83,7 +80,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
           password: '',
         };
   
-        // Solo incluir la contraseña si se está cambiando
+        // solo incluir la contraseña si se esta cambiando
         if (data.changePassword && data.newPassword) {
           updateData['password'] = data.newPassword;
         }
@@ -106,7 +103,7 @@ function SignupModal({ isOpen, onClose, onUserAdded, userToEdit, isEditing }: Si
       else {
 
 
-        // Crear nuevo usuario
+        
         try {
           const response = await axios.post('/api/auth/register', {
             name: data.name,

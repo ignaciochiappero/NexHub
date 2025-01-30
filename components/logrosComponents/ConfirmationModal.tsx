@@ -1,4 +1,3 @@
-//app/dashboard/logros/components/ConfirmationModal.tsx
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";

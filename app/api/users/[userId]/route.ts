@@ -1,4 +1,3 @@
-// app/api/users/[userId]/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
@@ -12,7 +11,6 @@ type RouteContext = {
 
 
 
-// GET: Obtener un usuario específico
 export async function GET(
     req: NextRequest,
     context: RouteContext
@@ -41,7 +39,6 @@ export async function GET(
       return new NextResponse("Usuario no encontrado", { status: 404 });
     }
 
-    // Formatear la fecha antes de enviarla
     const formattedUser = {
       ...user,
       birthday: user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : null,
@@ -54,7 +51,6 @@ export async function GET(
   }
 }
 
-// PUT: Actualizar un usuario
 export async function PUT(
   req: NextRequest,
   context: RouteContext
@@ -68,7 +64,6 @@ export async function PUT(
     const { userId } = await context.params;
     const body = await req.json();
     
-    // Preparar los datos para la actualización
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateData: any = {
       name: body.name || undefined,
@@ -80,7 +75,6 @@ export async function PUT(
       image: body.image || undefined,
     };
 
-    // Solo actualizar la contraseña si se proporciona una nueva
     if (body.password) {
       const hashedPassword = await bcrypt.hash(body.password, 10);
       updateData.password = hashedPassword;
@@ -105,7 +99,6 @@ export async function PUT(
         }
       });
 
-      // Formatear la fecha antes de enviarla
       const formattedUser = {
         ...updatedUser,
         birthday: updatedUser.birthday ? new Date(updatedUser.birthday).toISOString().split('T')[0] : null,
@@ -123,7 +116,6 @@ export async function PUT(
 }
 
 
-// DELETE: Eliminar un usuario
 export async function DELETE(
   req: NextRequest,
   context: RouteContext

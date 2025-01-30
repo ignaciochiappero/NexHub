@@ -1,5 +1,4 @@
 
-//app\api\posts\[postId]\route.ts
 import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
 import { getServerSession } from "next-auth/next"
@@ -44,7 +43,8 @@ export async function PUT(
   let updatedImageUrl = post.image
 
   if (deleteImage === "true" && post.image) {
-    // Eliminar la imagen de Cloudinary
+
+    // eliminar la img de cloudinatry
     const publicId = post.image.split("/").pop()?.split(".")[0]
     if (publicId) {
       await cloudinary.uploader.destroy(publicId)
@@ -100,7 +100,6 @@ export async function DELETE(
   }
 
   if (post.image) {
-    // Eliminar la imagen de Cloudinary
     const publicId = post.image.split("/").pop()?.split(".")[0]
     if (publicId) {
       await cloudinary.uploader.destroy(publicId)

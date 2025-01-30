@@ -136,7 +136,6 @@ export default function AdminLogrosPage() {
         initial="hidden"
         animate="visible"
       >
-        {/* Botón Volver */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -160,7 +159,6 @@ export default function AdminLogrosPage() {
           </Link>
         </motion.div>
 
-        {/* Grid de Botones */}
         <div className="grid md:grid-cols-2 grid-cols-1 gap-8 px-4">
           {menuItems.map((item, index) => {
             const IconComponent = item.icon;
@@ -183,16 +181,14 @@ export default function AdminLogrosPage() {
                       boxShadow: `0 0 40px ${item.shadowColor}`
                     }}
                   >
-                    {/* Partículas animadas */}
+
                     <ParticleBackground color={item.particleColor} />
 
-                    {/* Gradient Overlay */}
                     <div className={`
                       absolute inset-0 bg-gradient-to-br ${item.gradient}
                       opacity-0 group-hover:opacity-100 transition-opacity duration-700
                     `}/>
                     
-                    {/* Border Effect */}
                     <div className={`
                       absolute inset-0 border-2 border-transparent
                       group-hover:border-${item.borderColor}/50 rounded-2xl
@@ -200,9 +196,7 @@ export default function AdminLogrosPage() {
                       group-hover:scale-105 group-hover:rotate-2
                     `}/>
                     
-                    {/* Content Container */}
                     <div className="relative h-full flex flex-col items-center justify-center gap-8 p-8">
-                      {/* Icon Container */}
                       <motion.div
                         className="relative p-6 rounded-full bg-black/30"
                         whileHover={{ 
@@ -221,7 +215,6 @@ export default function AdminLogrosPage() {
                         />
                       </motion.div>
                       
-                      {/* Title */}
                       <span className="
                         text-2xl sm:text-3xl text-white font-bold tracking-wider
                         group-hover:scale-110 transition-transform duration-500
@@ -230,13 +223,11 @@ export default function AdminLogrosPage() {
                         {item.title}
                       </span>
                       
-                      {/* Línea decorativa */}
                       <div 
                         className="w-16 h-1 transform group-hover:scale-x-150 transition-transform duration-500"
                         style={{ background: item.color }}
                       />
 
-                      {/* Background Glows */}
                       <div 
                         className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-xl
                           group-hover:scale-150 transition-transform duration-700"

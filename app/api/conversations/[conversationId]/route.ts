@@ -1,4 +1,3 @@
-//app\api\conversations\[conversationId]\route.ts
 
 import { type NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
@@ -18,7 +17,6 @@ type RouteContext = {
   params: Promise<{ conversationId: string }>
 }
 
-// Obtener mensajes de una conversación
 export async function GET(
   req: NextRequest,
   { params }: RouteContext
@@ -63,7 +61,7 @@ export async function GET(
     return new NextResponse(JSON.stringify({ error: "Error interno" }), { status: 500 });
   }
 }
-// Updated POST function
+
 export async function POST(req: NextRequest, { params }: RouteContext) {
   try {
     const { conversationId } = await params
@@ -94,7 +92,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
       },
     })
 
-    // Trigger Pusher event
+    // trigger pusher
     await pusher.trigger(`conversation-${conversationId}`, "new-message", message)
 
     return new NextResponse(JSON.stringify(message), { status: 201 })
@@ -105,7 +103,6 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
 }
 
 
-// DELETE: Eliminar un usuario
 export async function DELETE(
   req: NextRequest,
   context: RouteContext

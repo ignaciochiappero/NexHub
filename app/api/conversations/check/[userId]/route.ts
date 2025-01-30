@@ -1,4 +1,3 @@
-//app\api\conversations\check\[userId]\route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';

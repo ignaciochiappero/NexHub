@@ -1,4 +1,3 @@
-// app\api\logros\[logroId]\route.ts
 
 import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -44,7 +43,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       premioIds = [],
     } = await req.json();
 
-    // Validaciones básicas
     if (!title || !description || !icon || stepsFinal === undefined) {
       return new NextResponse(
         JSON.stringify({
@@ -55,14 +53,12 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       );
     }
 
-    // Primero, eliminar todas las relaciones existentes
     await prisma.logroPremio.deleteMany({
       where: {
         logroId: parseInt(logroId),
       },
     });
 
-    // Luego, actualizar el logro y crear las nuevas relaciones
     const updatedLogro = await prisma.logro.update({
       where: { id: parseInt(logroId) },
       data: {
@@ -98,12 +94,10 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
     const { logroId } = await context.params;
 
-    // Primero eliminar las relaciones
     await prisma.logroPremio.deleteMany({
       where: { logroId: parseInt(logroId) },
     });
 
-    // Luego eliminar el logro
     const logroDeleted = await prisma.logro.delete({
       where: { id: parseInt(logroId) },
     });

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//app\dashboard\blog\components\BlogFeed.tsx
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import PostCard from "./PostCard";
 import CreatePostForm from "./CreatePostForm";

@@ -1,4 +1,3 @@
-// app/utils/dateFormatter.ts
 
 export const dateFormatter = new Intl.DateTimeFormat('es-ES', {
     year: 'numeric',

@@ -1,5 +1,4 @@
 
-//components\logrosForm\IconSelector.tsx
 
 "use client";
 
@@ -8,7 +7,6 @@ import {
   Gauge, Trophy, Star, Lock, Unlock, Medal, 
   Rocket, Target, CheckCircle, Code, Globe, 
   Database, Shield, Swords, Search, X,
-  // Íconos adicionales
   Zap, Heart, Crown, Diamond, Brain, 
   Flame,  Award,  Sparkles,
   Gem, Sword, Book, Compass, Map,
@@ -31,7 +29,6 @@ const icons = [
   { icon: Database, name: 'Database' },
   { icon: Shield, name: 'Shield' },
   { icon: Swords, name: 'Swords' },
-  // Íconos adicionales
   { icon: Zap, name: 'Zap' },
   { icon: Heart, name: 'Heart' },
   { icon: Crown, name: 'Crown' },
@@ -59,7 +56,7 @@ const IconSelector = ({ onSelect, selectedIcon } : { onSelect: (iconName: string
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Cerrar al hacer clic fuera del modal
+  // cerrar al hacer clic fuera del modal
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const modal = document.getElementById('icon-modal');
@@ -107,6 +104,7 @@ const IconSelector = ({ onSelect, selectedIcon } : { onSelect: (iconName: string
             id="icon-modal"
             className="bg-[#353535] rounded-xl shadow-2xl p-6 w-full max-w-3xl max-h-[90vh] flex flex-col"
           >
+            
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white">Seleccionar Ícono</h2>

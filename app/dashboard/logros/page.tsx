@@ -1,6 +1,3 @@
-//app\dashboard\logros\page.tsx
-
-//app/dashboard/logros/page.tsx
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -26,10 +23,10 @@ export default function LogrosPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [stepPages, setStepPages] = useState<{ [key: number]: number }>({});
 
-  //paginación de la página
+  //paginacion de la pagina
   const achievementsPerPage = 6;
 
-  //paginación del logro
+  //paginacion del logro
   const stepsPerPage = 5;
 
   const indexOfLastAchievement = currentPage * achievementsPerPage;
@@ -40,7 +37,6 @@ export default function LogrosPage() {
   );
 
 
-  //trae los logros
   const fetchAchievements = async () => {
     setLoading(true);
     try {
@@ -143,7 +139,6 @@ export default function LogrosPage() {
     }));
   };
   
-  // En //app/dashboard/logros/page.tsx
   return (
     <div className="min-h-screen p-8 pt-20 pb-24 font-[family-name:var(--blender-medium)] relative">
       <div className="max-w-6xl mx-auto flex flex-col min-h-[calc(100vh-theme(spacing.20))]">

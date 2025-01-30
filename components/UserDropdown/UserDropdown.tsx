@@ -1,4 +1,5 @@
 "use client"; 
+
 import { useState, useEffect, useRef } from 'react';
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -14,7 +15,7 @@ const UserDropdown = () => {
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showLoginButton, setShowLoginButton] = useState(false); // Estado para controlar el retraso en mostrar el botón de login
+  const [showLoginButton, setShowLoginButton] = useState(false); 
 
   const fetchUser = async (userId: number) => {
     const res = await fetch(`/api/users/${userId}`);
@@ -24,10 +25,10 @@ const UserDropdown = () => {
   };
 
   useEffect(() => {
-    // Retrasamos la visualización del botón de login después de un segundo
+    // espera un segundo 
     setTimeout(() => {
       setShowLoginButton(true);
-    }, 1000); // Retraso de 1 segundo
+    }, 1000); // retraso de 1 segundo
 
     if (session?.user?.id) {
       fetchUser(Number(session.user.id));
@@ -47,7 +48,7 @@ const UserDropdown = () => {
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('scroll', handleScroll);
 
-    handleScroll(); // Llamada inicial para establecer el estado correcto
+    handleScroll(); 
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -70,12 +71,12 @@ const UserDropdown = () => {
       label: 'Logout',
       icon: LogOut,
       onClick: () => signOut({ 
-        callbackUrl: '/' // Esto redireccionará al usuario al home después del logout
+        callbackUrl: '/' 
       }),
     },
   ];
 
-  if (!session && showLoginButton) { // Condición para mostrar el botón de login después de un segundo
+  if (!session && showLoginButton) { 
     return (
       <div className="z-50 absolute top-6 right-6 opacity-100 pointer-events-auto">
         <Link href="/auth/login" className="font-[family-name:var(--blender-bold)] bg-gradient-to-r from-pink-600 to-purple-600 shadow-lg hover:shadow-pink-500/25 transition-all rounded-xl px-4 py-2 duration-300 flex items-center gap-2 transform hover:scale-105">

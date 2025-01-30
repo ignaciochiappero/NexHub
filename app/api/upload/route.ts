@@ -1,4 +1,3 @@
-// app/api/upload/route.ts
 
 
 import { NextRequest, NextResponse } from "next/server";
@@ -16,11 +15,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Convertir el archivo a un Buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Subir imagen a Cloudinary
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise<NextResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(

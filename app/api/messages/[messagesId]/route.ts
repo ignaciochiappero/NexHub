@@ -1,5 +1,4 @@
 
-//app\api\messages\[messagesId]\route.ts
 
 import { type NextRequest, NextResponse } from "next/server"
 import prisma from "@/libs/prisma"
@@ -21,7 +20,6 @@ type RouteContext = {
 };
 
 
-// Añadir el método GET
 export async function GET(
   req: NextRequest,
   context: RouteContext
@@ -40,7 +38,6 @@ export async function GET(
       )
     }
 
-    // Obtener los mensajes de la conversación
     const messages = await prisma.message.findMany({
       where: {
         conversationId: Number(messagesId)
@@ -104,7 +101,6 @@ export async function PUT(
       )
     }
 
-    // Verificar que recibimos el contenido
     const body = await req.json()
     if (!body?.content?.trim()) {
       return new NextResponse(
@@ -116,7 +112,6 @@ export async function PUT(
       )
     }
 
-    // Verificar que el mensaje existe y pertenece al usuario
     const existingMessage = await prisma.message.findUnique({
       where: { id: Number(messagesId) },
       include: {
@@ -149,7 +144,6 @@ export async function PUT(
       )
     }
 
-    // Actualizar el mensaje
     const updatedMessage = await prisma.message.update({
       where: { id: Number(messagesId) },
       data: {
@@ -168,7 +162,6 @@ export async function PUT(
       }
     })
 
-    // Notificar a través de Pusher
     await pusher.trigger(
       `conversation-${updatedMessage.conversationId}`,
       "message-updated",
@@ -202,11 +195,9 @@ export async function DELETE(
   context: RouteContext
 ) {
   try {
-    // Esperar los parámetros
     const { messagesId } = await context.params;
 
 
-    // Verificar la sesión
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return new NextResponse(
@@ -218,7 +209,6 @@ export async function DELETE(
       )
     }
 
-    // Validar el ID del mensaje
     if (isNaN(Number(messagesId))) {
       return new NextResponse(
         JSON.stringify({ error: "ID de mensaje inválido" }),
@@ -229,7 +219,6 @@ export async function DELETE(
       )
     }
 
-    // Verificar que el mensaje existe y pertenece al usuario
     const message = await prisma.message.findUnique({
       where: { id: Number(messagesId) },
       select: { 
@@ -259,16 +248,14 @@ export async function DELETE(
       )
     }
 
-    // Eliminar el mensaje
     await prisma.message.delete({
       where: { id: Number(messagesId) }
     })
 
-    // Notificar a través de Pusher
     await pusher.trigger(
       `conversation-${message.conversationId}`,
       "message-deleted",
-      { messageId: Number(messagesId) } // Cambiado a messageId y asegurando que sea número
+      { messageId: Number(messagesId) } 
     )
 
     return new NextResponse(

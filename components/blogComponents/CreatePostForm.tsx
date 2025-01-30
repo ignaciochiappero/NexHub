@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//app\dashboard\blog\components\CreatePostForm.tsx
 "use client"
 
 import { useState, useRef } from "react"
 import { ImageIcon } from "lucide-react"
 import Image from "next/image"
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface CreatePostFormProps {
   currentUser: any
   onPostCreated: (newPost: any) => void

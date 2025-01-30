@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import { IconPulse } from "./icon-pulse"
 import { ParticleBackground } from "./particle-background"
-import type React from "react" // Import React
 
 export interface InsightProps {
   icon: React.ElementType

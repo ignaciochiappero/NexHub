@@ -1,4 +1,3 @@
-// components\newNavbar\hambIcon\HamburguerIcon.tsx
 "use client";
 
 import React from "react";

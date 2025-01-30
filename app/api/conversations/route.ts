@@ -1,10 +1,8 @@
-//app\api\conversations\route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 
-// Obtener todas las conversaciones del usuario
 export async function GET() {
   const session = await getServerSession(authOptions);
   
@@ -44,7 +42,6 @@ export async function GET() {
   return new NextResponse(JSON.stringify(conversations), { status: 200 });
 }
 
-// Crear una nueva conversación
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   
@@ -54,7 +51,7 @@ export async function POST(req: NextRequest) {
 
   const { participantIds } = await req.json();
 
-  // Asegurarse de que el usuario actual esté incluido en los participantes
+  // poner al usuario activo en la conversacion
   const uniqueParticipantIds = Array.from(new Set([...participantIds, parseInt(session.user.id)]));
 
   const conversation = await prisma.conversation.create({

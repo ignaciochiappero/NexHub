@@ -1,4 +1,3 @@
-//app/dashboard/logros/components/types.ts
 export interface Achievement {
   id: number;
   title: string;

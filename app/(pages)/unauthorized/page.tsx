@@ -1,4 +1,3 @@
-// app/(pages)/unauthorized/page.tsx
 
 "use client";
 

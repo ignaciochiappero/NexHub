@@ -1,9 +1,5 @@
 
 
-//app\(pages)\profile\page.tsx'use client';
-
-
-
 import { getServerSession } from "next-auth/next";
 import { config as authOptions } from "@/auth.config";
 import prisma from "@/libs/prisma";
@@ -35,14 +31,14 @@ export default async function ProfilePage() {
     return <div>Usuario no encontrado</div>;
   }
 
-  // Format the date adjusting for Argentina timezone
+  // formateo de fecha zona horaria arg
   const date = new Date(user.birthday);
 const formattedUser = {
   ...user,
   birthday: new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
 };
 
-// No modificamos mucho este archivo ya que es un componente servidor
+
 return (
   <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] pt-20 p-6">
     <div className="max-w-7xl mx-auto">

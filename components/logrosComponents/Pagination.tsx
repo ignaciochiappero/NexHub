@@ -1,4 +1,3 @@
-//app/dashboard/logros/components/Pagination.tsx
 "use client";
 
 import { motion } from "framer-motion";

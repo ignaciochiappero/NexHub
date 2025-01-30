@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// app\dashboard\blog\components\CommentSection.tsx
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Image from "next/image";
 import { Heart, Edit, Trash, Smile } from 'lucide-react';
