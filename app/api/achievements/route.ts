@@ -30,10 +30,27 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session) {
+  
+ 
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string
+    },
+    select: {
+      role: true
+    }
+  })
+
+  if (!session ) {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
+  if (user?.role !== 'ADMIN') {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
+ 
   const userId = parseInt(session.user.id);
   const { logroId, step } = await req.json();
 

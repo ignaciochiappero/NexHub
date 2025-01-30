@@ -2,6 +2,10 @@
 import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+
+import { getServerSession } from "next-auth/next";
+import { config as authOptions } from "@/auth.config";
+
 type RouteContext = {
   params: Promise<{ logroId: string }>;
 };
@@ -33,6 +37,24 @@ export async function GET(req: NextRequest, context: RouteContext) {
 }
 
 export async function PUT(req: NextRequest, context: RouteContext) {
+  
+  const session = await getServerSession(authOptions);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string
+    },
+    select: {
+      role: true
+    }
+  })
+
+  if (user?.role !== 'ADMIN') {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+  
+  
+  
   try {
     const { logroId } = await context.params;
     const {
@@ -91,6 +113,23 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
+  
+  const session = await getServerSession(authOptions);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string
+    },
+    select: {
+      role: true
+    }
+  })
+
+  if (user?.role !== 'ADMIN') {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+  
+  
   try {
     const { logroId } = await context.params;
 

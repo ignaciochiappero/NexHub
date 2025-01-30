@@ -3,6 +3,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 
+import { getServerSession } from "next-auth/next";
+import { config as authOptions } from "@/auth.config";
+
 export async function GET() {
   try {
     const logros = await prisma.logro.findMany({
@@ -48,6 +51,22 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+
+  const session = await getServerSession(authOptions);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string
+    },
+    select: {
+      role: true
+    }
+  })
+
+  if (user?.role !== 'ADMIN') {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
   try {
     const body = await req.json();
     

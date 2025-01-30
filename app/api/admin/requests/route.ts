@@ -12,6 +12,20 @@ export async function GET() {
     return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email as string
+    },
+    select: {
+      role: true
+    }
+  })
+
+  if (user?.role !== 'ADMIN') {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+  }
+
+
   try {
     const requests = await prisma.achievementRequest.findMany({
       include: {
