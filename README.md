@@ -44,13 +44,13 @@
 
 ### 📸 Funcionalidades de Imágenes y Mensajes
 
-| Carga de Foto | Recorte de Foto | Poster |
+| Carga de Foto | Recorte de Foto |  Editar Mensaje |
 |:-------------:|:--------------:|:-------:|
-|<img src="public/readme-screenshots/carga-foto.png" width="250">|<img src="public/readme-screenshots/crop-foto.png" width="250">|<img src="public/readme-screenshots/poster.png" width="250">|
+|<img src="public/readme-screenshots/carga-foto.png" width="250">|<img src="public/readme-screenshots/crop-foto.png" width="250">|<img src="public/readme-screenshots/edit-message.png" width="250">|
 
-| Editar Mensaje | Comentarios |
-|:-------------:|:----------:|
-|<img src="public/readme-screenshots/edit-message.png" width="250">|<img src="public/readme-screenshots/comentario.png" width="250">|
+|| Comentarios ||
+|:-------------:|:----------:|:----------:|
+||<img src="public/readme-screenshots/comentario.png" width="250">||
 
 ## ⚙️ Instalación
 
