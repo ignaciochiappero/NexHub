@@ -3,7 +3,7 @@
     <img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&size=35&duration=4000&pause=1000&color=F700D9&center=true&vCenter=true&width=500&lines=%F0%9F%92%BBNex+Hub%F0%9F%92%BB" alt="Typing SVG" />
   </a>
 
-  <p>
+  <p align="center">
     <strong>Última actualización:</strong> 2025-01-30 01:25:20 UTC<br>
     <strong>Desarrollador:</strong> <a href="https://github.com/ignaciochiappero">@ignaciochiappero</a>
   </p>
